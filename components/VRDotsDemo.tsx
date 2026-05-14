@@ -116,11 +116,12 @@ export default function VRDotsDemo({ cued, swapType }: Props) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // In cued condition Field 1 (green/CCW) is the delayed/translating field.
-    // In uncued condition Field 0 (red/CW) translates (no temporal cue).
-    const translatingField: 0 | 1 = cued ? 1 : 0;
+    // Field 1 (green/CCW) is always the translating field.
+    // Cued:   Field 0 appears at t=0, Field 1 appears at t=T_SOLO (delayed onset = cue).
+    // Uncued: both fields appear at t=0, no solo phase.
+    const translatingField = 1 as const;
 
-    // Trial timing depends on cued/uncued
+    // Trial timing
     const TRANS_START = cued ? T_SOLO + T_PRETRANS : T_PRETRANS;
     const T_TOTAL     = TRANS_START + T_TRANS + T_POST;
 
@@ -144,10 +145,10 @@ export default function VRDotsDemo({ cued, swapType }: Props) {
       lastTime = now;
 
       // ── Visibility ────────────────────────────────────────────────────────
-      // Cued: Field 0 visible from t=0; Field 1 visible from t=T_SOLO
-      // Uncued: both visible from t=0
+      // Cued:   Field 0 from t=0, Field 1 from t=T_SOLO (delayed onset = cue)
+      // Uncued: both fields present from t=0, no solo phase
       const f0Visible = true;
-      const f1Visible = cued ? t >= T_SOLO : true;
+      const f1Visible = !cued || t >= T_SOLO;
 
       // ── Translation window ────────────────────────────────────────────────
       const inTrans = t >= TRANS_START && t < TRANS_START + T_TRANS;
