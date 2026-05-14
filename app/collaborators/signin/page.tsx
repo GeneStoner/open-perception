@@ -1,13 +1,15 @@
 'use client';
 
+import { use } from 'react';
 import { signIn } from 'next-auth/react';
 
 export default function SignInPage({
   searchParams,
 }: {
-  searchParams: { error?: string };
+  searchParams: Promise<{ error?: string }>;
 }) {
-  const denied = searchParams?.error === 'AccessDenied';
+  const { error } = use(searchParams);
+  const denied = error === 'AccessDenied';
 
   return (
     <div className="min-h-[60vh] flex items-center justify-center px-6">
