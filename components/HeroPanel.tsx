@@ -3,6 +3,14 @@
 import { useEffect, useRef, useState } from 'react';
 import EyeO, { type EyeOHandle } from '@/components/EyeO';
 
+// Unlock browser audio on first user interaction so the creak always plays
+function unlockAudio() {
+  const silent = new Audio();
+  silent.play().catch(() => {});
+  window.removeEventListener('pointerdown', unlockAudio);
+  window.removeEventListener('keydown',     unlockAudio);
+}
+
 // ── master switch ─────────────────────────────────────────────────────────
 const REVEAL_ENABLED = true;
 // Keyboard trigger: Option + Shift + O (always works)
@@ -47,8 +55,7 @@ export default function HeroPanel() {
     }
   }, [phase]);
 
-  // Preload audio at mount — files land in browser cache so every
-  // subsequent new Audio(...) is instant
+  // Preload audio + register unlock listeners
   useEffect(() => {
     const creak = new Audio(SND_CREAK_OPEN);
     const slam  = new Audio(SND_DOOR_SLAM);
@@ -56,6 +63,12 @@ export default function HeroPanel() {
     slam.preload  = 'auto';
     creak.load();
     slam.load();
+    window.addEventListener('pointerdown', unlockAudio, { once: true });
+    window.addEventListener('keydown',     unlockAudio, { once: true });
+    return () => {
+      window.removeEventListener('pointerdown', unlockAudio);
+      window.removeEventListener('keydown',     unlockAudio);
+    };
   }, []);
 
   useEffect(() => {
@@ -78,7 +91,7 @@ export default function HeroPanel() {
       later(() => {
         slamAudio.play().catch(() => {});
         setPhase('closing');
-        eyeRef.current?.fastBlink();
+        eyeRef.current?.triggerCycle();
       }, OPEN_DUR + HOLD_DUR);
 
       later(() => {

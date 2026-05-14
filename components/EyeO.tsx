@@ -5,106 +5,96 @@ import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 're
 /**
  * EyeO — alternates between a plain "O" and an eye.
  *
- * Cycle:
- *   Plain O (50 s)
- *   → fast-close → eye appears → fast-open
- *   → lazy blink × 2
- *   → stare 5 s
- *   → fast-close → plain O → fast-open
- *   → repeat
+ * Normal cycle (every 50 s):
+ *   fast-close → eye appears → fast-open → lazy blink × 2 → stare 5 s
+ *   → fast-close → plain O → fast-open → repeat
  *
- * Exposes fastBlink() via ref for external triggers (e.g. panel slam).
+ * triggerCycle() (called on panel slam) runs the reveal sequence immediately,
+ * cancelling whatever was pending, then resumes the normal 50 s cadence.
  */
-export interface EyeOHandle { fastBlink: () => void; }
+export interface EyeOHandle { triggerCycle: () => void; }
 
 const EyeO = forwardRef<EyeOHandle, { size?: string }>(function EyeO(
   { size = '0.82em' },
   ref,
 ) {
-  const [showEye,  setShowEye]  = useState(false);
-  const [lidH,     setLidH]     = useState(0);      // 0 = open, 100 = closed
-  const [lazyLid,  setLazyLid]  = useState(false);  // true → slow blink transitions
+  const [showEye, setShowEye] = useState(false);
+  const [lidH,    setLidH]    = useState(0);
+  const [lazyLid, setLazyLid] = useState(false);
 
-  const mounted = useRef(true);
+  const mounted   = useRef(true);
+  const activeIds = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  // Cancel all pending timers
+  function cancelAll() {
+    activeIds.current.forEach(clearTimeout);
+    activeIds.current = [];
+  }
+
+  function later(fn: () => void, ms: number) {
+    const t = setTimeout(() => { if (mounted.current) fn(); }, ms);
+    activeIds.current.push(t);
+  }
+
+  // Timing constants
+  const FC = 320;
+  const FO = 370;
+  const LC = 530;
+  const LO = 580;
+
+  function lazyBlink(done: () => void) {
+    setLazyLid(true);
+    setLidH(100);
+    later(() => {
+      setLidH(0);
+      later(done, LO);
+    }, LC);
+  }
+
+  // Run the reveal sequence, then schedule the next idle wait
+  function runReveal(idleAfter = 50000) {
+    setLazyLid(false);
+    setLidH(100);
+    later(() => {
+      setShowEye(true);
+      setLidH(0);
+      later(() => {
+        lazyBlink(() => {
+          later(() => {
+            lazyBlink(() => {
+              later(() => {
+                setLazyLid(false);
+                setLidH(100);
+                later(() => {
+                  setShowEye(false);
+                  setLidH(0);
+                  later(() => runReveal(50000), FO);
+                }, FC);
+              }, 5000);
+            });
+          }, 700);
+        });
+      }, FO + 200);
+    }, FC);
+  }
 
   useImperativeHandle(ref, () => ({
-    fastBlink() {
+    triggerCycle() {
       if (!mounted.current) return;
-      setLazyLid(false);
-      setLidH(100);
-      setTimeout(() => { if (mounted.current) setLidH(0); }, 320);
+      cancelAll();
+      runReveal(50000);
     },
   }));
 
   useEffect(() => {
     mounted.current = true;
-    const tids: ReturnType<typeof setTimeout>[] = [];
-
-    function later(fn: () => void, ms: number) {
-      const t = setTimeout(() => { if (mounted.current) fn(); }, ms);
-      tids.push(t);
-    }
-
-    // Timing constants
-    const FC = 320;   // fast close wait (280 ms anim + buffer)
-    const FO = 370;   // fast open wait  (320 ms anim + buffer)
-    const LC = 530;   // lazy close wait (480 ms anim + buffer)
-    const LO = 580;   // lazy open wait  (520 ms anim + buffer)
-
-    function lazyBlink(done: () => void) {
-      setLazyLid(true);
-      setLidH(100);
-      later(() => {
-        setLidH(0);
-        later(done, LO);
-      }, LC);
-    }
-
-    function cycle() {
-      // ── Phase A: plain O for 50 s ─────────────────────────────────────────
-      later(() => {
-        // fast-close over plain O
-        setLazyLid(false);
-        setLidH(100);
-        later(() => {
-          setShowEye(true);    // swap to eye while lid is shut
-          setLidH(0);          // fast-open to reveal eye
-
-          // small pause so eye is seen before first blink
-          later(() => {
-            // lazy blink 1
-            lazyBlink(() => {
-              // pause between blinks
-              later(() => {
-                // lazy blink 2
-                lazyBlink(() => {
-                  // 5-second stare
-                  later(() => {
-                    // fast-close over eye
-                    setLazyLid(false);
-                    setLidH(100);
-                    later(() => {
-                      setShowEye(false);  // swap back to plain O
-                      setLidH(0);         // fast-open to reveal O
-                      later(cycle, FO);   // restart
-                    }, FC);
-                  }, 5000);
-                });
-              }, 700);
-            });
-          }, FO + 200);
-
-        }, FC);
-      }, 50000);
-    }
-
-    cycle();
-
+    // Start first cycle after 50 s idle
+    later(() => runReveal(50000), 50000);
     return () => {
       mounted.current = false;
-      tids.forEach(clearTimeout);
+      cancelAll();
     };
-  }, []);  // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const closeDur = lazyLid ? '0.48s' : '0.28s';
   const openDur  = lazyLid ? '0.52s' : '0.32s';
@@ -125,20 +115,18 @@ const EyeO = forwardRef<EyeOHandle, { size?: string }>(function EyeO(
         <clipPath id="eye-clip">
           <circle cx="50" cy="50" r="44" />
         </clipPath>
-
         <radialGradient id="iris-grad" cx="42%" cy="38%" r="60%">
           <stop offset="0%"   stopColor="#b8e4f9" />
           <stop offset="45%"  stopColor="#4ab0e8" />
           <stop offset="100%" stopColor="#1a6fa8" />
         </radialGradient>
-
         <radialGradient id="pupil-grad" cx="45%" cy="40%" r="65%">
           <stop offset="0%"   stopColor="#1a1a1a" />
           <stop offset="100%" stopColor="#000" />
         </radialGradient>
       </defs>
 
-      {/* ── eye contents ─────────────────────────────────────────────────────── */}
+      {/* eye contents */}
       <g clipPath="url(#eye-clip)" style={{ opacity: showEye ? 1 : 0 }}>
         <ellipse cx="50" cy="50" rx="44" ry="44" fill="#efe9dc" />
         <circle cx="50" cy="50" r="22" fill="url(#iris-grad)" />
@@ -158,7 +146,7 @@ const EyeO = forwardRef<EyeOHandle, { size?: string }>(function EyeO(
         <ellipse cx="50" cy="88" rx="44" ry="14" fill="#c8b89a" opacity="0.35" />
       </g>
 
-      {/* ── eyelid ───────────────────────────────────────────────────────────── */}
+      {/* eyelid */}
       <g clipPath="url(#eye-clip)">
         <rect
           x="6" y="6" width="88" height="92"
@@ -174,7 +162,7 @@ const EyeO = forwardRef<EyeOHandle, { size?: string }>(function EyeO(
         />
       </g>
 
-      {/* ── outer ring (the "O" stroke) ──────────────────────────────────────── */}
+      {/* outer ring */}
       <circle cx="50" cy="50" r="44"
         fill="none" stroke="white" strokeWidth="19"
       />
