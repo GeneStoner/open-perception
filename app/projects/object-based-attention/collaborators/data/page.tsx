@@ -3,6 +3,7 @@ import Image from "next/image";
 import ContentBlurb from "@/components/ContentBlurb";
 import ApkDownloads from "@/components/ApkDownloads";
 import SignOutButton from "@/components/SignOutButton";
+import VRDotsDemo from "@/components/VRDotsDemo";
 
 export default function CollaboratorDataPage() {
   return (
@@ -107,6 +108,36 @@ export default function CollaboratorDataPage() {
             className="text-xs leading-relaxed"
             style={{ color: "var(--text-secondary)" }}
           />
+        </div>
+
+        {/* Stimulus comparison blurb */}
+        <ContentBlurb
+          file="collab-stimulus-comparison.md"
+          className="text-sm leading-relaxed"
+          style={{ color: "var(--text-secondary)" }}
+        />
+
+        {/* Live stimulus demos */}
+        <div className="space-y-4">
+          <p className="text-xs font-medium uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
+            Live Stimulus Demos — translation shown at 5× actual speed
+          </p>
+          <div className="grid grid-cols-2 gap-6">
+            {([
+              { cued: true,  swapType: "none", label: "No Swap — Cued",               sub: "Red field onset precedes green by 750 ms" },
+              { cued: false, swapType: "none", label: "No Swap — Uncued",              sub: "Both fields onset simultaneously" },
+              { cued: true,  swapType: "cm",   label: "Color + Motion Swap — Cued",   sub: "Features exchange during translation" },
+              { cued: false, swapType: "cm",   label: "Color + Motion Swap — Uncued", sub: "Swap without temporal onset cue" },
+            ] as const).map(({ cued, swapType, label, sub }) => (
+              <div key={label} className="space-y-2">
+                <div>
+                  <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>{label}</p>
+                  <p className="text-xs" style={{ color: "var(--text-muted)" }}>{sub}</p>
+                </div>
+                <VRDotsDemo cued={cued} swapType={swapType} />
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Figure 7 + VRDots replication side by side */}
