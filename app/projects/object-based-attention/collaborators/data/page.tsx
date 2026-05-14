@@ -2,14 +2,18 @@ import SectionHeader from "@/components/SectionHeader";
 import Image from "next/image";
 import ContentBlurb from "@/components/ContentBlurb";
 import ApkDownloads from "@/components/ApkDownloads";
+import SignOutButton from "@/components/SignOutButton";
 
 export default function CollaboratorDataPage() {
   return (
     <div className="max-w-5xl mx-auto px-6 py-16 space-y-14">
 
-      <h1 className="text-3xl font-semibold tracking-tight" style={{ color: "var(--text-primary)" }}>
-        Collaborators
-      </h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-semibold tracking-tight" style={{ color: "var(--text-primary)" }}>
+          Collaborators
+        </h1>
+        <SignOutButton />
+      </div>
 
       {/* ── Experiment Software ──────────────────────────────────────────────── */}
       <section>

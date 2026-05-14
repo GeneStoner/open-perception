@@ -11,10 +11,8 @@ const handler = NextAuth({
   ],
   callbacks: {
     async signIn({ profile }) {
-      // Temporarily log to diagnose allowlist issue
       const username = (profile as { login?: string }).login ?? '';
-      console.log('GitHub signIn profile login:', username);
-      return true; // allow all for now
+      return isAllowed(username);
     },
     async session({ session, token }) {
       if (session.user && token.sub) {
