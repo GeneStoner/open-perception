@@ -91,7 +91,7 @@ export default function HeroPanel() {
       later(() => {
         slamAudio.play().catch(() => {});
         setPhase('closing');
-        eyeRef.current?.triggerCycle();
+        later(() => eyeRef.current?.triggerCycle(), CLOSE_DUR);
       }, OPEN_DUR + HOLD_DUR);
 
       later(() => {
