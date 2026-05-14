@@ -1,0 +1,18 @@
+[
+  {
+    "name": "VRDots — Stoner & Blanc Replication",
+    "version": "1.0",
+    "date": "2026-05-07",
+    "description": "Replication of the Stoner & Blanc (2010) delayed-onset feature-swap paradigm. Two superimposed dot fields (red CW, green CCW) rotate transparently. The delayed-onset field (Field B) undergoes a brief translational displacement. Conditions: N (no swap) and MC (motion+color swap).",
+    "params": {
+      "Aperture": "3.5°",
+      "Dot density": "26 dots/deg²/field",
+      "Dots per field": "327",
+      "Translation duration": "80 ms",
+      "Conditions": "N, MC",
+      "Platform": "Meta Quest 3"
+    },
+    "url": "/downloads/VRDots_StonerBlanc_Replication_v1.apk",
+    "filename": "VRDots_StonerBlanc_Replication_v1.apk"
+  }
+]
