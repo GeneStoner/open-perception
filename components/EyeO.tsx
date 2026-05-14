@@ -51,8 +51,8 @@ const EyeO = forwardRef<EyeOHandle, { size?: string }>(function EyeO(
     }, LC);
   }
 
-  // Run the reveal sequence, then schedule the next idle wait
-  function runReveal(idleAfter = 50000) {
+  // Run the reveal sequence once, then schedule the next one after 50 s
+  function runReveal() {
     setLazyLid(false);
     setLidH(100);
     later(() => {
@@ -68,7 +68,8 @@ const EyeO = forwardRef<EyeOHandle, { size?: string }>(function EyeO(
                 later(() => {
                   setShowEye(false);
                   setLidH(0);
-                  later(() => runReveal(50000), FO);
+                  // wait 50 s, then reveal again
+                  later(runReveal, 50000);
                 }, FC);
               }, 5000);
             });
@@ -82,14 +83,14 @@ const EyeO = forwardRef<EyeOHandle, { size?: string }>(function EyeO(
     triggerCycle() {
       if (!mounted.current) return;
       cancelAll();
-      runReveal(50000);
+      runReveal();
     },
   }));
 
   useEffect(() => {
     mounted.current = true;
-    // Start first cycle after 50 s idle
-    later(() => runReveal(50000), 50000);
+    // First reveal after 50 s idle
+    later(runReveal, 50000);
     return () => {
       mounted.current = false;
       cancelAll();
