@@ -14,6 +14,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+      <head>
+        <link rel="preload" href="/assets/creak-open.mp3" as="audio" type="audio/mpeg" />
+        <link rel="preload" href="/assets/door-slam.mp3"  as="audio" type="audio/mpeg" />
+      </head>
       <body className="min-h-screen flex flex-col" style={{ background: "var(--background)", color: "var(--text-primary)" }}>
         <Nav />
         <main className="flex-1">{children}</main>

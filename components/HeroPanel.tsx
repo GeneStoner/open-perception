@@ -46,6 +46,17 @@ export default function HeroPanel() {
     }
   }, [phase]);
 
+  // Preload audio at mount — files land in browser cache so every
+  // subsequent new Audio(...) is instant
+  useEffect(() => {
+    const creak = new Audio(SND_CREAK_OPEN);
+    const slam  = new Audio(SND_DOOR_SLAM);
+    creak.preload = 'auto';
+    slam.preload  = 'auto';
+    creak.load();
+    slam.load();
+  }, []);
+
   useEffect(() => {
     if (!REVEAL_ENABLED) return;
 
@@ -54,6 +65,7 @@ export default function HeroPanel() {
       tids.push(setTimeout(fn, ms));
 
     function runReveal() {
+      // Fresh elements each time — files are in browser cache after first load
       const creakAudio = new Audio(SND_CREAK_OPEN);
       const slamAudio  = new Audio(SND_DOOR_SLAM);
 
@@ -127,8 +139,6 @@ export default function HeroPanel() {
         muted
         playsInline
         preload="auto"
-        onError={(e) => console.error('video error', e)}
-        onCanPlay={() => console.log('video can play')}
         style={{
           position:       'absolute',
           top:            0,
