@@ -176,8 +176,18 @@ export default function VRDotsDemo({ cued, swapType }: Props) {
             if (px * px + py * py > AP_R * AP_R) {
               respawnFromLeft(dot);
             }
-          } else if (!inTrans && dot.tx !== 0) {
-            // Reset offsets after translation window
+          } else if (!inTrans && (dot.tx !== 0 || dot.ty !== 0)) {
+            // Absorb translation offset into base polar position so there's no snap-back
+            const nx = dot.r * Math.cos(dot.theta) + dot.tx;
+            const ny = dot.r * Math.sin(dot.theta) + dot.ty;
+            const nr = Math.sqrt(nx * nx + ny * ny);
+            // If within aperture, update base position; otherwise respawn
+            if (nr >= EXCL_R && nr <= AP_R - DOT_R) {
+              dot.r     = nr;
+              dot.theta = Math.atan2(ny, nx);
+            } else {
+              Object.assign(dot, randomAnnular(dot.field, dot.isCoherent));
+            }
             dot.tx = 0;
             dot.ty = 0;
           }
