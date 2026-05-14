@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
 /**
  * EyeO — alternates between a plain "O" and an eye.
@@ -12,13 +12,29 @@ import { useEffect, useRef, useState } from 'react';
  *   → stare 5 s
  *   → fast-close → plain O → fast-open
  *   → repeat
+ *
+ * Exposes fastBlink() via ref for external triggers (e.g. panel slam).
  */
-export default function EyeO({ size = '0.82em' }: { size?: string }) {
+export interface EyeOHandle { fastBlink: () => void; }
+
+const EyeO = forwardRef<EyeOHandle, { size?: string }>(function EyeO(
+  { size = '0.82em' },
+  ref,
+) {
   const [showEye,  setShowEye]  = useState(false);
   const [lidH,     setLidH]     = useState(0);      // 0 = open, 100 = closed
   const [lazyLid,  setLazyLid]  = useState(false);  // true → slow blink transitions
 
   const mounted = useRef(true);
+
+  useImperativeHandle(ref, () => ({
+    fastBlink() {
+      if (!mounted.current) return;
+      setLazyLid(false);
+      setLidH(100);
+      setTimeout(() => { if (mounted.current) setLidH(0); }, 320);
+    },
+  }));
 
   useEffect(() => {
     mounted.current = true;
@@ -88,7 +104,7 @@ export default function EyeO({ size = '0.82em' }: { size?: string }) {
       mounted.current = false;
       tids.forEach(clearTimeout);
     };
-  }, []);
+  }, []);  // eslint-disable-line react-hooks/exhaustive-deps
 
   const closeDur = lazyLid ? '0.48s' : '0.28s';
   const openDur  = lazyLid ? '0.52s' : '0.32s';
@@ -164,4 +180,6 @@ export default function EyeO({ size = '0.82em' }: { size?: string }) {
       />
     </svg>
   );
-}
+});
+
+export default EyeO;

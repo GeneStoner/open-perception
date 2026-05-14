@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import EyeO from '@/components/EyeO';
+import EyeO, { type EyeOHandle } from '@/components/EyeO';
 
 // ── master switch ─────────────────────────────────────────────────────────
 const REVEAL_ENABLED = true;
@@ -28,6 +28,7 @@ export default function HeroPanel() {
   const [phase, setPhase] = useState<Phase>('idle');
   const videoRef          = useRef<HTMLVideoElement>(null);
   const panelRef          = useRef<HTMLDivElement>(null);
+  const eyeRef            = useRef<EyeOHandle>(null);
   const runningRef        = useRef(false);
 
   // Directly control video visibility so it's never waiting on React's render cycle
@@ -77,6 +78,7 @@ export default function HeroPanel() {
       later(() => {
         slamAudio.play().catch(() => {});
         setPhase('closing');
+        eyeRef.current?.fastBlink();
       }, OPEN_DUR + HOLD_DUR);
 
       later(() => {
@@ -180,7 +182,7 @@ export default function HeroPanel() {
             alignItems:    'center',
           }}
         >
-          <EyeO />
+          <EyeO ref={eyeRef} />
           <span>pen Perception</span>
         </span>
       </div>
