@@ -1,1 +1,1 @@
-Caption / commentary for Figures 1 and 5.
+Figures 1 and 5 from Stoner and Blanc (2010).  Figure 5 shows both conventional depiction of delayed-onset design and the feature-trajectory depiction that allows easier appreciation of both spatiotemporal dot continuity and feature history. We initally wanted to replicate Stoner and Blanc's findings for the standard (i.e. no feature swaps) conditions and the motion/color swap conditions.  Figure 5 A and C show the no motion/color swap conditions and Figure F and H show the motion/color swap conditions.  
