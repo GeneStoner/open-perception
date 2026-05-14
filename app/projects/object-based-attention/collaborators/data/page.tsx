@@ -120,7 +120,7 @@ export default function CollaboratorDataPage() {
         {/* Live stimulus demos */}
         <div className="space-y-4">
           <p className="text-xs font-medium uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
-            Live Stimulus Demos — translation shown at 5× actual speed
+            Live Stimulus Demos — motion at ½ speed · translation duration 4× actual (320 ms vs 80 ms)
           </p>
           <div className="grid grid-cols-2 gap-6">
             {([
