@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import EyeO, { type EyeOHandle } from '@/components/EyeO';
+import { VARIANTS } from '@/components/PeekabooVariants';
 
 // Unlock browser audio context on first user interaction (no audible sound)
 function unlockAudio() {
@@ -36,7 +37,8 @@ const CLOSE_DUR  = 1000;   // panel reaches shut at slam impact (~1.0s into file
 type Phase = 'idle' | 'opening' | 'holding' | 'closing';
 
 export default function HeroPanel() {
-  const [phase, setPhase] = useState<Phase>('idle');
+  const [phase,        setPhase]        = useState<Phase>('idle');
+  const [variantIndex, setVariantIndex] = useState<number | null>(null);
   const videoRef          = useRef<HTMLVideoElement>(null);
   const panelRef          = useRef<HTMLDivElement>(null);
   const eyeRef            = useRef<EyeOHandle>(null);
@@ -88,6 +90,10 @@ export default function HeroPanel() {
       tids.push(setTimeout(fn, ms));
 
     function runReveal() {
+      // 1 in 5 reveals uses a variant instead of the eyes video
+      const useVariant = Math.random() < 0.2;
+      setVariantIndex(useVariant ? Math.floor(Math.random() * VARIANTS.length) : null);
+
       // Reuse preloaded audio — avoids download delay on first keyboard trigger
       const creakAudio = creakRef.current ?? new Audio(SND_CREAK_OPEN);
       const slamAudio  = slamRef.current  ?? new Audio(SND_DOOR_SLAM);
@@ -160,7 +166,7 @@ export default function HeroPanel() {
     // Video is position:absolute (out of flow) so it doesn't affect panel size.
     <div style={{ position: 'relative', display: 'inline-flex' }} aria-hidden="true">
 
-      {/* Video: absolutely fills the panel area, rendered below (DOM first) */}
+      {/* Video: shown only when no variant is active */}
       <video
         ref={videoRef}
         src="/assets/eyes.mp4"
@@ -177,8 +183,15 @@ export default function HeroPanel() {
           objectPosition: 'center center',
           opacity:        0,   // controlled directly via useEffect
           pointerEvents:  'none',
+          display:        variantIndex !== null ? 'none' : 'block',
         }}
       />
+
+      {/* Variant content: shown instead of video when variantIndex is set */}
+      {variantIndex !== null && (() => {
+        const V = VARIANTS[variantIndex % VARIANTS.length];
+        return <V phase={phase} />;
+      })()}
 
       {/* Panel: in-flow (defines container size), rotates on hinge at top */}
       <div
