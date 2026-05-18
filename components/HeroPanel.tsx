@@ -3,10 +3,12 @@
 import { useEffect, useRef, useState } from 'react';
 import EyeO, { type EyeOHandle } from '@/components/EyeO';
 
-// Unlock browser audio on first user interaction so the creak always plays
+// Unlock browser audio context on first user interaction (no audible sound)
 function unlockAudio() {
-  const silent = new Audio();
-  silent.play().catch(() => {});
+  try {
+    const ctx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+    ctx.resume().catch(() => {});
+  } catch { /* ignore */ }
   window.removeEventListener('pointerdown', unlockAudio);
   window.removeEventListener('keydown',     unlockAudio);
 }
@@ -38,6 +40,8 @@ export default function HeroPanel() {
   const panelRef          = useRef<HTMLDivElement>(null);
   const eyeRef            = useRef<EyeOHandle>(null);
   const runningRef        = useRef(false);
+  const creakRef          = useRef<HTMLAudioElement | null>(null);
+  const slamRef           = useRef<HTMLAudioElement | null>(null);
 
   // Directly control video visibility so it's never waiting on React's render cycle
   useEffect(() => {
@@ -55,7 +59,7 @@ export default function HeroPanel() {
     }
   }, [phase]);
 
-  // Preload audio + register unlock listeners
+  // Preload audio into refs + register unlock listeners
   useEffect(() => {
     const creak = new Audio(SND_CREAK_OPEN);
     const slam  = new Audio(SND_DOOR_SLAM);
@@ -63,6 +67,8 @@ export default function HeroPanel() {
     slam.preload  = 'auto';
     creak.load();
     slam.load();
+    creakRef.current = creak;
+    slamRef.current  = slam;
     window.addEventListener('pointerdown', unlockAudio, { once: true });
     window.addEventListener('keydown',     unlockAudio, { once: true });
     return () => {
@@ -79,9 +85,11 @@ export default function HeroPanel() {
       tids.push(setTimeout(fn, ms));
 
     function runReveal() {
-      // Fresh elements each time — files are in browser cache after first load
-      const creakAudio = new Audio(SND_CREAK_OPEN);
-      const slamAudio  = new Audio(SND_DOOR_SLAM);
+      // Reuse preloaded audio — avoids download delay on first keyboard trigger
+      const creakAudio = creakRef.current ?? new Audio(SND_CREAK_OPEN);
+      const slamAudio  = slamRef.current  ?? new Audio(SND_DOOR_SLAM);
+      creakAudio.currentTime = 0;
+      slamAudio.currentTime  = 0;
 
       creakAudio.play().catch(() => {});
       setPhase('opening');
