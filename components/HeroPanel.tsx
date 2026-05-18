@@ -223,8 +223,9 @@ export default function HeroPanel() {
             whiteSpace:    'nowrap',
           }}
         >
-          <EyeO ref={eyeRef} />
-          <span>pen Perception</span>
+          <span>Open Percepti</span>
+          <EyeO ref={eyeRef} size="1.0em" />
+          <span>n</span>
         </span>
       </div>
 
