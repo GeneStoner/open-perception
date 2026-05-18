@@ -16,10 +16,11 @@ function unlockAudio() {
 // ── master switch ─────────────────────────────────────────────────────────
 const REVEAL_ENABLED = true;
 // Keyboard trigger: Option + Shift + O (always works)
-// Spontaneous: 20% of visits, max once per 24 hours per browser
-const PROBABILITY  = 0.20;
-const COOLDOWN_MS  = 24 * 60 * 60 * 1000;
-const COOLDOWN_KEY = 'op_reveal';
+// Spontaneous: 20% of visits, max once per 24 hours per browser, never on first session
+const PROBABILITY    = 0.20;
+const COOLDOWN_MS    = 24 * 60 * 60 * 1000;
+const COOLDOWN_KEY   = 'op_reveal';
+const FIRST_VISIT_KEY = 'op_visited';
 
 // ── audio file paths ──────────────────────────────────────────────────────
 const SND_CREAK_OPEN  = '/assets/creak-open.mp3';  // 4.6s slow creak
@@ -79,6 +80,8 @@ export default function HeroPanel() {
 
   useEffect(() => {
     if (!REVEAL_ENABLED) return;
+    // Respect OS-level reduced-motion preference — skip the panel lift entirely
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const tids: ReturnType<typeof setTimeout>[] = [];
     const later = (fn: () => void, ms: number) =>
@@ -118,9 +121,11 @@ export default function HeroPanel() {
     }
     window.addEventListener('keydown', onKey);
 
-    // ── spontaneous trigger (15%, once per 24h) ───────────────────────────
-    const last = localStorage.getItem(COOLDOWN_KEY);
-    const eligible = !last || Date.now() - Number(last) > COOLDOWN_MS;
+    // ── spontaneous trigger (20%, once per 24h, never on first session) ────
+    const isFirstVisit = !localStorage.getItem(FIRST_VISIT_KEY);
+    localStorage.setItem(FIRST_VISIT_KEY, '1');   // mark visited from now on
+    const last     = localStorage.getItem(COOLDOWN_KEY);
+    const eligible = !isFirstVisit && (!last || Date.now() - Number(last) > COOLDOWN_MS);
     if (eligible && Math.random() < PROBABILITY) {
       const wait = 1000 + Math.random() * 2000; // 1–3s after page load
       const tid = setTimeout(() => {
@@ -153,7 +158,7 @@ export default function HeroPanel() {
   return (
     // position: relative + inline-flex: sized by panel content only.
     // Video is position:absolute (out of flow) so it doesn't affect panel size.
-    <div style={{ position: 'relative', display: 'inline-flex' }}>
+    <div style={{ position: 'relative', display: 'inline-flex' }} aria-hidden="true">
 
       {/* Video: absolutely fills the panel area, rendered below (DOM first) */}
       <video

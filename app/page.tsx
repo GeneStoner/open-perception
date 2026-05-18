@@ -48,13 +48,13 @@ export default function Home() {
 
       <div className="max-w-5xl mx-auto px-6 py-16">
 
-        {/* Research Portals */}
+        {/* Current Project */}
         <section>
           <h2
             className="text-xs uppercase tracking-[0.2em] mb-10 text-center"
             style={{ color: "var(--text-secondary)" }}
           >
-            Research Portals
+            Current Project
           </h2>
 
           <div className="flex flex-wrap gap-12 justify-center">
