@@ -17,55 +17,95 @@ const FILL: React.CSSProperties = {
   overflow: 'hidden',
 };
 
-// ── Variant 0: Drifting clouds ────────────────────────────────────────────────
+// ── Variant 0: Magritte-style clouds ─────────────────────────────────────────
 export function VariantClouds({ phase }: { phase: Phase }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const raf = useRef<number>(0);
 
   useEffect(() => {
     const canvas = ref.current;
-    if (!canvas) return;
+    if (!canvas || phase === 'idle') return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+    canvas.width  = canvas.offsetWidth  || 500;
+    canvas.height = canvas.offsetHeight || 80;
+    const W = canvas.width, H = canvas.height;
 
-    const W = canvas.offsetWidth || 500;
-    const H = canvas.offsetHeight || 80;
-    canvas.width = W; canvas.height = H;
+    type Puff = { cx: number; cy: number; rx: number; ry: number };
+    type Cloud = { puffs: Puff[]; x: number; speed: number; scale: number };
 
-    // Simple cloud blobs
-    type Cloud = { x: number; y: number; r: number; speed: number };
-    const clouds: Cloud[] = Array.from({ length: 6 }, (_, i) => ({
-      x: (i / 6) * W * 1.4 - W * 0.2,
-      y: H * 0.2 + Math.random() * H * 0.6,
-      r: 12 + Math.random() * 20,
-      speed: 0.15 + Math.random() * 0.2,
-    }));
-
-    function drawCloud(x: number, y: number, r: number) {
-      ctx!.beginPath();
-      ctx!.arc(x,       y,       r,       0, Math.PI * 2);
-      ctx!.arc(x + r,   y - r * 0.4, r * 0.75, 0, Math.PI * 2);
-      ctx!.arc(x - r,   y - r * 0.3, r * 0.6,  0, Math.PI * 2);
-      ctx!.arc(x + r * 1.6, y,   r * 0.5,  0, Math.PI * 2);
-      ctx!.fill();
+    function makePuffs(scale: number): Puff[] {
+      const s = scale;
+      return [
+        { cx:  0,      cy:  0,    rx: 28*s, ry: 22*s },
+        { cx:  24*s,   cy: -10*s, rx: 22*s, ry: 18*s },
+        { cx: -20*s,   cy: -8*s,  rx: 18*s, ry: 15*s },
+        { cx:  44*s,   cy:  4*s,  rx: 16*s, ry: 13*s },
+        { cx: -38*s,   cy:  4*s,  rx: 14*s, ry: 11*s },
+        { cx:  10*s,   cy: -20*s, rx: 14*s, ry: 12*s },
+      ];
     }
 
-    let visible = phase !== 'idle';
+    const clouds: Cloud[] = [
+      { x: W * 0.15, speed: 0.18, scale: 0.9,  puffs: makePuffs(0.9)  },
+      { x: W * 0.55, speed: 0.12, scale: 1.1,  puffs: makePuffs(1.1)  },
+      { x: W * 0.85, speed: 0.22, scale: 0.65, puffs: makePuffs(0.65) },
+      { x: W * -0.1, speed: 0.15, scale: 0.8,  puffs: makePuffs(0.8)  },
+    ];
+
+    function drawCloud(cloud: Cloud) {
+      const { x, puffs } = cloud;
+      const cy = H * 0.5;
+      puffs.forEach(p => {
+        // Shadow layer
+        const shadowGrad = ctx!.createRadialGradient(
+          x + p.cx, cy + p.cy + p.ry * 0.3, p.rx * 0.1,
+          x + p.cx, cy + p.cy + p.ry * 0.6, p.rx * 1.1
+        );
+        shadowGrad.addColorStop(0, 'rgba(200,210,220,0.0)');
+        shadowGrad.addColorStop(1, 'rgba(160,175,195,0.35)');
+        ctx!.beginPath();
+        ctx!.ellipse(x + p.cx, cy + p.cy, p.rx, p.ry, 0, 0, Math.PI * 2);
+        ctx!.fillStyle = shadowGrad;
+        ctx!.fill();
+
+        // Main body
+        const mainGrad = ctx!.createRadialGradient(
+          x + p.cx, cy + p.cy - p.ry * 0.3, p.rx * 0.05,
+          x + p.cx, cy + p.cy, p.rx
+        );
+        mainGrad.addColorStop(0,   'rgba(255,255,255,1)');
+        mainGrad.addColorStop(0.5, 'rgba(248,250,252,0.97)');
+        mainGrad.addColorStop(1,   'rgba(220,230,240,0.85)');
+        ctx!.beginPath();
+        ctx!.ellipse(x + p.cx, cy + p.cy, p.rx, p.ry, 0, 0, Math.PI * 2);
+        ctx!.fillStyle = mainGrad;
+        ctx!.fill();
+      });
+    }
+
+    let running = true;
     function frame() {
-      if (!visible) return;
-      ctx!.fillStyle = '#b8d4e8';
+      if (!running) return;
+
+      // Magritte sky gradient — vivid cobalt
+      const sky = ctx!.createLinearGradient(0, 0, 0, H);
+      sky.addColorStop(0,   '#1a5fb4');
+      sky.addColorStop(0.5, '#3584e4');
+      sky.addColorStop(1,   '#62a0ea');
+      ctx!.fillStyle = sky;
       ctx!.fillRect(0, 0, W, H);
-      ctx!.fillStyle = 'rgba(255,255,255,0.92)';
+
       clouds.forEach(c => {
         c.x += c.speed;
-        if (c.x - c.r * 2 > W) c.x = -c.r * 2;
-        drawCloud(c.x, c.y, c.r);
+        if (c.x - 80 * c.scale > W) c.x = -80 * c.scale;
+        drawCloud(c);
       });
+
       raf.current = requestAnimationFrame(frame);
     }
-
-    if (phase !== 'idle') { visible = true; frame(); }
-    return () => { visible = false; cancelAnimationFrame(raf.current); };
+    frame();
+    return () => { running = false; cancelAnimationFrame(raf.current); };
   }, [phase]);
 
   if (phase === 'idle') return null;
@@ -76,46 +116,103 @@ export function VariantClouds({ phase }: { phase: Phase }) {
   );
 }
 
-// ── Variant 1: First-person eyeglasses POV ───────────────────────────────────
+// ── Variant 1: First-person glasses POV ──────────────────────────────────────
+// Swap /assets/eyeglasses-pov.mp4 for real footage when available.
+// Falls back to a canvas simulation: a gently drifting outdoor scene
+// seen through round glasses with the frame and nose visible.
 export function VariantEyeglasses({ phase }: { phase: Phase }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const raf       = useRef<number>(0);
+  const t0        = useRef(0);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || phase === 'idle') return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    canvas.width  = canvas.offsetWidth  || 500;
+    canvas.height = canvas.offsetHeight || 80;
+    const W = canvas.width, H = canvas.height;
+    t0.current = Date.now();
+
+    let running = true;
+    function frame() {
+      if (!running) return;
+      const t = (Date.now() - t0.current) / 1000;
+
+      // Gentle sway — like someone breathing/walking
+      const swayX = Math.sin(t * 0.7)  * 2;
+      const swayY = Math.sin(t * 1.1)  * 1.2;
+
+      // Sky gradient (outdoor scene)
+      const sky = ctx!.createLinearGradient(0, 0, 0, H * 0.7);
+      sky.addColorStop(0, '#3584e4');
+      sky.addColorStop(1, '#7bc8f6');
+      ctx!.fillStyle = sky;
+      ctx!.fillRect(0, 0, W, H);
+
+      // Ground
+      ctx!.fillStyle = '#7aab5a';
+      ctx!.fillRect(0, H * 0.6, W, H * 0.4);
+
+      // A few cloud puffs in the background
+      [[0.2, 0.25], [0.6, 0.18], [0.85, 0.3]].forEach(([fx, fy]) => {
+        const cx = W * fx + swayX * 0.5;
+        const cy = H * fy + swayY * 0.3;
+        const r  = H * 0.18;
+        const g  = ctx!.createRadialGradient(cx, cy - r * 0.3, r * 0.05, cx, cy, r);
+        g.addColorStop(0, 'rgba(255,255,255,0.95)');
+        g.addColorStop(1, 'rgba(220,235,250,0.6)');
+        ctx!.beginPath(); ctx!.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx!.fillStyle = g; ctx!.fill();
+      });
+
+      // Vignette to simulate lens edges
+      const vig = ctx!.createRadialGradient(W/2 + swayX, H/2 + swayY, W * 0.25, W/2 + swayX, H/2 + swayY, W * 0.7);
+      vig.addColorStop(0,   'rgba(0,0,0,0)');
+      vig.addColorStop(0.7, 'rgba(0,0,0,0.15)');
+      vig.addColorStop(1,   'rgba(0,0,0,0.85)');
+      ctx!.fillStyle = vig;
+      ctx!.fillRect(0, 0, W, H);
+
+      // Glasses frame overlay
+      ctx!.save();
+      ctx!.translate(swayX * 0.3, swayY * 0.3);
+      const fw = W * 0.48; const fh = H * 0.82;
+      const lx = W * 0.25; const rx = W * 0.75; const fy = H * 0.46;
+      // frame color
+      const fc = '#2a2018';
+      ctx!.strokeStyle = fc; ctx!.lineWidth = Math.max(2, H * 0.05);
+      // left lens
+      ctx!.beginPath(); ctx!.ellipse(lx, fy, fw/2 - 2, fh/2 - 2, 0, 0, Math.PI*2);
+      ctx!.stroke();
+      // right lens
+      ctx!.beginPath(); ctx!.ellipse(rx, fy, fw/2 - 2, fh/2 - 2, 0, 0, Math.PI*2);
+      ctx!.stroke();
+      // bridge
+      ctx!.beginPath();
+      ctx!.moveTo(lx + fw/2 - 2, fy - fh*0.08);
+      ctx!.quadraticCurveTo(W/2, fy - fh*0.25, rx - fw/2 + 2, fy - fh*0.08);
+      ctx!.stroke();
+      // nose (bottom of panel)
+      ctx!.strokeStyle = '#b0a090'; ctx!.lineWidth = 1.5; ctx!.globalAlpha = 0.4;
+      ctx!.beginPath();
+      ctx!.moveTo(W/2 - W*0.04, H); ctx!.quadraticCurveTo(W/2, H*0.78, W/2 + W*0.04, H);
+      ctx!.stroke();
+      ctx!.globalAlpha = 1;
+      ctx!.restore();
+
+      raf.current = requestAnimationFrame(frame);
+    }
+    frame();
+    return () => { running = false; cancelAnimationFrame(raf.current); };
+  }, [phase]);
+
   if (phase === 'idle') return null;
   return (
-    <div style={{ ...FILL, background: 'linear-gradient(160deg,#e8e4dc 0%,#d4cfc7 100%)' }}>
-      <svg viewBox="0 0 500 80" width="100%" height="100%" style={{ position: 'absolute', inset: 0 }}>
-        {/* soft blurred world beyond the lenses */}
-        <defs>
-          <radialGradient id="lens-l" cx="35%" cy="50%">
-            <stop offset="0%" stopColor="#f0ede8" />
-            <stop offset="70%" stopColor="#ddd8d0" />
-            <stop offset="100%" stopColor="#c8c2ba" />
-          </radialGradient>
-          <radialGradient id="lens-r" cx="65%" cy="50%">
-            <stop offset="0%" stopColor="#f0ede8" />
-            <stop offset="70%" stopColor="#ddd8d0" />
-            <stop offset="100%" stopColor="#c8c2ba" />
-          </radialGradient>
-          <filter id="blur-lens">
-            <feGaussianBlur stdDeviation="0.8" />
-          </filter>
-        </defs>
-        {/* left lens fill */}
-        <ellipse cx="170" cy="40" rx="108" ry="34" fill="url(#lens-l)" filter="url(#blur-lens)" opacity="0.6" />
-        {/* right lens fill */}
-        <ellipse cx="330" cy="40" rx="108" ry="34" fill="url(#lens-r)" filter="url(#blur-lens)" opacity="0.6" />
-        {/* frame strokes */}
-        <ellipse cx="170" cy="40" rx="108" ry="34" fill="none" stroke="#4a3f35" strokeWidth="3.5" />
-        <ellipse cx="330" cy="40" rx="108" ry="34" fill="none" stroke="#4a3f35" strokeWidth="3.5" />
-        {/* bridge */}
-        <path d="M 278 38 Q 250 32 222 38" fill="none" stroke="#4a3f35" strokeWidth="3" />
-        {/* temples (arms going off-screen) */}
-        <line x1="62" y1="18" x2="0"   y2="10" stroke="#4a3f35" strokeWidth="3" strokeLinecap="round" />
-        <line x1="438" y1="18" x2="500" y2="10" stroke="#4a3f35" strokeWidth="3" strokeLinecap="round" />
-        {/* nose bridge suggestion at bottom */}
-        <path d="M 235 78 Q 250 68 265 78" fill="none" stroke="#b0a898" strokeWidth="2" opacity="0.5" />
-        {/* lens highlight */}
-        <ellipse cx="140" cy="28" rx="22" ry="8" fill="white" opacity="0.18" transform="rotate(-15,140,28)" />
-        <ellipse cx="300" cy="28" rx="22" ry="8" fill="white" opacity="0.18" transform="rotate(-15,300,28)" />
-      </svg>
+    <div style={FILL}>
+      {/* Replace canvas with <video> once eyeglasses-pov.mp4 is available */}
+      <canvas ref={canvasRef} style={{ width: '100%', height: '100%' }} />
     </div>
   );
 }
@@ -125,6 +222,7 @@ const QUOTES = [
   { text: 'Perception is unconscious inference.', attr: '— Helmholtz' },
   { text: 'Attention is the rarest form of generosity.', attr: '— Simone Weil' },
   { text: 'The eye is not a camera.', attr: '— Marr' },
+  { text: 'Perception itself is a kind of controlled hallucination.', attr: '— Anil Seth' },
 ];
 let quoteIndex = 0;
 
