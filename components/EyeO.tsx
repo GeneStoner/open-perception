@@ -2,6 +2,24 @@
 
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
+// ── Precomputed whorl spiral paths ────────────────────────────────────────────
+// Three interlocking spiral arms, each 1.2 turns, offset 120° apart.
+// Generated once at module load — deterministic, no runtime cost.
+function spiralPath(offsetAngle: number): string {
+  const pts: string[] = [];
+  const N = 80;
+  for (let i = 0; i <= N; i++) {
+    const t  = i / N;
+    const θ  = offsetAngle + t * 1.2 * 2 * Math.PI;
+    const r  = 5 + 16 * t;
+    const x  = (50 + r * Math.cos(θ)).toFixed(2);
+    const y  = (50 + r * Math.sin(θ)).toFixed(2);
+    pts.push(i === 0 ? `M ${x} ${y}` : `L ${x} ${y}`);
+  }
+  return pts.join(' ');
+}
+const WHORL = [0, 1, 2].map(k => spiralPath(k * (2 * Math.PI / 3)));
+
 /**
  * EyeO — alternates between a plain "O" and an eye.
  *
@@ -126,6 +144,24 @@ const EyeO = forwardRef<EyeOHandle, { size?: string; verticalAlign?: string }>(f
           <stop offset="100%" stopColor="#000" />
         </radialGradient>
       </defs>
+
+      {/* Steady-state whorl iris — fades out when animated eye takes over */}
+      <g clipPath="url(#eye-clip)"
+        style={{ opacity: showEye ? 0 : 1, transition: 'opacity 0.28s ease' }}>
+        {/* iris base */}
+        <circle cx="50" cy="50" r="22" fill="#1a6fa8" />
+        {/* three-arm whorl spiral */}
+        {WHORL.map((d, i) => (
+          <path key={i} d={d} fill="none"
+            stroke={i === 0 ? '#4ab0e8' : i === 1 ? '#2a8dc8' : '#62c0e8'}
+            strokeWidth={i === 0 ? 1.8 : 1.3}
+            opacity={i === 0 ? 0.85 : 0.55} />
+        ))}
+        {/* pupil */}
+        <circle cx="50" cy="50" r="8" fill="#060a10" />
+        {/* highlight */}
+        <circle cx="54" cy="45" r="3" fill="white" opacity="0.75" />
+      </g>
 
       {/* eye contents */}
       <g clipPath="url(#eye-clip)" style={{ opacity: showEye ? 1 : 0 }}>
