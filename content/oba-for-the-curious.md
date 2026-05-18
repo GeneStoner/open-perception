@@ -3,14 +3,14 @@ For those curious about the underlying science, here is a selection of relevant 
 **Introductory / Conceptual**
 
 - [Duncan (1984)](https://psycnet.apa.org/record/1984-32707-001) — *Selective attention and the organization of visual information.* The foundational paper establishing objects as units of attentional selection.
-- [Cavanagh (2011)](https://osf.io/download/2bsn7/) — *Visual Cognition.* An accessible review of object-based attention and its relationship to visual cognition more broadly.
+- [Cavanagh (2011)](https://pubmed.ncbi.nlm.nih.gov/21329719/) — *Visual Cognition.* Vision Research, 51(13), 1562–1578. An accessible review of object-based attention and its relationship to visual cognition more broadly.
 
 **Transparent Motion and Superimposed Stimuli**
 
 - [Valdés-Sosa, Cobo & Pinilla (1998)](https://www.researchgate.net/publication/12507001_Attention_to_object_files_defined_by_transparent_motion) — *Attention to object files defined by transparent motion.* Demonstrates that transparently overlapping motion fields define distinct attentional objects.
-- [Reynolds, Alborzian & Stoner (2003)](https://pubmed.ncbi.nlm.nih.gov/?term=Reynolds+Alborzian+Stoner+transparent+motion) — Transparent-motion delayed-onset studies of object-based attention.
-- [Stoner & Blanc (2010)](https://pubmed.ncbi.nlm.nih.gov/?term=Stoner+Blanc+object-based+attention) — Transparent-motion feature-swap studies of object-based attention.
-- [Catak, Ozkan, Kafaligonul & Stoner (2022)](https://pubmed.ncbi.nlm.nih.gov/35398757/) — *Behavioral and ERP evidence that object-based attention utilizes fine-grained spatial mechanisms.* Cortex, 151, 55–72.
+- [Reynolds, Alborzian & Stoner (2003)](https://www.sciencedirect.com/science/article/pii/S0042698902004030) — *Exogenously cued attention triggers competitive selection of surfaces.* Vision Research, 43(1), 59–66.
+- [Stoner & Blanc (2010)](https://pubmed.ncbi.nlm.nih.gov/19941882/) — *Exploring the mechanisms underlying surface-based stimulus selection.* Vision Research, 50(2), 229–238.
+- [Catek, Özkan, Kafaligonul & Stoner (2022)](https://pubmed.ncbi.nlm.nih.gov/35398757/) — *Behavioral and ERP evidence that object-based attention utilizes fine-grained spatial mechanisms.* Cortex, 151, 89–104.
 
 **Neural / ERP / Physiological Studies**
 

@@ -4,9 +4,9 @@ Duncan, J. (1984). *Selective attention and the organization of visual informati
 
   https://psycnet.apa.org/record/1984-32707-001
 
-- Cavanagh, P. (2011). *Visual Cognition*. Object-based attention review.  
+- Cavanagh, P. (2011). *Visual Cognition*. Vision Research, 51(13), 1562–1578.  
 
-  https://osf.io/download/2bsn7/
+  https://pubmed.ncbi.nlm.nih.gov/21329719/
 
   ### Transparent Motion and Superimposed Stimuli
 
@@ -14,15 +14,15 @@ Duncan, J. (1984). *Selective attention and the organization of visual informati
 
   https://www.researchgate.net/publication/12507001_Attention_to_object_files_defined_by_transparent_motion
 
-- Reynolds, J., Alborzian, S., & Stoner, G. R. (2003). Transparent-motion delayed-onset studies of object-based attention.  
+- Reynolds, J. H., Alborzian, S., & Stoner, G. R. (2003). *Exogenously cued attention triggers competitive selection of surfaces*. Vision Research, 43(1), 59–66.  
 
-  https://pubmed.ncbi.nlm.nih.gov/?term=Reynolds+Alborzian+Stoner+transparent+motion
+  https://www.sciencedirect.com/science/article/pii/S0042698902004030
 
-- Stoner, G. R., & Blanc, S. (2010). Transparent-motion feature-swap studies of object-based attention.  
+- Stoner, G. R., & Blanc, G. (2010). *Exploring the mechanisms underlying surface-based stimulus selection*. Vision Research, 50(2), 229–238.  
 
-  https://pubmed.ncbi.nlm.nih.gov/?term=Stoner+Blanc+object-based+attention
+  https://pubmed.ncbi.nlm.nih.gov/19941882/
 
-- Catak, E., Ozkan, M., Kafaligonul, H., & Stoner, G. R. (2022). *Behavioral and ERP evidence that object-based attention utilizes fine-grained spatial mechanisms*. Cortex, 151, 55–72.  
+- Catek, E. N., Özkan, M., Kafaligonul, H., & Stoner, G. R. (2022). *Behavioral and ERP evidence that object-based attention utilizes fine-grained spatial mechanisms*. Cortex, 151, 89–104.  
 
   https://pubmed.ncbi.nlm.nih.gov/35398757/
 
