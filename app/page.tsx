@@ -6,6 +6,14 @@ import ContentBlurb from "@/components/ContentBlurb";
 export default function Home() {
   return (
     <div>
+      {/* Under-construction notice */}
+      <div
+        className="w-full text-center text-xs py-2 px-4"
+        style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
+      >
+        This site is actively under development — content and features are incomplete and subject to change.
+      </div>
+
       {/* Hero */}
       <section
         className="relative px-6 py-24 text-center"
