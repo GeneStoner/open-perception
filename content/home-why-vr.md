@@ -1,0 +1,3 @@
+Consumer VR headsets have quietly become some of the most capable display platforms available to vision researchers. Modern head-mounted displays provide stereoscopic imagery with per-eye control, accurate head tracking, increasingly capable eye tracking, and wide-field immersive presentation — all within inexpensive self-contained devices.
+
+For experiments involving depth perception, three-dimensional motion, spatial organization, and immersive or naturalistic viewing, VR substantially expands what is experimentally possible. Portability and low cost may allow perceptual experiments to move beyond the traditional laboratory, enabling larger and more diverse participant populations and new forms of distributed scientific participation.
