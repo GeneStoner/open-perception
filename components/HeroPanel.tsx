@@ -224,7 +224,7 @@ export default function HeroPanel() {
           }}
         >
           <span>Open Percepti</span>
-          <EyeO ref={eyeRef} size="0.82em" />
+          <EyeO ref={eyeRef} size="0.70em" verticalAlign="-0.06em" />
           <span>n</span>
         </span>
       </div>

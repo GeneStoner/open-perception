@@ -14,8 +14,8 @@ import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 're
  */
 export interface EyeOHandle { triggerCycle: () => void; }
 
-const EyeO = forwardRef<EyeOHandle, { size?: string }>(function EyeO(
-  { size = '0.82em' },
+const EyeO = forwardRef<EyeOHandle, { size?: string; verticalAlign?: string }>(function EyeO(
+  { size = '0.82em', verticalAlign = '-0.10em' },
   ref,
 ) {
   const [showEye, setShowEye] = useState(false);
@@ -107,7 +107,7 @@ const EyeO = forwardRef<EyeOHandle, { size?: string }>(function EyeO(
         display: 'inline-block',
         width: size,
         height: size,
-        verticalAlign: '-0.10em',
+        verticalAlign,
         overflow: 'visible',
       }}
       aria-hidden="true"
