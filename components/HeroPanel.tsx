@@ -90,9 +90,9 @@ export default function HeroPanel() {
       tids.push(setTimeout(fn, ms));
 
     function runReveal() {
-      // 1 in 5 reveals uses a variant instead of the eyes video
-      const useVariant = Math.random() < 0.2;
-      setVariantIndex(useVariant ? Math.floor(Math.random() * VARIANTS.length) : null);
+      // TESTING: always show a variant, cycling through them
+      // TODO: restore to Math.random() < 0.2 after testing
+      setVariantIndex(prev => ((prev ?? -1) + 1) % VARIANTS.length);
 
       // Reuse preloaded audio — avoids download delay on first keyboard trigger
       const creakAudio = creakRef.current ?? new Audio(SND_CREAK_OPEN);
