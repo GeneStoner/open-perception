@@ -195,5 +195,5 @@ export default function DensityDemo({ dotsPerField }: Props) {
     return () => cancelAnimationFrame(rafId);
   }, [dotsPerField]);
 
-  return <canvas ref={canvasRef} width={W} height={H} style={{ display:'block', borderRadius:4 }} />;
+  return <canvas ref={canvasRef} width={W} height={H} style={{ display:'block', borderRadius:4, width:'100%', aspectRatio:'1' }} />;
 }

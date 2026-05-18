@@ -227,6 +227,6 @@ export default function VRDotsDemo({ cued, swapType }: Props) {
 
   return (
     <canvas ref={canvasRef} width={W} height={H}
-      style={{ display: 'block', borderRadius: 4 }} />
+      style={{ display: 'block', borderRadius: 4, width: '100%', aspectRatio: '1' }} />
   );
 }

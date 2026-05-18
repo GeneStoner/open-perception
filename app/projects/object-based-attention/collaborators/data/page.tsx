@@ -90,7 +90,7 @@ export default function CollaboratorDataPage() {
         {/* Live stimulus demos */}
         <div className="space-y-4">
           <ContentBlurb file="collab-sb-demo-caption.md" className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }} />
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {([
               { cued: true,  swapType: "none", label: "No Swap — Cued",               sub: "Red field onset precedes green by 750 ms" },
               { cued: false, swapType: "none", label: "No Swap — Uncued",              sub: "Both fields onset simultaneously" },
