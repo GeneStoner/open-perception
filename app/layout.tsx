@@ -26,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <footer className="border-t py-8 px-6 text-center text-sm space-y-1" style={{ borderColor: "var(--border)", color: "var(--text-muted)" }}>
           <div>Open Perception — research prototype v0.1</div>
           <div className="flex justify-center gap-6 text-xs">
-            <a href="https://github.com/genestoner1/open-perception" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>GitHub</a>
+            <a href="https://github.com/GeneStoner/open-perception" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>GitHub</a>
             <span>MIT License</span>
             <a href="mailto:generstoner@gmail.com" style={{ color: "var(--accent)" }}>Contact</a>
           </div>
