@@ -1,0 +1,1 @@
+VRDots Catek replication (SubfieldSwap_CatekExact_NMoCol_v1, aperture 1.65° radius, 43 dots/field, 80 ms translation). Five sessions, observer G.S. Bars show mean % correct ± 95% CI (normal approximation, *n* = 320 per arm). Blue = cued (delayed-onset field translates); orange = uncued. Brackets show cueing effect (Δpp) with two-proportion *z*-test significance.

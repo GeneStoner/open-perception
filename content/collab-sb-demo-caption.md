@@ -1,0 +1,1 @@
+Live stimulus demos — motion at ½ speed, translation duration 4× actual (176 ms vs 44 ms). Red field is always-on; green field has delayed onset (750 ms) and serves as the attention cue. On cued trials the green (delayed-onset) field translates; on uncued trials the red (always-on) field translates.

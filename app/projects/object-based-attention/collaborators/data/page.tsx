@@ -4,6 +4,11 @@ import ContentBlurb from "@/components/ContentBlurb";
 import ApkDownloads from "@/components/ApkDownloads";
 import SignOutButton from "@/components/SignOutButton";
 import VRDotsDemo from "@/components/VRDotsDemo";
+import CatekReplicationResults from "@/components/CatekReplicationResults";
+import CatekDemo from "@/components/CatekDemo";
+import DensityResults from "@/components/DensityResults";
+import DensityDemo from "@/components/DensityDemo";
+import HighDensSwapResults from "@/components/HighDensSwapResults";
 
 export default function CollaboratorDataPage() {
   return (
@@ -25,47 +30,12 @@ export default function CollaboratorDataPage() {
       {/* ── Key Publications ─────────────────────────────────────────────────── */}
       <section>
         <SectionHeader title="Key Publications" />
-        <div className="space-y-3">
-          {[
-            {
-              authors: "Stoner, G. R. & Blanc, G.",
-              year:    "2010",
-              title:   "Exploring the mechanisms underlying surface-based stimulus selection",
-              journal: "Vision Research, 50(2), 229–241",
-              doi:     "https://doi.org/10.1016/j.visres.2009.11.015",
-            },
-            {
-              authors: "Catek, M., Özkan, M., Kafaligonul, H. & Stoner, G. R.",
-              year:    "2022",
-              title:   "Behavioral and ERP evidence that object-based attention utilizes fine-grained spatial mechanisms",
-              journal: "Cortex, 151, 89–104",
-              doi:     "https://doi.org/10.1016/j.cortex.2022.02.013",
-            },
-          ].map(pub => (
-            <div
-              key={pub.doi}
-              className="rounded-lg border p-5"
-              style={{ background: "var(--surface)", borderColor: "var(--border)" }}
-            >
-              <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
-                {pub.authors} ({pub.year})
-              </p>
-              <p className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
-                {pub.title}
-              </p>
-              <p className="mt-1 text-xs" style={{ color: "var(--text-muted)" }}>
-                {pub.journal}{" "}·{" "}
-                <a
-                  href={pub.doi}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ color: "var(--accent)", textDecoration: "underline" }}
-                >
-                  {pub.doi.replace("https://doi.org/", "doi:")}
-                </a>
-              </p>
-            </div>
-          ))}
+        <div
+          className="rounded-lg border p-5"
+          style={{ background: "var(--surface)", borderColor: "var(--border)" }}
+        >
+          <ContentBlurb file="collab-publications.md"
+            className="text-sm leading-relaxed space-y-3" style={{ color: "var(--text-secondary)" }} />
         </div>
       </section>
 
@@ -119,9 +89,7 @@ export default function CollaboratorDataPage() {
 
         {/* Live stimulus demos */}
         <div className="space-y-4">
-          <p className="text-xs font-medium uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
-            Live Stimulus Demos — motion at ½ speed · translation duration 4× actual (320 ms vs 80 ms)
-          </p>
+          <ContentBlurb file="collab-sb-demo-caption.md" className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }} />
           <div className="grid grid-cols-2 gap-6">
             {([
               { cued: true,  swapType: "none", label: "No Swap — Cued",               sub: "Red field onset precedes green by 750 ms" },
@@ -187,6 +155,101 @@ export default function CollaboratorDataPage() {
             </div>
           </div>
 
+        </div>
+
+        {/* ── Catek et al. (2022) ─────────────────────────────────────────────── */}
+        <div className="space-y-4">
+          <SectionHeader title="Catek et al. (2022)" />
+
+          {/* Stimulus comparison blurb */}
+          <ContentBlurb
+            file="collab-catek-comparison.md"
+            className="text-sm leading-relaxed"
+            style={{ color: "var(--text-secondary)" }}
+          />
+
+          {/* Live Catek demos */}
+          <div className="space-y-4">
+            <ContentBlurb file="collab-catek-demo-caption.md" className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }} />
+            <div className="grid grid-cols-4 gap-4">
+              {([
+                { swapType: "N",  label: "No Swap",         sub: "N" },
+                { swapType: "M",  label: "Motion Swap",     sub: "M" },
+                { swapType: "C",  label: "Color Swap",      sub: "C" },
+                { swapType: "MC", label: "Motion+Color",    sub: "MC" },
+              ] as const).map(({ swapType, label, sub }) => (
+                <div key={swapType} className="space-y-2">
+                  <div>
+                    <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>{label}</p>
+                    <p className="text-xs" style={{ color: "var(--text-muted)" }}>{sub} — cued</p>
+                  </div>
+                  <CatekDemo cued={true} swapType={swapType} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Catek Fig 3 + VRDots replication side by side */}
+          <div className="grid grid-cols-2 gap-6 items-start">
+            <div className="space-y-3">
+              <p className="text-xs font-medium uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
+                Catek et al. (2022) — Figure 3
+              </p>
+              <div
+                className="rounded-lg border overflow-hidden"
+                style={{ borderColor: "var(--border)", background: "var(--surface)" }}
+              >
+                <Image
+                  src="/figures/catek2022/fig3.png"
+                  alt="Catek et al. (2022) Figure 3: Behavioral results"
+                  width={1201}
+                  height={1200}
+                  className="w-full h-auto"
+                />
+              </div>
+              <ContentBlurb file="collab-catek-fig3.md"
+                className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }} />
+            </div>
+            <div className="space-y-2">
+              <p className="text-xs font-medium uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
+                VRDots Replication
+              </p>
+              <CatekReplicationResults />
+            </div>
+          </div>
+        </div>
+
+        {/* ── Dot Density ──────────────────────────────────────────────────────── */}
+        <div className="space-y-6">
+          <SectionHeader title="Dot Density" />
+          <ContentBlurb file="collab-density-intro.md"
+            className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }} />
+
+          {/* Density demos */}
+          <div className="grid grid-cols-4 gap-4">
+            {([63, 173, 500, 1000] as const).map(n => (
+              <div key={n} className="space-y-2">
+                <div>
+                  <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
+                    {n === 63 ? 'VRDots' : n === 173 ? 'HighDens' : n === 500 ? 'Peak' : 'UltraHigh'}
+                  </p>
+                  <p className="text-xs" style={{ color: "var(--text-muted)" }}>{n} dots/field — cued</p>
+                </div>
+                <DensityDemo dotsPerField={n} />
+              </div>
+            ))}
+          </div>
+
+          {/* Density chart */}
+          <DensityResults />
+
+          {/* High-density + MC swap */}
+          <div className="space-y-4">
+            <SectionHeader title="Motion+Color Swap at High Density" />
+            <ContentBlurb file="collab-highdensswap-intro.md"
+              className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }} />
+            <HighDensSwapResults />
+          </div>
         </div>
 
       </section>

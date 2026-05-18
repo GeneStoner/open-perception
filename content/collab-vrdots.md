@@ -1,1 +1,1 @@
-Caption / commentary for the VRDots replication figure.
+Quest headset data from one subject (GS). We qualitatively replicated Stoner and Blanc's findings for both the standard (no swaps) delayed onset design and for the motion/color swap design: Performance (motion direction discrimination) was better for cued vs uncued conditions for both swap conditions.  These results imply that its the delayed dots that enjoy the processing advantage regardless of global feature configuration.

@@ -1,0 +1,1 @@
+All four conditions: aperture 3.5° radius, 80 ms translation, 750 ms delayed onset, N (no swap), single observer (G.S.). Bars show mean % correct ± 95% CI (normal approximation, *n* = 256 per arm). Blue = cued (delayed-onset field translates); orange = uncued. Brackets show cueing effect (Δpp) with two-proportion *z*-test significance. Chance = 12.5% (1/8 directions).

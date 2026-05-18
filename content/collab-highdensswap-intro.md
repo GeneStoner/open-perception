@@ -1,0 +1,3 @@
+Does the surface-based cueing advantage survive motion+color swaps at high dot density? Two experiments tested N (no swap) and MC (motion+color swap) conditions at the two highest density levels from the parametric series, using identical aperture (3.5° radius) and timing.
+
+At **Peak density** (500 dots/field) the cueing advantage survives the MC swap robustly — consistent with the Catek et al. replication at lower density. But at **UltraHigh density** (1000 dots/field) the MC swap completely abolishes cueing: the cued and uncued arms become statistically indistinguishable. This is a striking density × swap interaction. One session per condition; n = 256 per arm.

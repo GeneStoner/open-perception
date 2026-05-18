@@ -1,1 +1,1 @@
-Testing 1 2 3
+Figure 7 from Stoner and Blanc (2010) shows data for the four different swap conditions: No motion/color swaps (A and C), Motion swap (D and B), Color swap (E and G), and Motion/Color swap (H and F).  We replicated A,C,H, and F conditions and collected data with Quest 3 headset.
