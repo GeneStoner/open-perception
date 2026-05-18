@@ -16,8 +16,8 @@ function unlockAudio() {
 // ── master switch ─────────────────────────────────────────────────────────
 const REVEAL_ENABLED = true;
 // Keyboard trigger: Option + Shift + O (always works)
-// Spontaneous: 15% of visits, max once per 24 hours per browser
-const PROBABILITY  = 0.15;
+// Spontaneous: 20% of visits, max once per 24 hours per browser
+const PROBABILITY  = 0.20;
 const COOLDOWN_MS  = 24 * 60 * 60 * 1000;
 const COOLDOWN_KEY = 'op_reveal';
 
@@ -122,7 +122,7 @@ export default function HeroPanel() {
     const last = localStorage.getItem(COOLDOWN_KEY);
     const eligible = !last || Date.now() - Number(last) > COOLDOWN_MS;
     if (eligible && Math.random() < PROBABILITY) {
-      const wait = 3000 + Math.random() * 4000; // 3–7s after page load
+      const wait = 1000 + Math.random() * 2000; // 1–3s after page load
       const tid = setTimeout(() => {
         if (runningRef.current) return;
         runningRef.current = true;
@@ -195,12 +195,14 @@ export default function HeroPanel() {
         <span
           style={{
             color:         'white',
-            fontSize:      '3.9rem',
+            fontSize:      'clamp(1.8rem, 9vw, 3.9rem)',
             fontWeight:    600,
             letterSpacing: '-0.02em',
             lineHeight:    1,
             display:       'flex',
             alignItems:    'center',
+            flexWrap:      'nowrap',
+            whiteSpace:    'nowrap',
           }}
         >
           <EyeO ref={eyeRef} />
