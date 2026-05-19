@@ -85,7 +85,7 @@ function drawFixation(ctx: CanvasRenderingContext2D) {
   ctx.fillRect(CX-crossHW, CY-outerR, crossHW*2, outerR*2);
   ctx.restore();
   ctx.fillStyle = 'white';
-  ctx.beginPath(); ctx.arc(CX, CY, innerR, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(CX, CY, Math.max(innerR, crossHW), 0, Math.PI*2); ctx.fill();
 }
 
 // Batch-draw all dots of one color for performance at high dot counts
