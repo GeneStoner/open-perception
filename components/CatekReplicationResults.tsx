@@ -151,8 +151,8 @@ function BarChart() {
             <text
               x={(cx + ux + BAR_W) / 2} y={topY - 3}
               textAnchor="middle" fontSize={10}
-              fill={cond.sig === 'n.s.' ? '#9a97a0' : '#1e1e2a'}
-              fontWeight={cond.sig !== 'n.s.' ? '600' : '400'}
+              fill="#1e1e2a"
+              fontWeight="600"
             >
               {cond.sig}
             </text>
