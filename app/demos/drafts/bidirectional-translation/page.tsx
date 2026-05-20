@@ -7,7 +7,8 @@ export default function Page() {
       <SectionHeader title="bidirectional translation" />
       <dl className="text-xs grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1 mb-6" style={{ color: "var(--text-muted)" }}>
         <dt>aperture</dt><dd>4.5° (135 px)</dd>
-        <dt>dots / field</dt><dd>1000 (high density)</dd>
+        <dt>dots / field</dt><dd>173 (mid density)</dd>
+        <dt>rot / trans speed</dt><dd>experimental (81 °/s rotation, 2.26 °/s translation)</dd>
         <dt>coherence</dt><dd>50% coherent / 50% random (8 dirs)</dd>
         <dt>green field</dt><dd>rotates CW continuously (does not translate)</dd>
         <dt>red field</dt><dd>rotates CCW, translates RIGHT during trans phase</dd>

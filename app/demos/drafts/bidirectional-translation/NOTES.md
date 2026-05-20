@@ -10,14 +10,14 @@ prototyped from iPad via Vercel branch previews on
 | -------------------- | -------------------------------------------- |
 | canvas               | 320 × 320 px                                 |
 | aperture             | 4.5° (135 px at 30 px/°)                     |
-| dots / field         | 1000 (high density)                          |
+| dots / field         | 173 (mid density — matches the 173 step of the experimental series) |
 | coherence            | 50% coherent + 50% non-coherent (8 fixed dirs) |
 | dot radius           | 1.2 px                                       |
 | field 0 (green)      | `rgb(90,180,90)` — rotates CW, does **not** translate |
 | field 1 (red)        | `rgb(230,110,110)` — rotates CCW, translates **right** during trans |
 | translating field    | red only (same in both panels)               |
-| translation speed    | 1.13 °/s (= 2.26 × 0.5 from the spec)        |
-| rotation speed       | 40.5 °/s (= 81 × 0.5 from the spec)          |
+| translation speed    | 2.26 °/s — full experimental rate            |
+| rotation speed       | 81 °/s — full experimental rate              |
 | timing               | solo 750 / pre-trans 300 / **trans 160** / post 500 / blank 500 ms |
 | total loop           | 2210 ms                                      |
 | draw order           | per-frame Fisher-Yates shuffle of all 2000 dot indices |
@@ -62,8 +62,16 @@ Two panels side by side, identical except for which field is delay-onset:
    invisible at wrap, so the position jump isn't seen.
 
 6. **v6 — translating field = red (was green); trans duration 120 → 160 ms.**
-   Final tuning. Gene's verdict: works, not super dramatic but the
-   intended percept is there.
+   Gene's verdict: works, not super dramatic but the intended percept is there.
+
+7. **v7 — drop density to 173 / field; use full experimental speeds.**
+   Removed the demo-time 0.5× slow-mo on rotation (81 °/s) and
+   translation (2.26 °/s). Density to 173 to match the 173-step of the
+   original experimental series. Consequence: at experimental speed
+   × 160 ms trans, displacement = 0.362° — that's 2× the experimental
+   trans displacement of 0.181° (80 ms × 2.26 °/s). Still TBD whether
+   to keep the longer trans for visibility or shrink to match the
+   experimental displacement.
 
 ## Why the per-frame shuffle matters
 
