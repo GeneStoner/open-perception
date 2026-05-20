@@ -31,8 +31,10 @@ const NC_DIRS: [number, number][] = [
   [-1,  0], [-S2, -S2], [ 0, -1], [ S2, -S2],
 ];
 
-// Field 0 = green, Field 1 = red (reversed from previous version)
-const COL: [string, string] = ['rgb(34,139,34)', 'rgb(204,51,51)'];
+// Field 0 = green, Field 1 = red.
+// Approximately equiluminant (Rec. 709 luminance ~150 for both) to avoid
+// the brighter color being perceived as "in front" regardless of pixel order.
+const COL: [string, string] = ['rgb(90,180,90)', 'rgb(230,110,110)'];
 // Coherent translation per field: field 0 → left, field 1 → right
 const TRANS_SIGN: [number, number] = [-1, +1];
 // Rotation per field: field 0 CW, field 1 CCW
@@ -91,19 +93,34 @@ function drawFixation(ctx: CanvasRenderingContext2D) {
   ctx.beginPath(); ctx.arc(CX, CY, Math.max(innerR, crossHW), 0, Math.PI*2); ctx.fill();
 }
 
-function drawDots(ctx: CanvasRenderingContext2D, dots: Dot[], field: 0|1, visible: boolean) {
-  if (!visible) return;
-  ctx.fillStyle = COL[field];
-  ctx.beginPath();
-  for (const dot of dots) {
-    if (dot.field !== field) continue;
+// Per-frame randomized draw order eliminates any consistent z-bias between
+// fields. We can no longer batch by color (a single path fill has no
+// internal ordering), so every visible dot gets its own beginPath/fill.
+// At ~2000 dots this is well within Canvas2D's budget on iPad Safari.
+function drawDotsShuffled(
+  ctx: CanvasRenderingContext2D,
+  dots: Dot[],
+  order: Uint16Array,
+  f0Vis: boolean,
+  f1Vis: boolean,
+) {
+  // In-place Fisher-Yates shuffle of the index buffer
+  for (let i = order.length - 1; i > 0; i--) {
+    const j = (Math.random() * (i + 1)) | 0;
+    const tmp = order[i]; order[i] = order[j]; order[j] = tmp;
+  }
+  for (let i = 0; i < order.length; i++) {
+    const dot = dots[order[i]];
+    const visible = dot.field === 0 ? f0Vis : f1Vis;
+    if (!visible) continue;
     const px = CX + dot.x, py = CY + dot.y;
     const dx = px-CX, dy = py-CY;
     if (dx*dx + dy*dy > AP_R*AP_R) continue;
-    ctx.moveTo(px + DOT_R, py);
+    ctx.fillStyle = COL[dot.field];
+    ctx.beginPath();
     ctx.arc(px, py, DOT_R, 0, Math.PI*2);
+    ctx.fill();
   }
-  ctx.fill();
 }
 
 interface Props {
@@ -129,6 +146,8 @@ export default function Demo({ delayedField }: Props) {
         dots.push(initDot(field, isCoherent, ncDirIdx));
       }
     }
+    const drawOrder = new Uint16Array(dots.length);
+    for (let i = 0; i < drawOrder.length; i++) drawOrder[i] = i;
 
     let startTime: number|null = null;
     let lastTime:  number|null = null;
@@ -184,8 +203,7 @@ export default function Demo({ delayedField }: Props) {
 
       ctx.save();
       ctx.beginPath(); ctx.arc(CX, CY, AP_R, 0, Math.PI*2); ctx.clip();
-      drawDots(ctx, dots, 0, f0Vis);
-      drawDots(ctx, dots, 1, f1Vis);
+      drawDotsShuffled(ctx, dots, drawOrder, f0Vis, f1Vis);
       ctx.restore();
 
       drawFixation(ctx);
