@@ -4,6 +4,22 @@ Iterative exploration of a delayed-onset, bistable-style dot stimulus,
 prototyped from iPad via Vercel branch previews on
 `claude/ipad-transparent-motion-demos-Bz6Aj`.
 
+## Observer findings (Gene, viewing on iPad Safari)
+
+- **v6 / single-field 50% coherent, density 4.5** — works, percept
+  present but not super dramatic.
+- **v9 / both fields translate, density 4.5** — semi-convincing to a
+  biased experienced observer.
+- **v11 / density 13 (= exp. 500 condition) + 100% coherence** —
+  **most effective so far.** Highest signal in the percept of any
+  configuration on the page. Worth preserving as the reference
+  configuration for future comparisons.
+
+The three sections are kept on a single page (`/demos/drafts/bidirectional-translation`)
+specifically so the most effective configuration sits in direct
+visual proximity to the less-effective ones — making it easy to
+compare side by side rather than from memory.
+
 ## Current parameters (locked in)
 
 | param                | value                                        |
@@ -117,6 +133,11 @@ dots/°²**.
     explicitly so the three sections are unambiguous: 4.5/50%,
     13/50%, 13/100%. Twelve canvases run simultaneously now
     (~15.5k animated dots/frame).
+
+    **Gene's verdict: this is the most effective of the three
+    sections.** Higher density + full coherence produces the
+    strongest percept. Marks this as the reference configuration
+    going forward.
 
 ## Why the per-frame shuffle matters
 
