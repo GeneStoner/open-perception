@@ -109,6 +109,15 @@ dots/°²**.
     on this page now (~9k animated dots/frame total) — watch for
     iPad perf if we add more.
 
+11. **v11 — add a 100% coherent variant of the 13 dots/°² section.**
+    Demo gained a `coherenceFraction` prop (default 0.5). New section
+    at the bottom uses the same 13 dots/°² (= experimental 500
+    condition) but all dots translate coherently — no random-direction
+    population. Section heading now always shows coherence
+    explicitly so the three sections are unambiguous: 4.5/50%,
+    13/50%, 13/100%. Twelve canvases run simultaneously now
+    (~15.5k animated dots/frame).
+
 ## Why the per-frame shuffle matters
 
 `drawDots` originally batched all dots of one color into a single

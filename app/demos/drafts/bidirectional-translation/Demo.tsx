@@ -137,9 +137,17 @@ interface Props {
   // Areal density in dots per square degree. 4.5 matches the experimental
   // 173 condition; 13 matches the 500 condition; 26 matches the 1000 condition.
   density?: number;
+  // Fraction of dots that translate coherently (0..1). The rest move in
+  // fixed random directions (one of 8). Default 0.5 (50% coherent).
+  coherenceFraction?: number;
 }
 
-export default function Demo({ delayedField, bothTranslate = false, density = 4.5 }: Props) {
+export default function Demo({
+  delayedField,
+  bothTranslate = false,
+  density = 4.5,
+  coherenceFraction = 0.5,
+}: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -149,7 +157,7 @@ export default function Demo({ delayedField, bothTranslate = false, density = 4.
     if (!ctx) return;
 
     const dotsPerField = Math.round(density * APERTURE_AREA_DEG2);
-    const N_COHERENT = Math.floor(dotsPerField / 2);
+    const N_COHERENT = Math.floor(dotsPerField * coherenceFraction);
 
     const dots: Dot[] = [];
     for (let field = 0 as 0|1; field <= 1; field++) {
@@ -226,7 +234,7 @@ export default function Demo({ delayedField, bothTranslate = false, density = 4.
 
     rafId = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(rafId);
-  }, [delayedField, bothTranslate, density]);
+  }, [delayedField, bothTranslate, density, coherenceFraction]);
 
   return <canvas ref={canvasRef} width={W} height={H} style={{ display:'block', borderRadius:4, width:'100%', aspectRatio:'1' }} />;
 }
