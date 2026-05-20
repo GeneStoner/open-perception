@@ -10,7 +10,7 @@ prototyped from iPad via Vercel branch previews on
 | -------------------- | -------------------------------------------- |
 | canvas               | 320 × 320 px                                 |
 | aperture             | 4.5° (135 px at 30 px/°)                     |
-| dots / field         | 1000 (high density — matches the top of the experimental series) |
+| dots / field         | 286 (= 4.5 dots/°², same areal density as experimental 173 condition in its 3.5° aperture, scaled to our 4.5° aperture) |
 | coherence            | 50% coherent + 50% non-coherent (8 fixed dirs) |
 | dot radius           | 1.2 px                                       |
 | field 0 (green)      | `rgb(90,180,90)` — rotates CW, does **not** translate |
@@ -68,8 +68,15 @@ Two panels side by side, identical except for which field is delay-onset:
    Removed the demo-time 0.5× slow-mo on rotation (now 81 °/s) and
    translation (now 2.26 °/s). Trans duration shortened to 100 ms;
    displacement now 0.226° (1.25× experimental's 0.181°), close to
-   replication. Density kept at 1000 (high density). N_COHERENT = 500
-   coherent + 500 non-coherent, clean 50/50 at this density.
+   replication.
+
+8. **v8 — areal-density match instead of dot-count match.**
+   Switched from 1000 dots/field (per-count match) to 286 dots/field
+   (per-area match). 286 = 4.5 dots/°² × π × 4.5² — gives the same
+   areal density (4.5 dots/°²) the experimental 173 condition had in
+   its 3.5° aperture. This is the right way to compare across
+   aperture sizes since per-area density, not raw count, is what
+   determines local stimulus statistics.
 
 ## Why the per-frame shuffle matters
 
