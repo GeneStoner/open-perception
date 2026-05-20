@@ -25,9 +25,11 @@ const T_BLANK_START = T_SOLO + T_PRETRANS + T_TRANS_DEMO + T_POST;
 const T_TOTAL     = T_BLANK_START + T_BLANK;
 const TRANS_START = T_SOLO + T_PRETRANS;
 
-// Match areal density of the experimental 173 condition (173 dots in a 3.5°
-// aperture = 4.5 dots/°²). Scaled up to our 4.5° aperture: 4.5 × π × 4.5² ≈ 286.
-const DOTS_PER_FIELD = 286;
+// Primary parameter is areal density. Dot count is derived from aperture.
+// 4.5 dots/°² matches the experimental "173 condition" (173 dots / π·3.5²).
+const DENSITY_DOTS_PER_DEG2 = 4.5;
+const APERTURE_AREA_DEG2    = Math.PI * (AP_R / PX_PER_DEG) ** 2;
+const DOTS_PER_FIELD        = Math.round(DENSITY_DOTS_PER_DEG2 * APERTURE_AREA_DEG2);
 
 const S2 = Math.SQRT1_2;
 const NC_DIRS: [number, number][] = [

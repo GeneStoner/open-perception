@@ -10,7 +10,8 @@ prototyped from iPad via Vercel branch previews on
 | -------------------- | -------------------------------------------- |
 | canvas               | 320 × 320 px                                 |
 | aperture             | 4.5° (135 px at 30 px/°)                     |
-| dots / field         | 286 (= 4.5 dots/°², same areal density as experimental 173 condition in its 3.5° aperture, scaled to our 4.5° aperture) |
+| **density** (primary) | **4.5 dots/°²** — matches the experimental "173 condition" (173 / π·3.5² = 4.5) |
+| dots / field         | 286 (derived: density × π × 4.5²)            |
 | coherence            | 50% coherent + 50% non-coherent (8 fixed dirs) |
 | dot radius           | 1.2 px                                       |
 | field 0 (green)      | `rgb(90,180,90)` — rotates CW, does **not** translate |
@@ -27,6 +28,18 @@ Two panels side by side, identical except for which field is delay-onset:
 
 - Left panel:  `delayedField = 1` (red delayed)
 - Right panel: `delayedField = 0` (green delayed)
+
+## Convention: density is the primary parameter
+
+Across aperture sizes and conditions, **dots per square degree** is the
+quantity that should be reported and compared. Dot count is a derived
+quantity (density × aperture area) and is included only for reproducibility.
+This avoids the apples-to-oranges trap of comparing dot counts across
+different aperture sizes.
+
+Reference: the experimental dot-count ladder (63 / 173 / 500 / 1000 in a
+3.5° aperture) corresponds to densities of roughly **1.6 / 4.5 / 13 / 26
+dots/°²**.
 
 ## Iteration log
 
