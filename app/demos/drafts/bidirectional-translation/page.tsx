@@ -9,8 +9,8 @@ export default function Page() {
         <dt>aperture</dt><dd>4.5° (135 px)</dd>
         <dt>dots / field</dt><dd>1000 (high density)</dd>
         <dt>coherence</dt><dd>50% coherent / 50% random (8 dirs)</dd>
-        <dt>green field</dt><dd>rotates CW, translates LEFT</dd>
-        <dt>red field</dt><dd>rotates CCW, translates RIGHT</dd>
+        <dt>green field</dt><dd>rotates CW, translates LEFT during trans phase</dd>
+        <dt>red field</dt><dd>rotates CCW continuously (does not translate)</dd>
         <dt>timing</dt><dd>solo 750 / pre-trans 300 / <strong>trans 120</strong> / post 500 ms — loops</dd>
       </dl>
       <div className="flex flex-wrap gap-6 justify-center">

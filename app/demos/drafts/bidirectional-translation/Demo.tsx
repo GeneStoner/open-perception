@@ -35,6 +35,8 @@ const NC_DIRS: [number, number][] = [
 // Approximately equiluminant (Rec. 709 luminance ~150 for both) to avoid
 // the brighter color being perceived as "in front" regardless of pixel order.
 const COL: [string, string] = ['rgb(90,180,90)', 'rgb(230,110,110)'];
+// Only one field translates (same in both demos). The other field keeps rotating.
+const TRANSLATING_FIELD: 0 | 1 = 0;
 // Coherent translation per field: field 0 → left, field 1 → right
 const TRANS_SIGN: [number, number] = [-1, +1];
 // Rotation per field: field 0 CW, field 1 CCW
@@ -183,7 +185,7 @@ export default function Demo({ delayedField }: Props) {
           const visible = dot.field === 0 ? f0Vis : f1Vis;
           if (!visible) continue;
 
-          if (inTrans) {
+          if (inTrans && dot.field === TRANSLATING_FIELD) {
             if (dot.isCoherent) {
               dot.x += TRANS_SIGN[dot.field] * TRANS_PX_MS * dt;
             } else {
