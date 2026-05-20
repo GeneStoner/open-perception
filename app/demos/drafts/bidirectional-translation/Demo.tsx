@@ -15,7 +15,7 @@ const DOT_R        = Math.max(1, 0.04 * PX_PER_DEG);  // 1.2 px
 
 const ROT_RAD_MS   = (81 * 0.5 * Math.PI / 180) / 1000;
 const TRANS_PX_MS  = (2.26 * 0.5 * PX_PER_DEG) / 1000;
-const T_TRANS_DEMO = 120;
+const T_TRANS_DEMO = 160;
 
 const T_SOLO      = 750;
 const T_PRETRANS  = 300;

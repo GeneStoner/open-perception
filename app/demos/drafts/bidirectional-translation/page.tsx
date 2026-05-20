@@ -11,7 +11,7 @@ export default function Page() {
         <dt>coherence</dt><dd>50% coherent / 50% random (8 dirs)</dd>
         <dt>green field</dt><dd>rotates CW continuously (does not translate)</dd>
         <dt>red field</dt><dd>rotates CCW, translates RIGHT during trans phase</dd>
-        <dt>timing</dt><dd>solo 750 / pre-trans 300 / <strong>trans 120</strong> / post 500 / blank 500 ms — loops</dd>
+        <dt>timing</dt><dd>solo 750 / pre-trans 300 / <strong>trans 160</strong> / post 500 / blank 500 ms — loops</dd>
       </dl>
       <div className="flex flex-wrap gap-6 justify-center">
         <div className="flex-1 min-w-[280px] max-w-[420px]">
