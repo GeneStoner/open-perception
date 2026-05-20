@@ -91,6 +91,16 @@ dots/°²**.
    aperture sizes since per-area density, not raw count, is what
    determines local stimulus statistics.
 
+9. **v9 — add Variant B (both fields translate).**
+   Same page now shows two pairs of demos stacked vertically:
+   - Variant A: only red translates (single-field translation)
+   - Variant B: both fields translate in opposite directions
+     (red right, green left), during the same trans window
+   Each variant has the two delay assignments (red delayed vs green
+   delayed) side by side. All other parameters (density, speeds,
+   timing, aperture, draw order) are shared between variants. Demo
+   component gained a `bothTranslate` prop to gate the behavior.
+
 ## Why the per-frame shuffle matters
 
 `drawDots` originally batched all dots of one color into a single

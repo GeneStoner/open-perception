@@ -133,9 +133,13 @@ function drawDotsShuffled(
 
 interface Props {
   delayedField: 0 | 1;
+  // When true, both fields translate during the trans window in their
+  // respective directions (field 0 left, field 1 right). When false
+  // (default), only TRANSLATING_FIELD translates; the other rotates.
+  bothTranslate?: boolean;
 }
 
-export default function Demo({ delayedField }: Props) {
+export default function Demo({ delayedField, bothTranslate = false }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -191,7 +195,8 @@ export default function Demo({ delayedField }: Props) {
           const visible = dot.field === 0 ? f0Vis : f1Vis;
           if (!visible) continue;
 
-          if (inTrans && dot.field === TRANSLATING_FIELD) {
+          const fieldTranslatesNow = bothTranslate || dot.field === TRANSLATING_FIELD;
+          if (inTrans && fieldTranslatesNow) {
             if (dot.isCoherent) {
               dot.x += TRANS_SIGN[dot.field] * TRANS_PX_MS * dt;
             } else {
@@ -220,7 +225,7 @@ export default function Demo({ delayedField }: Props) {
 
     rafId = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(rafId);
-  }, [delayedField]);
+  }, [delayedField, bothTranslate]);
 
   return <canvas ref={canvasRef} width={W} height={H} style={{ display:'block', borderRadius:4, width:'100%', aspectRatio:'1' }} />;
 }
