@@ -20,7 +20,9 @@ const T_TRANS_DEMO = 120;
 const T_SOLO      = 750;
 const T_PRETRANS  = 300;
 const T_POST      = 500;
-const T_TOTAL     = T_SOLO + T_PRETRANS + T_TRANS_DEMO + T_POST;
+const T_BLANK     = 500;  // inter-trial blank — both fields invisible
+const T_BLANK_START = T_SOLO + T_PRETRANS + T_TRANS_DEMO + T_POST;
+const T_TOTAL     = T_BLANK_START + T_BLANK;
 const TRANS_START = T_SOLO + T_PRETRANS;
 
 const DOTS_PER_FIELD = 1000;
@@ -36,7 +38,7 @@ const NC_DIRS: [number, number][] = [
 // the brighter color being perceived as "in front" regardless of pixel order.
 const COL: [string, string] = ['rgb(90,180,90)', 'rgb(230,110,110)'];
 // Only one field translates (same in both demos). The other field keeps rotating.
-const TRANSLATING_FIELD: 0 | 1 = 0;
+const TRANSLATING_FIELD: 0 | 1 = 1;
 // Coherent translation per field: field 0 → left, field 1 → right
 const TRANS_SIGN: [number, number] = [-1, +1];
 // Rotation per field: field 0 CW, field 1 CCW
@@ -163,18 +165,18 @@ export default function Demo({ delayedField }: Props) {
       const dt = lastTime !== null ? Math.min(now-lastTime, 32) : 0;
       lastTime = now;
 
-      const delayedVis    = t >= T_SOLO;
-      const nonDelayedVis = true;
+      const inBlank       = t >= T_BLANK_START;
+      const delayedVis    = t >= T_SOLO && !inBlank;
+      const nonDelayedVis = !inBlank;
       const f0Vis = delayedField === 0 ? delayedVis : nonDelayedVis;
       const f1Vis = delayedField === 1 ? delayedVis : nonDelayedVis;
 
-      // At each loop wrap, while the delayed field is hidden, reinit it
-      if (prevT > t && !delayedVis) {
+      // Reinit all dots at the loop wrap. Both fields were invisible during
+      // the preceding blank, so jumping positions doesn't show.
+      if (prevT > t) {
         for (const dot of dots) {
-          if (dot.field === delayedField) {
-            const d = initDot(dot.field, dot.isCoherent, dot.ncDirIdx);
-            dot.x = d.x; dot.y = d.y;
-          }
+          const d = initDot(dot.field, dot.isCoherent, dot.ncDirIdx);
+          dot.x = d.x; dot.y = d.y;
         }
       }
       prevT = t;
