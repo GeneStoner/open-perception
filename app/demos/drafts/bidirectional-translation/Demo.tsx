@@ -3,12 +3,10 @@
 import { useEffect, useRef } from 'react';
 
 // ── Bigger aperture, high density, both fields translate in opposite directions ──
-// apertureRadius_deg = 4.5  (vs. 3.5 in DensityDemo)
-// dotsPerField       = 1000 (high density)
-// Field 0 (red, non-delayed): rotates CW, then translates LEFT during trans phase
-// Field 1 (green, delayed):   rotates CCW, then translates RIGHT during trans phase
-// 50% coherent (translate in field's coherent direction)
-// 50% non-coherent (random one of 8 directions, fixed per dot for stability)
+// Field 0 (green): rotates CW, translates LEFT during trans phase
+// Field 1 (red):   rotates CCW, translates RIGHT during trans phase
+// The `delayedField` prop selects which field is hidden until T_SOLO.
+// 50% coherent / 50% non-coherent (8 random directions, fixed per dot).
 
 const PX_PER_DEG   = 30;
 const AP_R         = 4.5 * PX_PER_DEG;   // 135 px
@@ -17,9 +15,9 @@ const DOT_R        = Math.max(1, 0.04 * PX_PER_DEG);  // 1.2 px
 
 const ROT_RAD_MS   = (81 * 0.5 * Math.PI / 180) / 1000;
 const TRANS_PX_MS  = (2.26 * 0.5 * PX_PER_DEG) / 1000;
-const T_TRANS_DEMO = 120;  // displayed translation duration (ms)
+const T_TRANS_DEMO = 120;
 
-const T_SOLO      = 750;   // field 1 hidden for first 750 ms
+const T_SOLO      = 750;
 const T_PRETRANS  = 300;
 const T_POST      = 500;
 const T_TOTAL     = T_SOLO + T_PRETRANS + T_TRANS_DEMO + T_POST;
@@ -33,11 +31,11 @@ const NC_DIRS: [number, number][] = [
   [-1,  0], [-S2, -S2], [ 0, -1], [ S2, -S2],
 ];
 
-// Field 0 = red, Field 1 = green
-const COL: [string, string] = ['rgb(204,51,51)', 'rgb(34,139,34)'];
-// Coherent translation direction per field: field 0 → left (-1), field 1 → right (+1)
+// Field 0 = green, Field 1 = red (reversed from previous version)
+const COL: [string, string] = ['rgb(34,139,34)', 'rgb(204,51,51)'];
+// Coherent translation per field: field 0 → left, field 1 → right
 const TRANS_SIGN: [number, number] = [-1, +1];
-// Rotation direction per field: field 0 CW (-1), field 1 CCW (+1)
+// Rotation per field: field 0 CW, field 1 CCW
 const ROT_SIGN: [number, number] = [-1, +1];
 
 const W = 320, H = 320;
@@ -108,7 +106,11 @@ function drawDots(ctx: CanvasRenderingContext2D, dots: Dot[], field: 0|1, visibl
   ctx.fill();
 }
 
-export default function Demo() {
+interface Props {
+  delayedField: 0 | 1;
+}
+
+export default function Demo({ delayedField }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -140,13 +142,15 @@ export default function Demo() {
       const dt = lastTime !== null ? Math.min(now-lastTime, 32) : 0;
       lastTime = now;
 
-      const f0Vis = true;
-      const f1Vis = t >= T_SOLO;
+      const delayedVis    = t >= T_SOLO;
+      const nonDelayedVis = true;
+      const f0Vis = delayedField === 0 ? delayedVis : nonDelayedVis;
+      const f1Vis = delayedField === 1 ? delayedVis : nonDelayedVis;
 
-      // At each loop wrap, while field 1 is still hidden, reinit field 1 dots
-      if (prevT > t && !f1Vis) {
+      // At each loop wrap, while the delayed field is hidden, reinit it
+      if (prevT > t && !delayedVis) {
         for (const dot of dots) {
-          if (dot.field === 1) {
+          if (dot.field === delayedField) {
             const d = initDot(dot.field, dot.isCoherent, dot.ncDirIdx);
             dot.x = d.x; dot.y = d.y;
           }
@@ -190,7 +194,7 @@ export default function Demo() {
 
     rafId = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(rafId);
-  }, []);
+  }, [delayedField]);
 
-  return <canvas ref={canvasRef} width={W} height={H} style={{ display:'block', borderRadius:4, width:'100%', maxWidth:520, aspectRatio:'1', margin:'0 auto' }} />;
+  return <canvas ref={canvasRef} width={W} height={H} style={{ display:'block', borderRadius:4, width:'100%', aspectRatio:'1' }} />;
 }
