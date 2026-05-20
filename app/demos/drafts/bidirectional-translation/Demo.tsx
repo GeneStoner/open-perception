@@ -25,11 +25,8 @@ const T_BLANK_START = T_SOLO + T_PRETRANS + T_TRANS_DEMO + T_POST;
 const T_TOTAL     = T_BLANK_START + T_BLANK;
 const TRANS_START = T_SOLO + T_PRETRANS;
 
-// Primary parameter is areal density. Dot count is derived from aperture.
-// 4.5 dots/°² matches the experimental "173 condition" (173 dots / π·3.5²).
-const DENSITY_DOTS_PER_DEG2 = 4.5;
-const APERTURE_AREA_DEG2    = Math.PI * (AP_R / PX_PER_DEG) ** 2;
-const DOTS_PER_FIELD        = Math.round(DENSITY_DOTS_PER_DEG2 * APERTURE_AREA_DEG2);
+// Aperture area is fixed; dot count is derived per-demo from the `density` prop.
+const APERTURE_AREA_DEG2 = Math.PI * (AP_R / PX_PER_DEG) ** 2;
 
 const S2 = Math.SQRT1_2;
 const NC_DIRS: [number, number][] = [
@@ -137,9 +134,12 @@ interface Props {
   // respective directions (field 0 left, field 1 right). When false
   // (default), only TRANSLATING_FIELD translates; the other rotates.
   bothTranslate?: boolean;
+  // Areal density in dots per square degree. 4.5 matches the experimental
+  // 173 condition; 13 matches the 500 condition; 26 matches the 1000 condition.
+  density?: number;
 }
 
-export default function Demo({ delayedField, bothTranslate = false }: Props) {
+export default function Demo({ delayedField, bothTranslate = false, density = 4.5 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -148,11 +148,12 @@ export default function Demo({ delayedField, bothTranslate = false }: Props) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const N_COHERENT = Math.floor(DOTS_PER_FIELD / 2);
+    const dotsPerField = Math.round(density * APERTURE_AREA_DEG2);
+    const N_COHERENT = Math.floor(dotsPerField / 2);
 
     const dots: Dot[] = [];
     for (let field = 0 as 0|1; field <= 1; field++) {
-      for (let k = 0; k < DOTS_PER_FIELD; k++) {
+      for (let k = 0; k < dotsPerField; k++) {
         const isCoherent = k < N_COHERENT;
         const ncDirIdx   = isCoherent ? 0 : (k - N_COHERENT) % 8;
         dots.push(initDot(field, isCoherent, ncDirIdx));
@@ -225,7 +226,7 @@ export default function Demo({ delayedField, bothTranslate = false }: Props) {
 
     rafId = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(rafId);
-  }, [delayedField, bothTranslate]);
+  }, [delayedField, bothTranslate, density]);
 
   return <canvas ref={canvasRef} width={W} height={H} style={{ display:'block', borderRadius:4, width:'100%', aspectRatio:'1' }} />;
 }

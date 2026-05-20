@@ -101,6 +101,14 @@ dots/°²**.
    timing, aperture, draw order) are shared between variants. Demo
    component gained a `bothTranslate` prop to gate the behavior.
 
+10. **v10 — add the next density step (13 dots/°² = experimental 500).**
+    Page now has two density sections (4.5 and 13 dots/°²), each with
+    Variant A + Variant B. Demo gained a `density` prop; dot count is
+    derived as `density × aperture area`. At 13 dots/°² in the 4.5°
+    aperture, dot count = 827/field. Eight canvases run simultaneously
+    on this page now (~9k animated dots/frame total) — watch for
+    iPad perf if we add more.
+
 ## Why the per-frame shuffle matters
 
 `drawDots` originally batched all dots of one color into a single
