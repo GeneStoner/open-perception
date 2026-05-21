@@ -22,11 +22,13 @@ function Pair({
   density,
   coherenceFraction,
   dotRadiusDeg,
+  colorSwap = false,
 }: {
   bothTranslate: boolean;
   density: number;
   coherenceFraction: number;
   dotRadiusDeg: number;
+  colorSwap?: boolean;
 }) {
   return (
     <div className="flex flex-wrap gap-6 justify-center">
@@ -34,13 +36,13 @@ function Pair({
         <p className="text-xs mb-2 text-center" style={{ color: "var(--text-muted)" }}>
           delayed: <span style={{ color: "rgb(230,110,110)" }}>red</span>
         </p>
-        <Demo delayedField={1} bothTranslate={bothTranslate} density={density} coherenceFraction={coherenceFraction} dotRadiusDeg={dotRadiusDeg} />
+        <Demo delayedField={1} bothTranslate={bothTranslate} density={density} coherenceFraction={coherenceFraction} dotRadiusDeg={dotRadiusDeg} colorSwap={colorSwap} />
       </div>
       <div className="flex-1 min-w-[280px] max-w-[420px]">
         <p className="text-xs mb-2 text-center" style={{ color: "var(--text-muted)" }}>
           delayed: <span style={{ color: "rgb(90,180,90)" }}>green</span>
         </p>
-        <Demo delayedField={0} bothTranslate={bothTranslate} density={density} coherenceFraction={coherenceFraction} dotRadiusDeg={dotRadiusDeg} />
+        <Demo delayedField={0} bothTranslate={bothTranslate} density={density} coherenceFraction={coherenceFraction} dotRadiusDeg={dotRadiusDeg} colorSwap={colorSwap} />
       </div>
     </div>
   );
@@ -51,24 +53,30 @@ function DensitySection({
   experimentalCondition,
   coherenceFraction = 0.5,
   dotRadiusDeg = EXPERIMENTAL_DOT_RADIUS_DEG,
+  colorSwap = false,
 }: {
   density: number;
   experimentalCondition: string;
   coherenceFraction?: number;
   dotRadiusDeg?: number;
+  colorSwap?: boolean;
 }) {
   const count = dotsAt(density);
   const coherencePct = Math.round(coherenceFraction * 100);
   const isLargerDot = dotRadiusDeg !== EXPERIMENTAL_DOT_RADIUS_DEG;
-  const dotNote = isLargerDot ? ` · ${dotRadiusDeg}° dots` : "";
+  const headerExtras = [
+    isLargerDot ? `${dotRadiusDeg}° dots` : null,
+    colorSwap ? "color swap at trans onset" : null,
+  ].filter(Boolean).join(" · ");
   return (
     <section className="mt-12">
       <h2 className="text-base font-semibold mb-1" style={{ color: "#e8eaf0" }}>
-        Density {density} dots/°² · {coherencePct}% coherent{dotNote}
+        Density {density} dots/°² · {coherencePct}% coherent{headerExtras ? " · " + headerExtras : ""}
       </h2>
       <p className="text-xs mb-6" style={{ color: "var(--text-muted)" }}>
         Matches experimental {experimentalCondition} condition · {count} dots/field
         {isLargerDot && ` · dot radius ${dotRadiusDeg}° (${(dotRadiusDeg / EXPERIMENTAL_DOT_RADIUS_DEG * 100 - 100).toFixed(0)}% larger than experimental)`}
+        {colorSwap && " · at trans onset the two fields swap colors and stay swapped — tests whether the effect is tied to color identity"}
       </p>
 
       <h3 className="text-sm font-semibold uppercase tracking-wider mb-3" style={{ color: "#e8eaf0" }}>
@@ -77,7 +85,7 @@ function DensitySection({
       <p className="text-xs mb-4" style={{ color: "var(--text-muted)" }}>
         Red translates rightward during the trans window. Green keeps rotating CW throughout.
       </p>
-      <Pair bothTranslate={false} density={density} coherenceFraction={coherenceFraction} dotRadiusDeg={dotRadiusDeg} />
+      <Pair bothTranslate={false} density={density} coherenceFraction={coherenceFraction} dotRadiusDeg={dotRadiusDeg} colorSwap={colorSwap} />
 
       <h3 className="text-sm font-semibold uppercase tracking-wider mb-3 mt-10" style={{ color: "#e8eaf0" }}>
         Variant B — both fields translate, opposite directions
@@ -85,7 +93,7 @@ function DensitySection({
       <p className="text-xs mb-4" style={{ color: "var(--text-muted)" }}>
         Red translates rightward and green translates leftward during the same trans window.
       </p>
-      <Pair bothTranslate={true} density={density} coherenceFraction={coherenceFraction} dotRadiusDeg={dotRadiusDeg} />
+      <Pair bothTranslate={true} density={density} coherenceFraction={coherenceFraction} dotRadiusDeg={dotRadiusDeg} colorSwap={colorSwap} />
     </section>
   );
 }
@@ -100,6 +108,7 @@ export default function Page() {
       <DensitySection density={13}  experimentalCondition="500" coherenceFraction={0.5} />
       <DensitySection density={13}  experimentalCondition="500" coherenceFraction={1.0} />
       <DensitySection density={13}  experimentalCondition="500" coherenceFraction={1.0} dotRadiusDeg={0.05} />
+      <DensitySection density={13}  experimentalCondition="500" coherenceFraction={1.0} dotRadiusDeg={0.05} colorSwap />
     </div>
   );
 }

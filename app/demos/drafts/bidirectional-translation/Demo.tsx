@@ -109,6 +109,7 @@ function drawDotsShuffled(
   f0Vis: boolean,
   f1Vis: boolean,
   dotR: number,
+  swapColors: boolean,
 ) {
   // In-place Fisher-Yates shuffle of the index buffer
   for (let i = order.length - 1; i > 0; i--) {
@@ -122,7 +123,8 @@ function drawDotsShuffled(
     const px = CX + dot.x, py = CY + dot.y;
     const dx = px-CX, dy = py-CY;
     if (dx*dx + dy*dy > AP_R*AP_R) continue;
-    ctx.fillStyle = COL[dot.field];
+    const colorIdx = swapColors ? (1 - dot.field) as 0|1 : dot.field;
+    ctx.fillStyle = COL[colorIdx];
     ctx.beginPath();
     ctx.arc(px, py, dotR, 0, Math.PI*2);
     ctx.fill();
@@ -143,6 +145,10 @@ interface Props {
   coherenceFraction?: number;
   // Dot radius in degrees. Default 0.04 matches the experimental dot size.
   dotRadiusDeg?: number;
+  // When true, both fields swap their rendering colors at trans onset and
+  // stay swapped for the remainder of the trial. Tests whether the
+  // perceived effect depends on color identity or on field/motion identity.
+  colorSwap?: boolean;
 }
 
 export default function Demo({
@@ -151,6 +157,7 @@ export default function Demo({
   density = 4.5,
   coherenceFraction = 0.5,
   dotRadiusDeg = DEFAULT_DOT_RADIUS_DEG,
+  colorSwap = false,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -230,7 +237,8 @@ export default function Demo({
 
       ctx.save();
       ctx.beginPath(); ctx.arc(CX, CY, AP_R, 0, Math.PI*2); ctx.clip();
-      drawDotsShuffled(ctx, dots, drawOrder, f0Vis, f1Vis, dotR);
+      const swapActive = colorSwap && t >= TRANS_START;
+      drawDotsShuffled(ctx, dots, drawOrder, f0Vis, f1Vis, dotR, swapActive);
       ctx.restore();
 
       drawFixation(ctx);
@@ -239,7 +247,7 @@ export default function Demo({
 
     rafId = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(rafId);
-  }, [delayedField, bothTranslate, density, coherenceFraction, dotRadiusDeg]);
+  }, [delayedField, bothTranslate, density, coherenceFraction, dotRadiusDeg, colorSwap]);
 
   return <canvas ref={canvasRef} width={W} height={H} style={{ display:'block', borderRadius:4, width:'100%', aspectRatio:'1' }} />;
 }

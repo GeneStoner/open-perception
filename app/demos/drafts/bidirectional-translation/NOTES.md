@@ -165,6 +165,27 @@ dots/°²**.
     2.26 °/s × 0.120 s = 0.271° (= 1.5× the 80 ms experimental
     displacement of 0.181°). Affects all four sections.
 
+16. **v16 — add a color-swap control section beneath the 0.05° section.**
+    Fifth section is identical to the fourth (density 13, 100% coherent,
+    0.05° dots) except both fields swap their rendering colors at trans
+    onset and stay swapped for the rest of the trial. This isolates
+    whether the effect is tied to **color identity** (the percept
+    should weaken if it depends on green-vs-red labeling, since the
+    dots that *were* delayed/translating are now the other color) or
+    to **field/motion identity independent of color** (percept should
+    be largely unchanged).
+
+    Demo gained a `colorSwap` prop. Implementation: a per-frame flag
+    (`swapActive = colorSwap && t >= TRANS_START`) is passed to
+    `drawDotsShuffled`, which inverts the COL[] index for every dot
+    when active. Field identity, positions, motion, and visibility
+    rules are unchanged — only the rendering color flips. Note that
+    this produces a salient luminance/chromatic transient at trans
+    onset (all dots change color simultaneously), which is itself a
+    visible event; that's the manipulation, but it does mean the
+    swap-condition isn't otherwise identical to the no-swap condition
+    at the trans-onset frame.
+
 ## Why the per-frame shuffle matters
 
 `drawDots` originally batched all dots of one color into a single
