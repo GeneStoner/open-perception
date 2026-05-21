@@ -11,7 +11,7 @@ import { useEffect, useRef } from 'react';
 const PX_PER_DEG   = 30;
 const AP_R         = 4.5 * PX_PER_DEG;   // 135 px
 const EXCL_R       = 1.1 * PX_PER_DEG;   // 33 px
-const DOT_R        = Math.max(1, 0.04 * PX_PER_DEG);  // 1.2 px
+const DOT_R        = Math.max(1, 0.06 * PX_PER_DEG);  // 1.8 px (50% bigger than 0.04° experimental)
 
 const ROT_RAD_MS   = (81 * Math.PI / 180) / 1000;     // 81 °/s — experimental rate
 const TRANS_PX_MS  = (2.26 * PX_PER_DEG) / 1000;       // 2.26 °/s — experimental rate

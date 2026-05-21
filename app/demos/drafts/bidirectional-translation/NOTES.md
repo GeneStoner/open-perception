@@ -29,7 +29,7 @@ compare side by side rather than from memory.
 | **density** (primary) | **4.5 dots/°²** — matches the experimental "173 condition" (173 / π·3.5² = 4.5) |
 | dots / field         | 286 (derived: density × π × 4.5²)            |
 | coherence            | 50% coherent + 50% non-coherent (8 fixed dirs) |
-| dot radius           | 1.2 px                                       |
+| dot radius           | 1.8 px (0.06°) — 50% larger than 0.04° experimental |
 | field 0 (green)      | `rgb(90,180,90)` — rotates CW, does **not** translate |
 | field 1 (red)        | `rgb(230,110,110)` — rotates CCW, translates **right** during trans |
 | translating field    | red only (same in both panels)               |
@@ -138,6 +138,11 @@ dots/°²**.
     sections.** Higher density + full coherence produces the
     strongest percept. Marks this as the reference configuration
     going forward.
+
+12. **v12 — dot radius 0.04° → 0.06° (50% larger).**
+    Applied page-wide. Experimental dots were ~0.04° radius; bumping
+    to 0.06° makes them more visible on iPad without changing any
+    other parameter. Affects all three sections.
 
 ## Why the per-frame shuffle matters
 
