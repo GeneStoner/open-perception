@@ -99,7 +99,7 @@ export default function Page() {
       <DensitySection density={4.5} experimentalCondition="173" coherenceFraction={0.5} />
       <DensitySection density={13}  experimentalCondition="500" coherenceFraction={0.5} />
       <DensitySection density={13}  experimentalCondition="500" coherenceFraction={1.0} />
-      <DensitySection density={13}  experimentalCondition="500" coherenceFraction={1.0} dotRadiusDeg={0.06} />
+      <DensitySection density={13}  experimentalCondition="500" coherenceFraction={1.0} dotRadiusDeg={0.05} />
     </div>
   );
 }

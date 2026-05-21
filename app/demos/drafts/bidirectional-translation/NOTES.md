@@ -29,7 +29,7 @@ compare side by side rather than from memory.
 | **density** (primary) | **4.5 dots/°²** — matches the experimental "173 condition" (173 / π·3.5² = 4.5) |
 | dots / field         | 286 (derived: density × π × 4.5²)            |
 | coherence            | 50% coherent + 50% non-coherent (8 fixed dirs) |
-| dot radius           | 0.04° (experimental) per default; one section (bottom) at 0.06° (50% larger) |
+| dot radius           | 0.04° (experimental) per default; bottom section at 0.05° (25% larger, halfway between 0.04 and 0.06) |
 | field 0 (green)      | `rgb(90,180,90)` — rotates CW, does **not** translate |
 | field 1 (red)        | `rgb(230,110,110)` — rotates CCW, translates **right** during trans |
 | translating field    | red only (same in both panels)               |
@@ -154,6 +154,11 @@ dots/°²**.
     (initDot/respawn/checkOOB/rotate/drawDotsShuffled) now take
     `dotR` as an explicit parameter rather than reading a module
     constant.
+
+14. **v14 — dial the fourth section's dot size back to 0.05° (halfway).**
+    0.06° felt like too much; 0.04° is the experimental baseline.
+    0.05° splits the difference (25% larger than experimental) and
+    gives a more conservative comparison against the third section.
 
 ## Why the per-frame shuffle matters
 
