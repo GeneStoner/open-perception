@@ -11,7 +11,7 @@ import { useEffect, useRef } from 'react';
 const PX_PER_DEG   = 30;
 const AP_R         = 4.5 * PX_PER_DEG;   // 135 px
 const EXCL_R       = 1.1 * PX_PER_DEG;   // 33 px
-const DOT_R        = Math.max(1, 0.06 * PX_PER_DEG);  // 1.8 px (50% bigger than 0.04° experimental)
+const DEFAULT_DOT_RADIUS_DEG = 0.04;  // experimental dot radius; overridable per-demo
 
 const ROT_RAD_MS   = (81 * Math.PI / 180) / 1000;     // 81 °/s — experimental rate
 const TRANS_PX_MS  = (2.26 * PX_PER_DEG) / 1000;       // 2.26 °/s — experimental rate
@@ -50,34 +50,34 @@ const CX = W / 2, CY = H / 2;
 
 interface Dot { x: number; y: number; isCoherent: boolean; ncDirIdx: number; field: 0|1; }
 
-function initDot(field: 0|1, isCoherent: boolean, ncDirIdx: number): Dot {
+function initDot(field: 0|1, isCoherent: boolean, ncDirIdx: number, dotR: number): Dot {
   const r2min = EXCL_R * EXCL_R;
-  const r2max = (AP_R - DOT_R) * (AP_R - DOT_R);
+  const r2max = (AP_R - dotR) * (AP_R - dotR);
   const r     = Math.sqrt(r2min + Math.random() * (r2max - r2min));
   const θ     = Math.random() * 2 * Math.PI;
   return { x: r * Math.cos(θ), y: r * Math.sin(θ), isCoherent, ncDirIdx, field };
 }
 
-function respawn(dot: Dot) {
+function respawn(dot: Dot, dotR: number) {
   const r2min = EXCL_R * EXCL_R;
-  const r2max = (AP_R - DOT_R) * (AP_R - DOT_R);
+  const r2max = (AP_R - dotR) * (AP_R - dotR);
   const r     = Math.sqrt(r2min + Math.random() * (r2max - r2min));
   const θ     = Math.random() * 2 * Math.PI;
   dot.x = r * Math.cos(θ); dot.y = r * Math.sin(θ);
 }
 
-function checkOOB(dot: Dot) {
+function checkOOB(dot: Dot, dotR: number) {
   const r2 = dot.x*dot.x + dot.y*dot.y;
-  if (r2 > (AP_R-DOT_R)*(AP_R-DOT_R) || r2 < EXCL_R*EXCL_R) respawn(dot);
+  if (r2 > (AP_R-dotR)*(AP_R-dotR) || r2 < EXCL_R*EXCL_R) respawn(dot, dotR);
 }
 
-function rotate(dot: Dot, dirSign: number, dt: number) {
+function rotate(dot: Dot, dirSign: number, dt: number, dotR: number) {
   const α = dirSign * ROT_RAD_MS * dt;
   const ca = Math.cos(α), sa = Math.sin(α);
   const nx = dot.x*ca + dot.y*sa;
   const ny = -dot.x*sa + dot.y*ca;
   dot.x = nx; dot.y = ny;
-  checkOOB(dot);
+  checkOOB(dot, dotR);
 }
 
 function drawFixation(ctx: CanvasRenderingContext2D) {
@@ -108,6 +108,7 @@ function drawDotsShuffled(
   order: Uint16Array,
   f0Vis: boolean,
   f1Vis: boolean,
+  dotR: number,
 ) {
   // In-place Fisher-Yates shuffle of the index buffer
   for (let i = order.length - 1; i > 0; i--) {
@@ -123,7 +124,7 @@ function drawDotsShuffled(
     if (dx*dx + dy*dy > AP_R*AP_R) continue;
     ctx.fillStyle = COL[dot.field];
     ctx.beginPath();
-    ctx.arc(px, py, DOT_R, 0, Math.PI*2);
+    ctx.arc(px, py, dotR, 0, Math.PI*2);
     ctx.fill();
   }
 }
@@ -140,6 +141,8 @@ interface Props {
   // Fraction of dots that translate coherently (0..1). The rest move in
   // fixed random directions (one of 8). Default 0.5 (50% coherent).
   coherenceFraction?: number;
+  // Dot radius in degrees. Default 0.04 matches the experimental dot size.
+  dotRadiusDeg?: number;
 }
 
 export default function Demo({
@@ -147,6 +150,7 @@ export default function Demo({
   bothTranslate = false,
   density = 4.5,
   coherenceFraction = 0.5,
+  dotRadiusDeg = DEFAULT_DOT_RADIUS_DEG,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -158,13 +162,14 @@ export default function Demo({
 
     const dotsPerField = Math.round(density * APERTURE_AREA_DEG2);
     const N_COHERENT = Math.floor(dotsPerField * coherenceFraction);
+    const dotR = Math.max(1, dotRadiusDeg * PX_PER_DEG);
 
     const dots: Dot[] = [];
     for (let field = 0 as 0|1; field <= 1; field++) {
       for (let k = 0; k < dotsPerField; k++) {
         const isCoherent = k < N_COHERENT;
         const ncDirIdx   = isCoherent ? 0 : (k - N_COHERENT) % 8;
-        dots.push(initDot(field, isCoherent, ncDirIdx));
+        dots.push(initDot(field, isCoherent, ncDirIdx, dotR));
       }
     }
     const drawOrder = new Uint16Array(dots.length);
@@ -192,7 +197,7 @@ export default function Demo({
       // the preceding blank, so jumping positions doesn't show.
       if (prevT > t) {
         for (const dot of dots) {
-          const d = initDot(dot.field, dot.isCoherent, dot.ncDirIdx);
+          const d = initDot(dot.field, dot.isCoherent, dot.ncDirIdx, dotR);
           dot.x = d.x; dot.y = d.y;
         }
       }
@@ -213,9 +218,9 @@ export default function Demo({
               dot.x += TRANS_PX_MS * dx * dt;
               dot.y += TRANS_PX_MS * dy * dt;
             }
-            checkOOB(dot);
+            checkOOB(dot, dotR);
           } else {
-            rotate(dot, ROT_SIGN[dot.field], dt);
+            rotate(dot, ROT_SIGN[dot.field], dt, dotR);
           }
         }
       }
@@ -225,7 +230,7 @@ export default function Demo({
 
       ctx.save();
       ctx.beginPath(); ctx.arc(CX, CY, AP_R, 0, Math.PI*2); ctx.clip();
-      drawDotsShuffled(ctx, dots, drawOrder, f0Vis, f1Vis);
+      drawDotsShuffled(ctx, dots, drawOrder, f0Vis, f1Vis, dotR);
       ctx.restore();
 
       drawFixation(ctx);
@@ -234,7 +239,7 @@ export default function Demo({
 
     rafId = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(rafId);
-  }, [delayedField, bothTranslate, density, coherenceFraction]);
+  }, [delayedField, bothTranslate, density, coherenceFraction, dotRadiusDeg]);
 
   return <canvas ref={canvasRef} width={W} height={H} style={{ display:'block', borderRadius:4, width:'100%', aspectRatio:'1' }} />;
 }
