@@ -35,8 +35,8 @@ compare side by side rather than from memory.
 | translating field    | red only (same in both panels)               |
 | translation speed    | 2.26 °/s — full experimental rate            |
 | rotation speed       | 81 °/s — full experimental rate              |
-| timing               | solo 750 / pre-trans 300 / **trans 100** / post 500 / blank 500 ms |
-| total loop           | 2150 ms                                      |
+| timing               | solo 750 / pre-trans 300 / **trans 120** / post 500 / blank 500 ms |
+| total loop           | 2170 ms                                      |
 | draw order           | per-frame Fisher-Yates shuffle of all 2000 dot indices |
 | reinit               | both fields reset to fresh random positions at loop wrap |
 
@@ -159,6 +159,11 @@ dots/°²**.
     0.06° felt like too much; 0.04° is the experimental baseline.
     0.05° splits the difference (25% larger than experimental) and
     gives a more conservative comparison against the third section.
+
+15. **v15 — trans duration 100 → 120 ms (all demos).**
+    Global +20 ms bump. Displacement at experimental speed:
+    2.26 °/s × 0.120 s = 0.271° (= 1.5× the 80 ms experimental
+    displacement of 0.181°). Affects all four sections.
 
 ## Why the per-frame shuffle matters
 

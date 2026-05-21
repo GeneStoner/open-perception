@@ -15,7 +15,7 @@ const DEFAULT_DOT_RADIUS_DEG = 0.04;  // experimental dot radius; overridable pe
 
 const ROT_RAD_MS   = (81 * Math.PI / 180) / 1000;     // 81 °/s — experimental rate
 const TRANS_PX_MS  = (2.26 * PX_PER_DEG) / 1000;       // 2.26 °/s — experimental rate
-const T_TRANS_DEMO = 100;
+const T_TRANS_DEMO = 120;
 
 const T_SOLO      = 750;
 const T_PRETRANS  = 300;

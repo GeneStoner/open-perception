@@ -12,7 +12,7 @@ const sharedParams = (
     <dt>speeds</dt><dd>experimental (81 °/s rotation, 2.26 °/s translation)</dd>
     <dt>green field</dt><dd>rotates CW; translates LEFT if it's a translating field</dd>
     <dt>red field</dt><dd>rotates CCW; translates RIGHT if it's a translating field</dd>
-    <dt>timing</dt><dd>solo 750 / pre-trans 300 / <strong>trans 100</strong> / post 500 / blank 500 ms — loops</dd>
+    <dt>timing</dt><dd>solo 750 / pre-trans 300 / <strong>trans 120</strong> / post 500 / blank 500 ms — loops</dd>
     <dt>dot radius</dt><dd>0.04° (experimental) unless noted otherwise</dd>
   </dl>
 );
