@@ -9,6 +9,19 @@ const EXPERIMENTAL_DOT_RADIUS_DEG = 0.04;
 const sharedParams = (
   <div className="text-xs mb-6 space-y-3" style={{ color: "var(--text-secondary)" }}>
     <p>
+      <strong style={{ color: "var(--text-primary)" }}>What you're looking at.</strong>{" "}
+      Each aperture contains two overlapping fields of dots — one{" "}
+      <span style={{ color: "rgb(230,110,110)" }}>red</span>, one{" "}
+      <span style={{ color: "rgb(90,180,90)" }}>green</span> — rotating in opposite
+      directions about the centre. One field appears first; the other onsets{" "}
+      <strong>750 ms</strong> later (the <em>delayed-onset cue</em>). After both
+      have been rotating together for 300 ms, the stimulus enters a brief{" "}
+      <strong>120 ms translation window</strong> in which one or both fields drift
+      sideways as a group. The two variants below differ in <em>which</em> field(s)
+      drift during that window. Each trial then ends with 500 ms more rotation,
+      a 500 ms blank, and the loop restarts.
+    </p>
+    <p>
       <strong style={{ color: "var(--text-primary)" }}>About sizes.</strong>{" "}
       The true visual angle these demos subtend depends on your viewing
       distance and display, neither of which we know. So all sizes below
@@ -103,8 +116,8 @@ function DensitySection({
         {colorSwap && " · at trans onset the two fields swap colors and stay swapped — tests whether the effect is tied to color identity. Note: the swap is instantaneous on one frame, producing a salient global chromatic transient that is itself a visible event."}
       </p>
 
-      <h3 className="text-sm font-semibold uppercase tracking-wider mb-3" style={{ color: "var(--text-primary)" }}>
-        Variant A — only red translates{variantSuffix}
+      <h3 className="text-base font-semibold mb-3" style={{ color: "var(--text-primary)" }}>
+        Single-field translation — only red drifts{variantSuffix}
       </h3>
       <p className="text-xs mb-4" style={{ color: "var(--text-secondary)" }}>
         {coherenceFraction === 1
@@ -113,8 +126,8 @@ function DensitySection({
       </p>
       <Pair bothTranslate={false} density={density} coherenceFraction={coherenceFraction} dotRadiusDeg={dotRadiusDeg} colorSwap={colorSwap} />
 
-      <h3 className="text-sm font-semibold uppercase tracking-wider mb-3 mt-10" style={{ color: "var(--text-primary)" }}>
-        Variant B — both fields translate, opposite directions{variantSuffix}
+      <h3 className="text-base font-semibold mb-3 mt-10" style={{ color: "var(--text-primary)" }}>
+        Bidirectional translation — red drifts right, green drifts left{variantSuffix}
       </h3>
       <p className="text-xs mb-4" style={{ color: "var(--text-secondary)" }}>
         {coherenceFraction === 1
