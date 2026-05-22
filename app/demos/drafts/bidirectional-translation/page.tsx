@@ -84,10 +84,16 @@ function DensitySection({
   const isLargerDot = dotRadiusDeg !== EXPERIMENTAL_DOT_RADIUS_DEG;
   const headerExtras = [
     isLargerDot ? `${dotRadiusDeg}° dots` : null,
-    colorSwap ? "color swap at trans onset" : null,
   ].filter(Boolean).join(" · ");
+  const variantSuffix = colorSwap ? " · color-swap variant" : "";
   return (
     <section className="mt-12">
+      {colorSwap && (
+        <div className="inline-block px-3 py-1 mb-3 text-xs font-semibold uppercase tracking-widest rounded"
+             style={{ background: "rgb(120,60,140)", color: "#fff" }}>
+          Color-swap control
+        </div>
+      )}
       <h2 className="text-base font-semibold mb-1" style={{ color: "#e8eaf0" }}>
         Density {density} dots/°² · {coherencePct}% coherent{headerExtras ? " · " + headerExtras : ""}
       </h2>
@@ -98,7 +104,7 @@ function DensitySection({
       </p>
 
       <h3 className="text-sm font-semibold uppercase tracking-wider mb-3" style={{ color: "#e8eaf0" }}>
-        Variant A — only red translates
+        Variant A — only red translates{variantSuffix}
       </h3>
       <p className="text-xs mb-4" style={{ color: "var(--text-muted)" }}>
         {coherenceFraction === 1
@@ -108,7 +114,7 @@ function DensitySection({
       <Pair bothTranslate={false} density={density} coherenceFraction={coherenceFraction} dotRadiusDeg={dotRadiusDeg} colorSwap={colorSwap} />
 
       <h3 className="text-sm font-semibold uppercase tracking-wider mb-3 mt-10" style={{ color: "#e8eaf0" }}>
-        Variant B — both fields translate, opposite directions
+        Variant B — both fields translate, opposite directions{variantSuffix}
       </h3>
       <p className="text-xs mb-4" style={{ color: "var(--text-muted)" }}>
         {coherenceFraction === 1
