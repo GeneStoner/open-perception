@@ -7,9 +7,9 @@ const dotsAt = (density: number) => Math.round(density * APERTURE_AREA_DEG2);
 const EXPERIMENTAL_DOT_RADIUS_DEG = 0.04;
 
 const sharedParams = (
-  <div className="text-xs mb-6 space-y-3" style={{ color: "var(--text-muted)" }}>
+  <div className="text-xs mb-6 space-y-3" style={{ color: "var(--text-secondary)" }}>
     <p>
-      <strong style={{ color: "#e8eaf0" }}>About sizes.</strong>{" "}
+      <strong style={{ color: "var(--text-primary)" }}>About sizes.</strong>{" "}
       The true visual angle these demos subtend depends on your viewing
       distance and display, neither of which we know. So all sizes below
       are stated relative to the <strong>aperture diameter D</strong> —
@@ -51,13 +51,13 @@ function Pair({
   return (
     <div className="flex flex-wrap gap-6 justify-center">
       <div className="flex-1 min-w-[280px] max-w-[420px]">
-        <p className="text-xs mb-2 text-center" style={{ color: "var(--text-muted)" }}>
+        <p className="text-xs mb-2 text-center" style={{ color: "var(--text-secondary)" }}>
           delayed: <span style={{ color: "rgb(230,110,110)" }}>red</span>
         </p>
         <Demo delayedField={1} bothTranslate={bothTranslate} density={density} coherenceFraction={coherenceFraction} dotRadiusDeg={dotRadiusDeg} colorSwap={colorSwap} />
       </div>
       <div className="flex-1 min-w-[280px] max-w-[420px]">
-        <p className="text-xs mb-2 text-center" style={{ color: "var(--text-muted)" }}>
+        <p className="text-xs mb-2 text-center" style={{ color: "var(--text-secondary)" }}>
           delayed: <span style={{ color: "rgb(90,180,90)" }}>green</span>
         </p>
         <Demo delayedField={0} bothTranslate={bothTranslate} density={density} coherenceFraction={coherenceFraction} dotRadiusDeg={dotRadiusDeg} colorSwap={colorSwap} />
@@ -94,29 +94,29 @@ function DensitySection({
           Color-swap control
         </div>
       )}
-      <h2 className="text-base font-semibold mb-1" style={{ color: "#e8eaf0" }}>
+      <h2 className="text-base font-semibold mb-1" style={{ color: "var(--text-primary)" }}>
         Density {density} dots/°² · {coherencePct}% coherent{headerExtras ? " · " + headerExtras : ""}
       </h2>
-      <p className="text-xs mb-6" style={{ color: "var(--text-muted)" }}>
+      <p className="text-xs mb-6" style={{ color: "var(--text-secondary)" }}>
         Matches experimental {experimentalCondition} condition · {count} dots/field
         {isLargerDot && ` · dot diameter ≈1.1% of D (${dotRadiusDeg}° radius experimental — ${(dotRadiusDeg / EXPERIMENTAL_DOT_RADIUS_DEG * 100 - 100).toFixed(0)}% larger than experimental dot)`}
         {colorSwap && " · at trans onset the two fields swap colors and stay swapped — tests whether the effect is tied to color identity. Note: the swap is instantaneous on one frame, producing a salient global chromatic transient that is itself a visible event."}
       </p>
 
-      <h3 className="text-sm font-semibold uppercase tracking-wider mb-3" style={{ color: "#e8eaf0" }}>
+      <h3 className="text-sm font-semibold uppercase tracking-wider mb-3" style={{ color: "var(--text-primary)" }}>
         Variant A — only red translates{variantSuffix}
       </h3>
-      <p className="text-xs mb-4" style={{ color: "var(--text-muted)" }}>
+      <p className="text-xs mb-4" style={{ color: "var(--text-secondary)" }}>
         {coherenceFraction === 1
           ? <>All red dots translate rightward during the trans window (≈3% of D). Green keeps rotating CW throughout.</>
           : <>{coherencePct}% of red dots translate coherently rightward during the trans window (≈3% of D); the remaining {100 - coherencePct}% move in fixed random directions (one of 8). Green keeps rotating CW throughout.</>}
       </p>
       <Pair bothTranslate={false} density={density} coherenceFraction={coherenceFraction} dotRadiusDeg={dotRadiusDeg} colorSwap={colorSwap} />
 
-      <h3 className="text-sm font-semibold uppercase tracking-wider mb-3 mt-10" style={{ color: "#e8eaf0" }}>
+      <h3 className="text-sm font-semibold uppercase tracking-wider mb-3 mt-10" style={{ color: "var(--text-primary)" }}>
         Variant B — both fields translate, opposite directions{variantSuffix}
       </h3>
-      <p className="text-xs mb-4" style={{ color: "var(--text-muted)" }}>
+      <p className="text-xs mb-4" style={{ color: "var(--text-secondary)" }}>
         {coherenceFraction === 1
           ? <>All red dots translate rightward and all green dots translate leftward during the same trans window (≈3% of D each).</>
           : <>{coherencePct}% of red dots translate coherently rightward and {coherencePct}% of green dots translate coherently leftward during the same trans window (≈3% of D each); the remaining {100 - coherencePct}% of each field move in fixed random directions (one of 8).</>}
