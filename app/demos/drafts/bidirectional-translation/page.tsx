@@ -7,14 +7,32 @@ const dotsAt = (density: number) => Math.round(density * APERTURE_AREA_DEG2);
 const EXPERIMENTAL_DOT_RADIUS_DEG = 0.04;
 
 const sharedParams = (
-  <dl className="text-xs grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1 mb-6" style={{ color: "var(--text-muted)" }}>
-    <dt>aperture</dt><dd>4.5° (135 px)</dd>
-    <dt>speeds</dt><dd>experimental (81 °/s rotation, 2.26 °/s translation)</dd>
-    <dt>green field</dt><dd>rotates CW; translates LEFT if it's a translating field</dd>
-    <dt>red field</dt><dd>rotates CCW; translates RIGHT if it's a translating field</dd>
-    <dt>timing</dt><dd>solo 750 / pre-trans 300 / <strong>trans 120</strong> / post 500 / blank 500 ms — loops</dd>
-    <dt>dot radius</dt><dd>0.04° (experimental) unless noted otherwise</dd>
-  </dl>
+  <div className="text-xs mb-6 space-y-3" style={{ color: "var(--text-muted)" }}>
+    <p>
+      <strong style={{ color: "#e8eaf0" }}>About sizes.</strong>{" "}
+      The true visual angle these demos subtend depends on your viewing
+      distance and display, neither of which we know. So all sizes below
+      are stated relative to the <strong>aperture diameter D</strong> —
+      the visible dot circle in each panel. The short horizontal bar just
+      below each aperture is the scale reference: it spans{" "}
+      <strong>¼ D</strong>. Original experimental values (in degrees of
+      visual angle, at the experimental viewing distance) are given in
+      parentheses for reference only.
+    </p>
+    <dl className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1">
+      <dt>aperture (D)</dt><dd>the visible dot circle (270 canvas px ≈ 9° at experimental scale)</dd>
+      <dt>scale bar</dt><dd>¼ D, drawn below each aperture</dd>
+      <dt>fixation ring (outer Ø)</dt><dd>20% of D (1.8° experimental)</dd>
+      <dt>fixation exclusion zone (Ø)</dt><dd>24% of D — dots never enter this central region (2.2° experimental)</dd>
+      <dt>dot diameter (default)</dt><dd>≈0.9% of D (0.08° experimental)</dd>
+      <dt>dot diameter (larger)</dt><dd>≈1.1% of D — 25% larger than default (0.10° experimental, sections 4–5)</dd>
+      <dt>translation per trial</dt><dd>≈3% of D — distance a coherent dot moves during the 120 ms trans window (0.27° experimental)</dd>
+      <dt>rotation rate</dt><dd>81 °/s about the aperture centre (≈ 0.22 turns/s, same at any viewing distance)</dd>
+      <dt>green field</dt><dd>rotates CW; translates LEFT if it's a translating field</dd>
+      <dt>red field</dt><dd>rotates CCW; translates RIGHT if it's a translating field</dd>
+      <dt>timing</dt><dd>solo 750 / pre-trans 300 / <strong>trans 120</strong> / post 500 / blank 500 ms — loops</dd>
+    </dl>
+  </div>
 );
 
 function Pair({
@@ -75,15 +93,17 @@ function DensitySection({
       </h2>
       <p className="text-xs mb-6" style={{ color: "var(--text-muted)" }}>
         Matches experimental {experimentalCondition} condition · {count} dots/field
-        {isLargerDot && ` · dot radius ${dotRadiusDeg}° (${(dotRadiusDeg / EXPERIMENTAL_DOT_RADIUS_DEG * 100 - 100).toFixed(0)}% larger than experimental)`}
-        {colorSwap && " · at trans onset the two fields swap colors and stay swapped — tests whether the effect is tied to color identity"}
+        {isLargerDot && ` · dot diameter ≈1.1% of D (${dotRadiusDeg}° radius experimental — ${(dotRadiusDeg / EXPERIMENTAL_DOT_RADIUS_DEG * 100 - 100).toFixed(0)}% larger than experimental dot)`}
+        {colorSwap && " · at trans onset the two fields swap colors and stay swapped — tests whether the effect is tied to color identity. Note: the swap is instantaneous on one frame, producing a salient global chromatic transient that is itself a visible event."}
       </p>
 
       <h3 className="text-sm font-semibold uppercase tracking-wider mb-3" style={{ color: "#e8eaf0" }}>
         Variant A — only red translates
       </h3>
       <p className="text-xs mb-4" style={{ color: "var(--text-muted)" }}>
-        Red translates rightward during the trans window. Green keeps rotating CW throughout.
+        {coherenceFraction === 1
+          ? <>All red dots translate rightward during the trans window (≈3% of D). Green keeps rotating CW throughout.</>
+          : <>{coherencePct}% of red dots translate coherently rightward during the trans window (≈3% of D); the remaining {100 - coherencePct}% move in fixed random directions (one of 8). Green keeps rotating CW throughout.</>}
       </p>
       <Pair bothTranslate={false} density={density} coherenceFraction={coherenceFraction} dotRadiusDeg={dotRadiusDeg} colorSwap={colorSwap} />
 
@@ -91,7 +111,9 @@ function DensitySection({
         Variant B — both fields translate, opposite directions
       </h3>
       <p className="text-xs mb-4" style={{ color: "var(--text-muted)" }}>
-        Red translates rightward and green translates leftward during the same trans window.
+        {coherenceFraction === 1
+          ? <>All red dots translate rightward and all green dots translate leftward during the same trans window (≈3% of D each).</>
+          : <>{coherencePct}% of red dots translate coherently rightward and {coherencePct}% of green dots translate coherently leftward during the same trans window (≈3% of D each); the remaining {100 - coherencePct}% of each field move in fixed random directions (one of 8).</>}
       </p>
       <Pair bothTranslate={true} density={density} coherenceFraction={coherenceFraction} dotRadiusDeg={dotRadiusDeg} colorSwap={colorSwap} />
     </section>

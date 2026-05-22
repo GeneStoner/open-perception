@@ -48,6 +48,13 @@ const ROT_SIGN: [number, number] = [-1, +1];
 const W = 320, H = 320;
 const CX = W / 2, CY = H / 2;
 
+// Scale bar: ¼ of the aperture *diameter*, drawn just below the aperture.
+// True visual angle depends on viewing distance/display, so all on-page
+// sizes are stated relative to the aperture diameter and the scale bar
+// is the visible reference.
+const SCALE_BAR_LEN = AP_R / 2;       // = ¼ × (2·AP_R) = ¼ D
+const SCALE_BAR_Y_OFFSET = 12;        // px below aperture edge
+
 interface Dot { x: number; y: number; isCoherent: boolean; ncDirIdx: number; field: 0|1; }
 
 function initDot(field: 0|1, isCoherent: boolean, ncDirIdx: number, dotR: number): Dot {
@@ -78,6 +85,16 @@ function rotate(dot: Dot, dirSign: number, dt: number, dotR: number) {
   const ny = -dot.x*sa + dot.y*ca;
   dot.x = nx; dot.y = ny;
   checkOOB(dot, dotR);
+}
+
+function drawScaleBar(ctx: CanvasRenderingContext2D) {
+  const y  = CY + AP_R + SCALE_BAR_Y_OFFSET;
+  const x0 = CX - SCALE_BAR_LEN / 2;
+  const x1 = CX + SCALE_BAR_LEN / 2;
+  ctx.fillStyle = 'rgb(210,210,210)';
+  ctx.fillRect(x0, y - 1, SCALE_BAR_LEN, 2);           // bar
+  ctx.fillRect(x0 - 0.5, y - 4, 1, 9);                 // left endcap
+  ctx.fillRect(x1 - 0.5, y - 4, 1, 9);                 // right endcap
 }
 
 function drawFixation(ctx: CanvasRenderingContext2D) {
@@ -242,6 +259,7 @@ export default function Demo({
       ctx.restore();
 
       drawFixation(ctx);
+      drawScaleBar(ctx);
       rafId = requestAnimationFrame(frame);
     }
 
