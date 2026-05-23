@@ -12,11 +12,12 @@ const sharedParams = (
     <dt>green field</dt><dd>rotates CW</dd>
     <dt>red field</dt><dd>rotates CCW</dd>
     <dt>dot radius</dt><dd>0.04° (experimental)</dd>
-    <dt>swap interval (B only)</dt><dd>500 ms — half of each field flips both color and direction simultaneously, position preserved</dd>
+    <dt>swap interval (B only)</dt><dd>500 ms — selected fraction of each field flips both color and direction simultaneously, position preserved</dd>
   </dl>
 );
 
-function Pair({ density }: { density: number }) {
+function Pair({ density, swapFraction }: { density: number; swapFraction: number }) {
+  const pct = Math.round(swapFraction * 100);
   return (
     <div className="flex flex-wrap gap-6 justify-center mt-4">
       <div className="flex-1 min-w-[280px] max-w-[420px]">
@@ -30,12 +31,14 @@ function Pair({ density }: { density: number }) {
       </div>
       <div className="flex-1 min-w-[280px] max-w-[420px]">
         <h4 className="text-sm font-semibold uppercase tracking-wider mb-2 text-center" style={{ color: "var(--text-primary)" }}>
-          B — same + 500 ms membership swap
+          B — same + 500 ms {pct}% exchange
         </h4>
         <p className="text-xs mb-3 text-center" style={{ color: "var(--text-secondary)" }}>
-          Every 500 ms, half of each field's dots flip both color and rotation direction (position preserved).
+          {swapFraction === 1
+            ? <>Every 500 ms, <strong>all</strong> dots in each field flip both color and rotation direction — the two fields fully exchange identities (positions preserved).</>
+            : <>Every 500 ms, <strong>{pct}%</strong> of each field's dots flip both color and rotation direction (positions preserved).</>}
         </p>
-        <Demo swap density={density} />
+        <Demo swap density={density} swapFraction={swapFraction} />
       </div>
     </div>
   );
@@ -45,10 +48,12 @@ function DensitySection({
   density,
   label,
   conditionNote,
+  swapFraction = 0.5,
 }: {
   density: number;
   label: string;
   conditionNote: string;
+  swapFraction?: number;
 }) {
   return (
     <section className="mt-12">
@@ -56,9 +61,9 @@ function DensitySection({
         {label}
       </h2>
       <p className="text-xs mb-2" style={{ color: "var(--text-secondary)" }}>
-        {conditionNote} · {dotsAt(density)} dots/field (derived: density × π × 4.5²)
+        {conditionNote} · {dotsAt(density)} dots/field (derived: density × π × 4.5²) · {Math.round(swapFraction * 100)}% exchange
       </p>
-      <Pair density={density} />
+      <Pair density={density} swapFraction={swapFraction} />
     </section>
   );
 }
@@ -73,12 +78,21 @@ export default function Page() {
         density={13}
         label="Density 13 dots/°² · matches experimental 500 condition"
         conditionNote="Higher-density follow-up series"
+        swapFraction={0.5}
       />
 
       <DensitySection
         density={5}
         label="Density 5 dots/°² · matches Stoner & Blanc (2010)"
         conditionNote="Original S&B density: 63 dots in a 2° aperture ≈ 5 dots/°²"
+        swapFraction={0.5}
+      />
+
+      <DensitySection
+        density={5}
+        label="Density 5 dots/°² · Stoner & Blanc · 100% exchange"
+        conditionNote="Same as above, but every swap flips every dot — full identity exchange between the two fields"
+        swapFraction={1.0}
       />
     </div>
   );

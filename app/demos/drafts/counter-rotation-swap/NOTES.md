@@ -7,18 +7,29 @@ Two-panel demo:
 
 ## Parameters
 
-Two density sections on the page, otherwise identical:
+Three density × exchange-fraction sections on the page, all sharing the same
+A baseline (continuous counter-rotation). Only B varies:
 
-| param            | density-13 section | density-5 section |
-| ---------------- | ------------------ | ----------------- |
-| aperture         | 4.5° (135 px)      | 4.5° (135 px)     |
-| density          | 13 dots/°² (= exp. 500 cond.) | 5 dots/°² (= Stoner & Blanc 2010: 63 dots in 2° aperture ≈ 5/°²) |
-| dots / field     | 287                | 318               |
-| rotation speed   | 81 °/s (experimental) | same           |
-| dot radius       | 0.04° (experimental)  | same           |
-| colors           | green `rgb(90,180,90)`, red `rgb(230,110,110)` (≈ equiluminant) | same |
-| draw order       | per-frame Fisher-Yates shuffle (no z-bias) | same |
-| swap interval (B)| 500 ms             | same              |
+| section                          | density          | exchange fraction (B) |
+| -------------------------------- | ---------------- | --------------------- |
+| Density 13 · 50% exchange        | 13 dots/°² (exp. 500 condition)         | 50%  |
+| Density 5 · 50% exchange         | 5 dots/°² (Stoner & Blanc 2010)         | 50%  |
+| Density 5 · **100% exchange**    | 5 dots/°² (Stoner & Blanc 2010)         | 100% |
+
+Common parameters across all sections:
+
+| param            | value |
+| ---------------- | ----- |
+| aperture         | 4.5° (135 px) |
+| rotation speed   | 81 °/s (experimental) |
+| dot radius       | 0.04° (experimental)  |
+| colors           | green `rgb(90,180,90)`, red `rgb(230,110,110)` (≈ equiluminant) |
+| draw order       | per-frame Fisher-Yates shuffle (no z-bias) |
+| swap interval (B)| 500 ms |
+
+At 100% exchange, every dot of field 0 simultaneously becomes field 1 (now
+red, rotating CCW) and vice versa, with position preserved. The two fields
+completely swap identities once per 500 ms cycle.
 
 ## Why "symmetric exchange"
 

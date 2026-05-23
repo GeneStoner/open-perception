@@ -82,9 +82,12 @@ function drawDotsShuffled(
   }
 }
 
-// Symmetric exchange: capture each field's roster first, then flip half of each.
-// (Doing them sequentially would draw from the post-flip field 1, breaking symmetry.)
-function performSwap(dots: Dot[]) {
+// Symmetric exchange: capture each field's roster first, then flip the
+// chosen fraction of each. (Doing them sequentially would draw from the
+// post-flip field 1, breaking symmetry.) At swapFraction = 1 every dot
+// flips simultaneously and the two fields completely exchange identities
+// with positions preserved.
+function performSwap(dots: Dot[], swapFraction: number) {
   const f0: number[] = [];
   const f1: number[] = [];
   for (let i = 0; i < dots.length; i++) {
@@ -98,8 +101,8 @@ function performSwap(dots: Dot[]) {
     const j = (Math.random() * (i + 1)) | 0;
     const t = f1[i]; f1[i] = f1[j]; f1[j] = t;
   }
-  const h0 = Math.floor(f0.length / 2);
-  const h1 = Math.floor(f1.length / 2);
+  const h0 = Math.floor(f0.length * swapFraction);
+  const h1 = Math.floor(f1.length * swapFraction);
   for (let i = 0; i < h0; i++) dots[f0[i]].field = 1;
   for (let i = 0; i < h1; i++) dots[f1[i]].field = 0;
 }
@@ -108,12 +111,16 @@ interface Props {
   swap?: boolean;
   density?: number;
   dotRadiusDeg?: number;
+  // Fraction of each field's dots that flip at each swap event. Default 0.5
+  // (symmetric half-exchange). 1.0 = both fields completely exchange identities.
+  swapFraction?: number;
 }
 
 export default function Demo({
   swap = false,
   density = DEFAULT_DENSITY,
   dotRadiusDeg = DEFAULT_DOT_RADIUS_DEG,
+  swapFraction = 0.5,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -150,7 +157,7 @@ export default function Demo({
       if (swap) {
         const cycle = Math.floor(t / SWAP_INTERVAL_MS);
         if (cycle > lastSwapCycle) {
-          performSwap(dots);
+          performSwap(dots, swapFraction);
           lastSwapCycle = cycle;
         }
       }
@@ -175,7 +182,7 @@ export default function Demo({
 
     rafId = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(rafId);
-  }, [swap, density, dotRadiusDeg]);
+  }, [swap, density, dotRadiusDeg, swapFraction]);
 
   return <canvas ref={canvasRef} width={W} height={H} style={{ display: 'block', borderRadius: 4, width: '100%', aspectRatio: '1' }} />;
 }
