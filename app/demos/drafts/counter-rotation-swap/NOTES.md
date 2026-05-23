@@ -7,14 +7,15 @@ Two-panel demo:
 
 ## Parameters
 
-Three density × exchange-fraction sections on the page, all sharing the same
-A baseline (continuous counter-rotation). Only B varies:
+Four density × exchange-fraction × interval sections on the page, all
+sharing the same A baseline (continuous counter-rotation). Only B varies:
 
-| section                          | density          | exchange fraction (B) |
-| -------------------------------- | ---------------- | --------------------- |
-| Density 13 · 50% exchange        | 13 dots/°² (exp. 500 condition)         | 50%  |
-| Density 5 · 50% exchange         | 5 dots/°² (Stoner & Blanc 2010)         | 50%  |
-| Density 5 · **100% exchange**    | 5 dots/°² (Stoner & Blanc 2010)         | 100% |
+| section                                  | density                              | exchange fraction (B) | interval |
+| ---------------------------------------- | ------------------------------------ | --------------------- | -------- |
+| Density 13 · 50% · 500 ms                | 13 dots/°² (exp. 500 condition)      | 50%                   | 500 ms   |
+| Density 5 · 50% · 500 ms                 | 5 dots/°² (Stoner & Blanc 2010)      | 50%                   | 500 ms   |
+| Density 5 · **100%** · 500 ms            | 5 dots/°² (Stoner & Blanc 2010)      | 100%                  | 500 ms   |
+| Density 5 · 100% · **1 s**               | 5 dots/°² (Stoner & Blanc 2010)      | 100%                  | 1 s      |
 
 Common parameters across all sections:
 

@@ -114,6 +114,8 @@ interface Props {
   // Fraction of each field's dots that flip at each swap event. Default 0.5
   // (symmetric half-exchange). 1.0 = both fields completely exchange identities.
   swapFraction?: number;
+  // Time between swap events in ms. Default 500.
+  swapIntervalMs?: number;
 }
 
 export default function Demo({
@@ -121,6 +123,7 @@ export default function Demo({
   density = DEFAULT_DENSITY,
   dotRadiusDeg = DEFAULT_DOT_RADIUS_DEG,
   swapFraction = 0.5,
+  swapIntervalMs = SWAP_INTERVAL_MS,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -155,7 +158,7 @@ export default function Demo({
       lastTime = now;
 
       if (swap) {
-        const cycle = Math.floor(t / SWAP_INTERVAL_MS);
+        const cycle = Math.floor(t / swapIntervalMs);
         if (cycle > lastSwapCycle) {
           performSwap(dots, swapFraction);
           lastSwapCycle = cycle;
@@ -182,7 +185,7 @@ export default function Demo({
 
     rafId = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(rafId);
-  }, [swap, density, dotRadiusDeg, swapFraction]);
+  }, [swap, density, dotRadiusDeg, swapFraction, swapIntervalMs]);
 
   return <canvas ref={canvasRef} width={W} height={H} style={{ display: 'block', borderRadius: 4, width: '100%', aspectRatio: '1' }} />;
 }
