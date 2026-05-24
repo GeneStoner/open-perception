@@ -1,5 +1,6 @@
 import SectionHeader from "@/components/SectionHeader";
 import Demo from "./Demo";
+import TransSwapDemo from "./TransSwapDemo";
 
 const APERTURE_DEG = 4.5;
 const APERTURE_AREA_DEG2 = Math.PI * APERTURE_DEG * APERTURE_DEG;
@@ -121,6 +122,26 @@ export default function Page() {
         swapFraction={1.0}
         swapIntervalMs={1000}
       />
+
+      <section className="mt-12">
+        <h2 className="text-base font-semibold mb-1" style={{ color: "var(--text-primary)" }}>
+          Translation + color/motion swap · no delayed onset · 50% coherent
+        </h2>
+        <p className="text-xs mb-4" style={{ color: "var(--text-secondary)" }}>
+          Trial-based (loops). Both fields visible from t=0 (no delayed onset). After 1 s of normal
+          counter-rotation, at <strong>trans onset</strong>: the non-translating field (green CW)
+          swaps both color (→ red) and direction (→ CCW); the translating field (red CCW) swaps
+          color (→ green) and begins 50%-coherent rightward translation. At <strong>trans end</strong>{" "}
+          (120 ms later): the translating field reverts color (→ red) and stops translating; the
+          non-translating field stays swapped (red, CCW) through the 500 ms post phase. Then 500 ms
+          blank, loop restarts. Density 5 dots/°² (Stoner-Blanc).
+        </p>
+        <div className="flex justify-center">
+          <div className="max-w-[420px] w-full">
+            <TransSwapDemo density={5} />
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
