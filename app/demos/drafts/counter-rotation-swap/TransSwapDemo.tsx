@@ -2,19 +2,18 @@
 
 import { useEffect, useRef } from 'react';
 
-// Trial-based demo: two counter-rotating fields, NO delayed onset.
+// Trial-based demo: Stoner & Blanc field-membership swap, no delayed onset.
 //
-// At trans onset:
-//   Field 0 (non-translating, originally green CW):
-//     swaps both color (→ red) and rotation direction (→ CCW)
-//   Field 1 (translating, originally red CCW):
-//     swaps color (→ green) and begins 50%-coherent rightward translation
-//
-// At trans end:
-//   Field 1: reverts color (→ red), stops translating, resumes CCW rotation
-//   Field 0: stays swapped (red, CCW) through the post phase
-//
-// At blank: both invisible, reinit for next trial.
+// Pre-trans:  both fields rotating normally (green CW, red CCW)
+// Trans onset: every dot flips field membership (color + direction swap).
+//   Dots now in field 1 (originally green CW, now red CCW) begin
+//   50%-coherent rightward translation.
+// Trans end:  translation stops. Translating-field dots REVERT rotation
+//   to their original (pre-swap) direction (CW), keeping their swapped
+//   color (red). Non-translating dots (originally red, now green CW)
+//   continue CW. Result: both groups rotate CW with different colors —
+//   the motion cue that distinguished the two surfaces is broken.
+// Blank: reinit, loop.
 
 const PX_PER_DEG   = 30;
 const AP_DEG       = 4.5;
@@ -26,17 +25,19 @@ const TRANS_PX_MS  = (2.26 * PX_PER_DEG) / 1000;
 const APERTURE_AREA_DEG2 = Math.PI * AP_DEG * AP_DEG;
 
 const COL: [string, string]      = ['rgb(90,180,90)', 'rgb(230,110,110)'];
-const ROT_SIGN: [number, number] = [-1, +1];      // field 0 CW, field 1 CCW
-const TRANS_SIGN: [number, number] = [-1, +1];     // field 0 left, field 1 right
+const ROT_SIGN: [number, number] = [-1, +1];
+const TRANS_SIGN: [number, number] = [-1, +1];
 
-const T_ROTATE     = 1000;   // pre-trans rotation (both visible from t=0)
-const T_TRANS      = 120;
-const T_POST       = 500;
-const T_BLANK      = 500;
-const TRANS_START   = T_ROTATE;
-const TRANS_END     = T_ROTATE + T_TRANS;
-const T_BLANK_START = TRANS_END + T_POST;
-const T_TOTAL       = T_BLANK_START + T_BLANK;
+const TRANSLATING_FIELD: 0 | 1 = 1;
+
+const T_ROTATE      = 1050;
+const T_TRANS        = 120;
+const T_POST         = 500;
+const T_BLANK        = 500;
+const TRANS_START    = T_ROTATE;
+const TRANS_END      = T_ROTATE + T_TRANS;
+const T_BLANK_START  = TRANS_END + T_POST;
+const T_TOTAL        = T_BLANK_START + T_BLANK;
 
 const S2 = Math.SQRT1_2;
 const NC_DIRS: [number, number][] = [
@@ -47,14 +48,20 @@ const NC_DIRS: [number, number][] = [
 const W = 320, H = 320;
 const CX = W / 2, CY = H / 2;
 
-interface Dot { x: number; y: number; field: 0|1; isCoherent: boolean; ncDirIdx: number; }
+interface Dot {
+  x: number; y: number;
+  field: 0|1;
+  originalField: 0|1;
+  isCoherent: boolean;
+  ncDirIdx: number;
+}
 
 function initDot(field: 0|1, isCoherent: boolean, ncDirIdx: number, dotR: number): Dot {
   const r2min = EXCL_R * EXCL_R;
   const r2max = (AP_R - dotR) * (AP_R - dotR);
   const r     = Math.sqrt(r2min + Math.random() * (r2max - r2min));
   const θ     = Math.random() * 2 * Math.PI;
-  return { x: r * Math.cos(θ), y: r * Math.sin(θ), field, isCoherent, ncDirIdx };
+  return { x: r * Math.cos(θ), y: r * Math.sin(θ), field, originalField: field, isCoherent, ncDirIdx };
 }
 
 function respawn(dot: Dot, dotR: number) {
@@ -130,6 +137,7 @@ export default function TransSwapDemo({
     let startTime: number | null = null;
     let lastTime:  number | null = null;
     let prevT      = T_TOTAL;
+    let swapped    = false;
     let rafId: number;
 
     function frame(now: number) {
@@ -142,28 +150,34 @@ export default function TransSwapDemo({
       const inTrans = t >= TRANS_START && t < TRANS_END;
       const inPost  = t >= TRANS_END && t < T_BLANK_START;
       const inBlank = t >= T_BLANK_START;
+      const pastTransOnset = t >= TRANS_START && !inBlank;
 
-      // Non-translating field (0): color + direction swapped during trans and post
-      const f0Swapped = inTrans || inPost;
-      // Translating field (1): color swapped during trans only (reverts in post)
-      const f1ColorSwapped = inTrans;
-
-      // Reinit all dots at loop wrap (during blank)
+      // Reinit at loop wrap (during blank)
       if (prevT > t) {
+        swapped = false;
         for (const dot of dots) {
-          const d = initDot(dot.field, dot.isCoherent, dot.ncDirIdx, dotR);
+          dot.field = dot.originalField;
+          const d = initDot(dot.originalField, dot.isCoherent, dot.ncDirIdx, dotR);
           dot.x = d.x; dot.y = d.y;
         }
       }
       prevT = t;
 
+      // Field-membership swap at trans onset (once per trial)
+      if (pastTransOnset && !swapped) {
+        for (const dot of dots) {
+          dot.field = (1 - dot.field) as 0|1;
+        }
+        swapped = true;
+      }
+
       // Update positions
       if (dt > 0 && !inBlank) {
         for (const dot of dots) {
-          if (inTrans && dot.field === 1) {
-            // Translating field: 50%-coherent translation
+          if (inTrans && dot.field === TRANSLATING_FIELD) {
+            // 50%-coherent translation
             if (dot.isCoherent) {
-              dot.x += TRANS_SIGN[1] * TRANS_PX_MS * dt;
+              dot.x += TRANS_SIGN[TRANSLATING_FIELD] * TRANS_PX_MS * dt;
             } else {
               const [dx, dy] = NC_DIRS[dot.ncDirIdx];
               dot.x += TRANS_PX_MS * dx * dt;
@@ -171,9 +185,12 @@ export default function TransSwapDemo({
             }
             checkOOB(dot, dotR);
           } else {
-            // Rotate — field 0 uses reversed direction when swapped
-            const dirSign = (dot.field === 0 && f0Swapped)
-              ? ROT_SIGN[1]   // reversed: CCW instead of CW
+            // Rotation direction:
+            // - During post, translating-field dots revert to their ORIGINAL direction
+            // - All other phases: use current field's direction
+            const revertToOriginal = inPost && dot.field === TRANSLATING_FIELD;
+            const dirSign = revertToOriginal
+              ? ROT_SIGN[dot.originalField]
               : ROT_SIGN[dot.field];
             rotate(dot, dirSign, dt, dotR);
           }
@@ -198,13 +215,7 @@ export default function TransSwapDemo({
           const px = CX + dot.x, py = CY + dot.y;
           const dx = px - CX, dy = py - CY;
           if (dx*dx + dy*dy > AP_R*AP_R) continue;
-
-          // Color mapping: swap when the per-field flag says so
-          let colorIdx: 0|1 = dot.field;
-          if (dot.field === 0 && f0Swapped)      colorIdx = 1;
-          if (dot.field === 1 && f1ColorSwapped)  colorIdx = 0;
-
-          ctx.fillStyle = COL[colorIdx];
+          ctx.fillStyle = COL[dot.field];
           ctx.beginPath();
           ctx.arc(px, py, dotR, 0, Math.PI*2);
           ctx.fill();
