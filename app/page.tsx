@@ -139,6 +139,9 @@ export default function Home() {
                   <OBADemo />
                 </div>
               </Link>
+              <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                Learn the science →
+              </p>
             </div>
           </div>
         </section>
