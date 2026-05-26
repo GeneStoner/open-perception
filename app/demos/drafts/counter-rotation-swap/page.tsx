@@ -132,11 +132,10 @@ export default function Page() {
           (green CW, red CCW), at <strong>trans onset</strong>: every dot flips field membership — color
           AND rotation direction swap simultaneously. Dots now in field 1 (originally green CW, now
           red CCW) begin 50%-coherent rightward translation; 50% translate in random directions.
-          At <strong>trans end</strong> (120 ms later): translation stops. The translating-field dots
-          <strong>revert rotation to their original pre-swap direction</strong> (CW), keeping their
-          swapped color (red). Non-translating dots (green CW) continue unchanged. During the 500 ms
-          post phase, both groups rotate CW with different colors — the direction cue that distinguished
-          the two surfaces is deliberately broken. Then 500 ms blank, loop restarts.
+          At <strong>trans end</strong> (120 ms later): translation stops. All dots rotate per their
+          current (swapped) field — green CW, red CCW — restoring normal counter-rotation. The
+          color-direction pairing is the same as pre-swap, but the underlying dot membership has
+          changed. Then 500 ms post, 500 ms blank, loop restarts.
           Density 5 dots/°² (Stoner-Blanc).
         </p>
         <div className="flex justify-center">

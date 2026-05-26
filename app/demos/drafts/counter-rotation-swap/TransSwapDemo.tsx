@@ -8,11 +8,10 @@ import { useEffect, useRef } from 'react';
 // Trans onset: every dot flips field membership (color + direction swap).
 //   Dots now in field 1 (originally green CW, now red CCW) begin
 //   50%-coherent rightward translation.
-// Trans end:  translation stops. Translating-field dots REVERT rotation
-//   to their original (pre-swap) direction (CW), keeping their swapped
-//   color (red). Non-translating dots (originally red, now green CW)
-//   continue CW. Result: both groups rotate CW with different colors —
-//   the motion cue that distinguished the two surfaces is broken.
+// Trans end:  translation stops. All dots rotate per their current
+//   (swapped) field — green CW, red CCW — restoring counter-rotation
+//   with the same color-direction pairing as pre-swap. The underlying
+//   dot membership has changed but the surface pattern is preserved.
 // Blank: reinit, loop.
 
 const PX_PER_DEG   = 30;
@@ -185,14 +184,7 @@ export default function TransSwapDemo({
             }
             checkOOB(dot, dotR);
           } else {
-            // Rotation direction:
-            // - During post, translating-field dots revert to their ORIGINAL direction
-            // - All other phases: use current field's direction
-            const revertToOriginal = inPost && dot.field === TRANSLATING_FIELD;
-            const dirSign = revertToOriginal
-              ? ROT_SIGN[dot.originalField]
-              : ROT_SIGN[dot.field];
-            rotate(dot, dirSign, dt, dotR);
+            rotate(dot, ROT_SIGN[dot.field], dt, dotR);
           }
         }
       }
