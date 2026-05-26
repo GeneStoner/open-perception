@@ -7,17 +7,6 @@ export default function ObjectBasedAttentionPage() {
   return (
     <div className="max-w-5xl mx-auto px-6 py-16 space-y-14">
 
-      {/* Header */}
-      <div>
-        <div className="flex items-center gap-3 mb-3">
-          <h1 className="text-3xl font-semibold tracking-tight" style={{ color: "var(--text-primary)" }}>
-            Transparent Motion and Object-Based Attention
-          </h1>
-        </div>
-        <div className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-          <ContentBlurb file="oba-tagline.md" />
-        </div>
-      </div>
 
       {/* ── Transparent Motion ───────────────────────────────────────────────── */}
       <section className="space-y-8">
@@ -74,6 +63,9 @@ export default function ObjectBasedAttentionPage() {
       {/* ── Object-Based Attention ───────────────────────────────────────────── */}
       <section className="space-y-6">
         <SectionHeader title="Transparent Motion and Attention: Object-Based" />
+        <div className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+          <ContentBlurb file="oba-tagline.md" />
+        </div>
         <ContentBlurb
           file="oba-object-based-intro.md"
           className="text-sm leading-relaxed"
