@@ -125,22 +125,35 @@ export default function Page() {
 
       <section className="mt-12">
         <h2 className="text-base font-semibold mb-1" style={{ color: "var(--text-primary)" }}>
-          S&B field-membership swap + translation · no delayed onset · 50% coherent
+          Translation with and without S&B field-membership swap · no delayed onset · 50% coherent
         </h2>
         <p className="text-xs mb-4" style={{ color: "var(--text-secondary)" }}>
           Trial-based (loops). Both fields visible from t=0. After 1050 ms of normal counter-rotation
-          (green CW, red CCW), at <strong>trans onset</strong>: every dot flips field membership — color
-          AND rotation direction swap simultaneously. Dots now in field 1 (originally green CW, now
-          red CCW) begin 50%-coherent rightward translation; 50% translate in random directions.
-          At <strong>trans end</strong> (240 ms later): translation stops. All dots rotate per their
-          current (swapped) field — green CW, red CCW — restoring normal counter-rotation. The
-          color-direction pairing is the same as pre-swap, but the underlying dot membership has
-          changed. Then 500 ms post, 500 ms blank, loop restarts.
+          (green CW, red CCW), translation begins (240 ms, 50% coherent rightward, 50% random).
+          Left panel: no swap — red field translates as normal. Right panel: at trans onset every dot
+          flips field membership (color + direction). Dots now in field 1 (originally green CW, now
+          red CCW) translate. After translation, both fields resume counter-rotation per their current
+          field (green CW, red CCW). Then 500 ms post, 500 ms blank, loop restarts.
           Density 5 dots/°² (Stoner-Blanc).
         </p>
-        <div className="flex justify-center">
-          <div className="max-w-[420px] w-full">
-            <TransSwapDemo density={5} />
+        <div className="flex flex-wrap gap-6 justify-center">
+          <div className="flex-1 min-w-[280px] max-w-[420px]">
+            <h4 className="text-sm font-semibold uppercase tracking-wider mb-2 text-center" style={{ color: "var(--text-primary)" }}>
+              No swap — normal translation
+            </h4>
+            <p className="text-xs mb-3 text-center" style={{ color: "var(--text-secondary)" }}>
+              Red (field 1) translates right at 50% coherence. No field-membership swap.
+            </p>
+            <TransSwapDemo density={5} fieldSwap={false} />
+          </div>
+          <div className="flex-1 min-w-[280px] max-w-[420px]">
+            <h4 className="text-sm font-semibold uppercase tracking-wider mb-2 text-center" style={{ color: "var(--text-primary)" }}>
+              S&B swap at trans onset
+            </h4>
+            <p className="text-xs mb-3 text-center" style={{ color: "var(--text-secondary)" }}>
+              Every dot flips field (color + direction) at trans onset. The newly-red dots translate right at 50% coherence.
+            </p>
+            <TransSwapDemo density={5} fieldSwap={true} />
           </div>
         </div>
       </section>

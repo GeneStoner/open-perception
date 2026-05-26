@@ -104,11 +104,15 @@ function drawFixation(ctx: CanvasRenderingContext2D) {
 interface Props {
   density?: number;
   dotRadiusDeg?: number;
+  // When true, every dot flips field membership at trans onset (S&B swap).
+  // When false, no swap — just normal translation. Default true.
+  fieldSwap?: boolean;
 }
 
 export default function TransSwapDemo({
   density = 5,
   dotRadiusDeg = 0.04,
+  fieldSwap = true,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -162,8 +166,8 @@ export default function TransSwapDemo({
       }
       prevT = t;
 
-      // Field-membership swap at trans onset (once per trial)
-      if (pastTransOnset && !swapped) {
+      // Field-membership swap at trans onset (once per trial, if enabled)
+      if (fieldSwap && pastTransOnset && !swapped) {
         for (const dot of dots) {
           dot.field = (1 - dot.field) as 0|1;
         }
@@ -221,7 +225,7 @@ export default function TransSwapDemo({
 
     rafId = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(rafId);
-  }, [density, dotRadiusDeg]);
+  }, [density, dotRadiusDeg, fieldSwap]);
 
   return <canvas ref={canvasRef} width={W} height={H} style={{ display: 'block', borderRadius: 4, width: '100%', aspectRatio: '1' }} />;
 }
