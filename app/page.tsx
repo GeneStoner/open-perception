@@ -140,7 +140,7 @@ export default function Home() {
                 </div>
               </Link>
               <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-                Learn the science →
+                Learn about the science →
               </p>
             </div>
           </div>

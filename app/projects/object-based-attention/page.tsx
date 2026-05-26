@@ -1,5 +1,6 @@
 import SectionHeader from "@/components/SectionHeader";
 import ContentBlurb from "@/components/ContentBlurb";
+import CounterRotationDemo from "@/components/CounterRotationDemo";
 import Link from "next/link";
 
 export default function ObjectBasedAttentionPage() {
@@ -17,6 +18,48 @@ export default function ObjectBasedAttentionPage() {
           <ContentBlurb file="oba-tagline.md" />
         </div>
       </div>
+
+      {/* ── Transparent Motion ───────────────────────────────────────────────── */}
+      <section className="space-y-8">
+        <SectionHeader title="Transparent Motion" />
+
+        <ContentBlurb
+          file="oba-transparent-motion-intro.md"
+          className="text-sm leading-relaxed"
+          style={{ color: "var(--text-secondary)" }}
+        />
+
+        {/* Side-by-side demos */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+
+          {/* Baseline */}
+          <div className="space-y-3">
+            <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+              Counter-rotation baseline
+            </p>
+            <CounterRotationDemo swap={false} />
+            <ContentBlurb
+              file="oba-demo-baseline-caption.md"
+              className="text-xs leading-relaxed"
+              style={{ color: "var(--text-secondary)" }}
+            />
+          </div>
+
+          {/* Same + 500 ms swaps */}
+          <div className="space-y-3">
+            <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+              Same — field-membership swap every 500 ms
+            </p>
+            <CounterRotationDemo swap={true} swapIntervalMs={500} />
+            <ContentBlurb
+              file="oba-demo-swap-caption.md"
+              className="text-xs leading-relaxed"
+              style={{ color: "var(--text-secondary)" }}
+            />
+          </div>
+
+        </div>
+      </section>
 
       {/* ── For the Curious ──────────────────────────────────────────────────── */}
       <section className="space-y-8">
@@ -46,10 +89,7 @@ export default function ObjectBasedAttentionPage() {
           <Link
             href="/projects/object-based-attention/volunteer"
             className="text-xs font-medium px-4 py-2 rounded border whitespace-nowrap self-start sm:self-auto"
-            style={{
-              borderColor: "var(--accent)",
-              color: "var(--accent)",
-            }}
+            style={{ borderColor: "var(--accent)", color: "var(--accent)" }}
           >
             Learn more →
           </Link>
@@ -67,10 +107,8 @@ export default function ObjectBasedAttentionPage() {
             <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
               Internal data, session logs, analysis scripts, and experimental protocols are available
               to invited collaborators. To request access contact{" "}
-              <a
-                href="mailto:Generstoner@gmail.com"
-                style={{ color: "var(--accent)", textDecoration: "underline" }}
-              >
+              <a href="mailto:Generstoner@gmail.com"
+                style={{ color: "var(--accent)", textDecoration: "underline" }}>
                 Generstoner@gmail.com
               </a>.
             </p>
@@ -78,10 +116,7 @@ export default function ObjectBasedAttentionPage() {
           <Link
             href="/projects/object-based-attention/collaborators"
             className="text-xs font-medium px-4 py-2 rounded border whitespace-nowrap self-start sm:self-auto"
-            style={{
-              borderColor: "var(--accent)",
-              color: "var(--accent)",
-            }}
+            style={{ borderColor: "var(--accent)", color: "var(--accent)" }}
           >
             Sign in →
           </Link>
