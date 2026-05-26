@@ -30,7 +30,7 @@ const TRANS_SIGN: [number, number] = [-1, +1];
 const TRANSLATING_FIELD: 0 | 1 = 1;
 
 const T_ROTATE      = 1050;
-const T_TRANS        = 120;
+const T_TRANS        = 240;
 const T_POST         = 500;
 const T_BLANK        = 500;
 const TRANS_START    = T_ROTATE;

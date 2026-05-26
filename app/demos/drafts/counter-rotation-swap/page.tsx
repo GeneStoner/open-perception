@@ -132,7 +132,7 @@ export default function Page() {
           (green CW, red CCW), at <strong>trans onset</strong>: every dot flips field membership — color
           AND rotation direction swap simultaneously. Dots now in field 1 (originally green CW, now
           red CCW) begin 50%-coherent rightward translation; 50% translate in random directions.
-          At <strong>trans end</strong> (120 ms later): translation stops. All dots rotate per their
+          At <strong>trans end</strong> (240 ms later): translation stops. All dots rotate per their
           current (swapped) field — green CW, red CCW — restoring normal counter-rotation. The
           color-direction pairing is the same as pre-swap, but the underlying dot membership has
           changed. Then 500 ms post, 500 ms blank, loop restarts.
