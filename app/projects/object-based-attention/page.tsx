@@ -50,19 +50,9 @@ export default function ObjectBasedAttentionPage() {
         </div>
       </section>
 
-      {/* ── Feature-Based Attention ─────────────────────────────────────────── */}
-      <section className="space-y-6">
-        <SectionHeader title="Transparent Motion and Attention: Feature-Based" />
-        <ContentBlurb
-          file="oba-feature-based-intro.md"
-          className="text-sm leading-relaxed"
-          style={{ color: "var(--text-secondary)" }}
-        />
-      </section>
-
       {/* ── Object-Based Attention ───────────────────────────────────────────── */}
       <section className="space-y-6">
-        <SectionHeader title="Transparent Motion and Attention: Object-Based" />
+        <SectionHeader title="Transparent Motion and Object-Based Attention" />
         <div className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
           <ContentBlurb file="oba-tagline.md" />
         </div>
