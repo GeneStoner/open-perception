@@ -18,9 +18,26 @@ const RAND_SPEED   = TRANS_PX_MS;
 const CYL_V_MAX    = TRANS_PX_MS;
 const COL          = 'rgb(210,210,210)';
 
-// Transition: 24s cycle (6s per state), lerp rate gives ~1s smooth blend
-const CYCLE_MS  = 24000;
-const LERP_RATE = 0.004; // per ms — 1/0.004 = 250ms time constant
+// Transition: 52s cycle (13s per state).
+// Each state: 55% hold (stable percept) then 45% smoothstep blend to next.
+// ~7s stable, ~6s morphing.
+const CYCLE_MS   = 52000;
+const HOLD_FRAC  = 0.55;
+const LERP_RATE  = 0.015; // fast enough to track the smoothly-moving target
+
+// Returns a phase in [0,4] that has long flat plateaus + smooth transitions
+function smoothedPhase(raw: number): number {
+  const state = Math.floor(raw);
+  const frac  = raw - state;
+  let t: number;
+  if (frac < HOLD_FRAC) {
+    t = 0;
+  } else {
+    const s = (frac - HOLD_FRAC) / (1 - HOLD_FRAC); // 0→1
+    t = s * s * (3 - 2 * s);                          // smoothstep
+  }
+  return state + t;
+}
 
 interface Dot {
   x: number; y: number;
@@ -70,24 +87,31 @@ export default function RotatingCylinderDemo({ mode }: { mode: CylMode }) {
 
       ctx!.fillStyle = '#0a0a0a'; ctx!.fillRect(0, 0, W, H);
 
-      // Transition mode: phase 0–4 cycles over CYCLE_MS (0=random,1=single,2=transparent,3=cylinder)
-      const phase = mode === 'transition'
+      const rawPhase = mode === 'transition'
         ? ((now - startT) % CYCLE_MS) / CYCLE_MS * 4
         : 0;
+      const sp = mode === 'transition' ? smoothedPhase(rawPhase) : 0;
+
+      // Target velocity for a given state index
+      function stateTarget(s: number, dot: Dot): { vx: number; vy: number } {
+        const si = ((Math.round(s)) % 4 + 4) % 4;
+        if (si === 0) return { vx: dot.rvx, vy: dot.rvy };
+        if (si === 1) return { vx: TRANS_PX_MS, vy: 0 };
+        if (si === 2) return { vx: (dot.field === 0 ? +1 : -1) * TRANS_PX_MS, vy: 0 };
+        const speed = CYL_V_MAX * Math.sqrt(Math.max(0, 1 - (dot.x / CX) ** 2));
+        return { vx: (dot.field === 0 ? +1 : -1) * speed, vy: 0 };
+      }
 
       for (const dot of dots) {
         if (mode === 'transition') {
-          // Compute target velocity for current state
-          const state = Math.floor(phase) % 4;
-          let tvx = 0, tvy = 0;
-          if (state === 0) { tvx = dot.rvx; tvy = dot.rvy; }
-          else if (state === 1) { tvx = TRANS_PX_MS; tvy = 0; }
-          else if (state === 2) { tvx = (dot.field === 0 ? +1 : -1) * TRANS_PX_MS; tvy = 0; }
-          else {
-            const speed = CYL_V_MAX * Math.sqrt(Math.max(0, 1 - (dot.x / CX) ** 2));
-            tvx = (dot.field === 0 ? +1 : -1) * speed; tvy = 0;
-          }
-          // Lerp toward target
+          // Blend between current and next state targets using smoothed phase
+          const stA  = Math.floor(sp) % 4;
+          const stB  = (stA + 1) % 4;
+          const blend = sp - Math.floor(sp);
+          const tA = stateTarget(stA, dot);
+          const tB = stateTarget(stB, dot);
+          const tvx = tA.vx * (1 - blend) + tB.vx * blend;
+          const tvy = tA.vy * (1 - blend) + tB.vy * blend;
           dot.vx += (tvx - dot.vx) * LERP_RATE * dt;
           dot.vy += (tvy - dot.vy) * LERP_RATE * dt;
           dot.x += dot.vx * dt;
