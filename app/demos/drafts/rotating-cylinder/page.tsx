@@ -9,17 +9,22 @@ const PANELS = [
   {
     mode:    'single'      as const,
     title:   'One coherent field',
-    caption: 'All dots rotate together. Local motions integrate into a single global percept — a rotating surface.',
+    caption: 'All dots translate together in one direction. Local motions integrate into a single global surface.',
   },
   {
     mode:    'transparent' as const,
-    title:   'Two counter-rotating fields',
-    caption: 'Two superimposed fields rotating in opposite directions. Both surfaces are simultaneously perceived — transparent motion.',
+    title:   'Two opposing fields',
+    caption: 'Two superimposed fields moving in opposite directions. Both surfaces are simultaneously visible — transparent motion.',
   },
   {
     mode:    'cylinder'    as const,
     title:   'Rotating cylinder',
-    caption: 'Same two fields, but with a sinusoidal speed profile: dots move fastest at centre, slowest at the edges. The visual system interprets this as a cylinder rotating in depth. The percept is bistable — the cylinder can spontaneously reverse direction.',
+    caption: 'Same two fields, but speed varies sinusoidally: fastest at centre, zero at the edges. The visual system recovers a cylinder rotating in depth. The percept is bistable — rotation direction can spontaneously reverse.',
+  },
+  {
+    mode:    'transition'  as const,
+    title:   'Continuous transition',
+    caption: 'The same dots cycle slowly through all four states. Watch a single region of dots to follow the transition from incoherent noise to transparent motion to structured depth.',
   },
 ] as const;
 
@@ -43,7 +48,7 @@ export default function RotatingCylinderPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
         {PANELS.map(({ mode, title, caption }) => (
           <div key={mode} className="space-y-3">
             <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
