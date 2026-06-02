@@ -139,8 +139,8 @@ export default function Home() {
                   <OBADemo />
                 </div>
               </Link>
-              <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-                Learn about the science →
+              <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+                Click the stimulus to learn about the science →
               </p>
             </div>
           </div>

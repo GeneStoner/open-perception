@@ -23,9 +23,11 @@ export default function ObjectBasedAttentionPage() {
 
           {/* Baseline */}
           <div className="space-y-3">
-            <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
-              Counter-rotation baseline
-            </p>
+            <ContentBlurb
+              file="CounterRotatingDots-title.md"
+              className="text-sm font-semibold text-center"
+              style={{ color: "var(--text-primary)" }}
+            />
             <CounterRotationDemo swap={false} />
             <ContentBlurb
               file="oba-demo-baseline-caption.md"
@@ -36,9 +38,11 @@ export default function ObjectBasedAttentionPage() {
 
           {/* Same + 500 ms swaps */}
           <div className="space-y-3">
-            <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
-              Same — field-membership swap every 500 ms
-            </p>
+            <ContentBlurb
+              file="CounterRotatingDots-Swap-title.md"
+              className="text-sm font-semibold text-center"
+              style={{ color: "var(--text-primary)" }}
+            />
             <CounterRotationDemo swap={true} swapIntervalMs={500} />
             <ContentBlurb
               file="oba-demo-swap-caption.md"

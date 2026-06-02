@@ -1,1 +1,1 @@
-[Placeholder caption for counter-rotation baseline demo.]
+Two random-dot fields rotating in opposite directions are superimposed at the same location. No spatial boundary separates them — surface identity is carried entirely by coherent motion direction. The visual system nonetheless perceives two distinct rotating surfaces, one clockwise and one counterclockwise.

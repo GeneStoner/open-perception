@@ -1,1 +1,1 @@
-[Placeholder caption for same stimulus with 500 ms field-membership swaps.]
+Every 500 ms, the dot populations exchange surface membership: each dot switches from one rotating field to the other. The rotation directions are unchanged. Two coherent rotating surfaces continue to be perceived despite the disruption — the visual system reassigns the incoming dot populations to the appropriate surface. This manipulation probes whether surface identity is carried by the physical elements themselves or by their instantaneous motion direction.
