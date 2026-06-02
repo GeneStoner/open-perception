@@ -139,6 +139,11 @@ export default function Home() {
                   <OBADemo />
                 </div>
               </Link>
+              <ContentBlurb
+                file="home-oba-demo-caption.md"
+                className="text-xs leading-relaxed text-center max-w-xs"
+                style={{ color: "var(--text-secondary)" }}
+              />
               <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
                 Click the stimulus to learn about the science →
               </p>

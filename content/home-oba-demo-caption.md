@@ -1,0 +1,1 @@
+Transparent-motion stimulus. Two superimposed fields of dots rotate in opposite directions, producing a perception of two transparent surfaces moving over  one another. The abrupt onset of one dot field captures attention. Variants of this stimulus are used in several current Open Perception experiments to study the mechanisms of visual attention.

@@ -1,1 +1,1 @@
-Two random-dot fields rotating in opposite directions are superimposed at the same location. No spatial boundary separates them — surface identity is carried entirely by coherent motion direction. The visual system nonetheless perceives two distinct rotating surfaces, one clockwise and one counterclockwise.
+Two superimposed dot fields rotate in opposite directions. Most observers perceive two distinct surfaces moving over one another rather than a single collection of independently moving dots.  
