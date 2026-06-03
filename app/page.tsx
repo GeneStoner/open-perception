@@ -141,7 +141,7 @@ export default function Home() {
               </Link>
               <ContentBlurb
                 file="home-oba-demo-caption.md"
-                className="text-xs leading-relaxed text-center max-w-xs"
+                className="text-xs leading-relaxed max-w-xs"
                 style={{ color: "var(--text-secondary)" }}
               />
               <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
