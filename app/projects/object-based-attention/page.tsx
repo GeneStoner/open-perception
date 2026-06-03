@@ -1,6 +1,7 @@
 import SectionHeader from "@/components/SectionHeader";
 import ContentBlurb from "@/components/ContentBlurb";
 import CounterRotationDemo from "@/components/CounterRotationDemo";
+import VRDotsDemo from "@/components/VRDotsDemo";
 import Link from "next/link";
 
 export default function ObjectBasedAttentionPage() {
@@ -65,6 +66,32 @@ export default function ObjectBasedAttentionPage() {
           className="text-sm leading-relaxed"
           style={{ color: "var(--text-secondary)" }}
         />
+
+        {/* Cued vs Uncued demos */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-2">
+          <div className="space-y-3">
+            <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+              Cued — delayed-onset field translates
+            </p>
+            <VRDotsDemo cued={true} swapType="none" />
+            <ContentBlurb
+              file="oba-delayed-onset-caption-cued.md"
+              className="text-xs leading-relaxed"
+              style={{ color: "var(--text-secondary)" }}
+            />
+          </div>
+          <div className="space-y-3">
+            <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+              Uncued — always-on field translates
+            </p>
+            <VRDotsDemo cued={false} swapType="none" />
+            <ContentBlurb
+              file="oba-delayed-onset-caption-uncued.md"
+              className="text-xs leading-relaxed"
+              style={{ color: "var(--text-secondary)" }}
+            />
+          </div>
+        </div>
       </section>
 
       {/* ── For the Curious ──────────────────────────────────────────────────── */}
