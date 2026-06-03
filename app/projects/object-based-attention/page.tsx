@@ -31,7 +31,7 @@ export default function ObjectBasedAttentionPage() {
             <CounterRotationDemo swap={false} />
             <ContentBlurb
               file="oba-demo-baseline-caption.md"
-              className="text-xs leading-relaxed"
+              className="text-xs leading-relaxed mt-3"
               style={{ color: "var(--text-secondary)" }}
             />
           </div>
@@ -46,7 +46,7 @@ export default function ObjectBasedAttentionPage() {
             <CounterRotationDemo swap={true} swapIntervalMs={500} />
             <ContentBlurb
               file="oba-demo-swap-caption.md"
-              className="text-xs leading-relaxed"
+              className="text-xs leading-relaxed mt-3"
               style={{ color: "var(--text-secondary)" }}
             />
           </div>
