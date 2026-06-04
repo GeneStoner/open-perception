@@ -1,0 +1,1 @@
+Two superimposed dot fields rotate in opposite directions. Most observers perceive two distinct surfaces moving over one another rather than a single collection of independently moving dots.  

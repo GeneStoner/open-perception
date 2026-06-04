@@ -23,31 +23,35 @@ export default function ObjectBasedAttentionPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
 
           {/* Baseline */}
-          <div className="space-y-3">
-            <ContentBlurb
-              file="CounterRotatingDots-title.md"
-              className="text-sm font-semibold text-center"
-              style={{ color: "var(--text-primary)" }}
-            />
+          <div className="flex flex-col gap-3">
+            <div className="h-16 flex items-center justify-center">
+              <ContentBlurb
+                file="tm-demo-constant-title.md"
+                className="text-sm font-semibold text-center"
+                style={{ color: "var(--text-primary)" }}
+              />
+            </div>
             <CounterRotationDemo swap={false} />
             <ContentBlurb
-              file="oba-demo-baseline-caption.md"
-              className="text-xs leading-relaxed mt-3"
+              file="tm-demo-constant-caption.md"
+              className="text-xs leading-relaxed"
               style={{ color: "var(--text-secondary)" }}
             />
           </div>
 
-          {/* Same + 500 ms swaps */}
-          <div className="space-y-3">
-            <ContentBlurb
-              file="CounterRotatingDots-Swap-title.md"
-              className="text-sm font-semibold text-center"
-              style={{ color: "var(--text-primary)" }}
-            />
+          {/* Swap every 500 ms */}
+          <div className="flex flex-col gap-3">
+            <div className="h-16 flex items-center justify-center">
+              <ContentBlurb
+                file="tm-demo-swap-title.md"
+                className="text-sm font-semibold text-center"
+                style={{ color: "var(--text-primary)" }}
+              />
+            </div>
             <CounterRotationDemo swap={true} swapIntervalMs={500} />
             <ContentBlurb
-              file="oba-demo-swap-caption.md"
-              className="text-xs leading-relaxed mt-3"
+              file="tm-demo-swap-caption.md"
+              className="text-xs leading-relaxed"
               style={{ color: "var(--text-secondary)" }}
             />
           </div>

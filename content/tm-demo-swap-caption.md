@@ -1,0 +1,1 @@
+Same as stimulus to the left except that every 500 ms, 50% of the dots of the two dot fields switch color and rotation direction.  Without close scutiny, this dot switching tends to go unnoticed emphasizing that its the global directions, rather than the local motions of the dots, that generally underlie our perception of these moving surfaces.
