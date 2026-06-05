@@ -80,7 +80,7 @@ export default function ObjectBasedAttentionPage() {
             <VRDotsDemo cued={true} swapType="none" />
             <ContentBlurb
               file="oba-delayed-onset-caption-cued.md"
-              className="text-xs leading-relaxed"
+              className="text-xs leading-relaxed pt-2"
               style={{ color: "var(--text-secondary)" }}
             />
           </div>
@@ -91,7 +91,7 @@ export default function ObjectBasedAttentionPage() {
             <VRDotsDemo cued={false} swapType="none" />
             <ContentBlurb
               file="oba-delayed-onset-caption-uncued.md"
-              className="text-xs leading-relaxed"
+              className="text-xs leading-relaxed pt-2"
               style={{ color: "var(--text-secondary)" }}
             />
           </div>
