@@ -1,1 +1,1 @@
-The delayed (cued) dot field, shown in green, translates. Observers more reliably judge these *cued* translations than the corresponding *uncued* translations.
+The delayed (cued) dot field, shown in green, translates. Observers more reliably judge these *cued* translations than the corresponding *uncued* translations. (*Cued* refers to which set of dots was delayed at trial onset.)

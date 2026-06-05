@@ -1,0 +1,1 @@
+At the moment of translation, both the colors and the rotation directions of the two dot fields are exchanged. Globally the resulting configuration matches the *cued* no-swap demo above. Yet observers still judge these *uncued* translations less reliably than the corresponding *cued* ones, consistent with selection by individual-dot identity rather than global features.

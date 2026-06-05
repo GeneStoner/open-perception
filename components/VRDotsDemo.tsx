@@ -22,10 +22,11 @@ const ROT_RAD_MS   = (81 * 0.5 * Math.PI / 180) / 1000; // rad/ms
 const TRANS_PX_MS  = (2.26 * 0.5 * PX_PER_DEG) / 1000;  // px/ms
 const T_TRANS_DEMO = 44 * 4;   // 176 ms (4× actual 44 ms)
 
-// Trial timing (ms)
-const T_SOLO    = 750;
-const T_PRETRANS = 300;
-const T_POST    = 500;
+// Trial timing (ms) — pre/post phases doubled to compensate for half-speed rotation
+// (matches real-paradigm angular displacement; translation kept at 4× actual for clarity)
+const T_SOLO    = 1500;
+const T_PRETRANS = 600;
+const T_POST    = 800;
 const T_TOTAL   = T_SOLO + T_PRETRANS + T_TRANS_DEMO + T_POST;
 
 // Dots: 63/field, split into coherent (MK_LIN) and NC (MK_NC) subfields
@@ -209,7 +210,7 @@ export default function VRDotsDemo({ cued, swapType }: Props) {
         const dx = px - CX, dy = py - CY;
         if (dx * dx + dy * dy > AP_R * AP_R) continue;
 
-        const dispField = (colorSwap && inTrans)
+        const dispField = (colorSwap && t >= TRANS_START)
           ? (dot.field === 0 ? 1 : 0) as 0 | 1
           : dot.field;
         ctx.fillStyle = COL[dispField];

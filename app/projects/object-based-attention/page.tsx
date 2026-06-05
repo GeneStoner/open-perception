@@ -75,7 +75,7 @@ export default function ObjectBasedAttentionPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-2">
           <div className="space-y-3">
             <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
-              Cued — delayed-onset field translates
+              <em>Cued</em> — delayed-onset field translates
             </p>
             <VRDotsDemo cued={true} swapType="none" />
             <ContentBlurb
@@ -86,11 +86,37 @@ export default function ObjectBasedAttentionPage() {
           </div>
           <div className="space-y-3">
             <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
-              Uncued — always-on field translates
+              <em>Uncued</em> — always-on field translates
             </p>
             <VRDotsDemo cued={false} swapType="none" />
             <ContentBlurb
               file="oba-delayed-onset-caption-uncued.md"
+              className="text-xs leading-relaxed pt-2"
+              style={{ color: "var(--text-secondary)" }}
+            />
+          </div>
+        </div>
+
+        {/* Cued vs Uncued demos — with motion + color swap */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-2">
+          <div className="space-y-3">
+            <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+              <em>Cued</em> — with motion + color swap
+            </p>
+            <VRDotsDemo cued={true} swapType="cm" />
+            <ContentBlurb
+              file="oba-delayed-onset-swap-caption-cued.md"
+              className="text-xs leading-relaxed pt-2"
+              style={{ color: "var(--text-secondary)" }}
+            />
+          </div>
+          <div className="space-y-3">
+            <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+              <em>Uncued</em> — with motion + color swap
+            </p>
+            <VRDotsDemo cued={false} swapType="cm" />
+            <ContentBlurb
+              file="oba-delayed-onset-swap-caption-uncued.md"
               className="text-xs leading-relaxed pt-2"
               style={{ color: "var(--text-secondary)" }}
             />
