@@ -254,6 +254,108 @@ export default function CollaboratorDataPage() {
 
       </section>
 
+      {/* ── Computational Modeling ───────────────────────────────────────────── */}
+      <section className="space-y-10">
+        <SectionHeader
+          title="Computational Modeling"
+          subtitle="Re-implementing the published accounts, then testing them against the VR data"
+        />
+
+        <ContentBlurb file="model-intro.md"
+          className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }} />
+
+        {/* Biased-competition circuit (Reynolds et al. 1999) */}
+        <div className="space-y-3">
+          <div
+            className="rounded-lg border overflow-hidden"
+            style={{ borderColor: "var(--border)", background: "var(--surface)" }}
+          >
+            <Image
+              src="/figures/modeling/web_model_circuit.png"
+              alt="Biased-competition circuit (Reynolds et al. 1999) mapped onto MT/MST and V1"
+              width={1767}
+              height={1188}
+              className="w-full h-auto"
+            />
+          </div>
+          <ContentBlurb file="model-circuit-caption.md"
+            className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }} />
+        </div>
+
+        {/* Feature trajectories — no-swap + motion-swap (Figs. 1B & 4) */}
+        <div className="space-y-3">
+          <div
+            className="rounded-lg border overflow-hidden"
+            style={{ borderColor: "var(--border)", background: "var(--surface)" }}
+          >
+            <Image
+              src="/figures/modeling/web_model_motionswap.png"
+              alt="Feature trajectories, no-swap and motion-swap — Stoner & Blanc (2010) Figs. 1B & 4"
+              width={2202}
+              height={1130}
+              className="w-full h-auto"
+            />
+          </div>
+          <ContentBlurb file="model-trajectories-caption.md"
+            className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }} />
+        </div>
+
+        {/* Directional inputs — all four trial types */}
+        <div className="space-y-3">
+          <div
+            className="rounded-lg border overflow-hidden"
+            style={{ borderColor: "var(--border)", background: "var(--surface)" }}
+          >
+            <Image
+              src="/figures/modeling/web_model_inputs.png"
+              alt="Directional inputs S(t) across all four trial types"
+              width={2697}
+              height={1159}
+              className="w-full h-auto"
+            />
+          </div>
+          <ContentBlurb file="model-inputs-caption.md"
+            className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }} />
+        </div>
+
+        {/* Model responses — all four trial types (no-swap + swap) */}
+        <div className="space-y-3">
+          <div
+            className="rounded-lg border overflow-hidden"
+            style={{ borderColor: "var(--border)", background: "var(--surface)" }}
+          >
+            <Image
+              src="/figures/modeling/web_model_responses.png"
+              alt="Model responses across all four trial types — cued advantage and its reversal under motion swap"
+              width={2697}
+              height={1647}
+              className="w-full h-auto"
+            />
+          </div>
+          <ContentBlurb file="model-responses-caption.md"
+            className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }} />
+        </div>
+
+        {/* Colour-swap feature trajectories (Fig. 5 idiom) — model is colour-blind */}
+        <div className="space-y-3">
+          <div
+            className="rounded-lg border overflow-hidden"
+            style={{ borderColor: "var(--border)", background: "var(--surface)" }}
+          >
+            <Image
+              src="/figures/modeling/web_model_colorswap.png"
+              alt="Colour-swap feature trajectories — identity (line style) is invariant; the model is colour-blind"
+              width={2202}
+              height={1130}
+              className="w-full h-auto"
+            />
+          </div>
+          <ContentBlurb file="model-colorswap-caption.md"
+            className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }} />
+        </div>
+
+      </section>
+
     </div>
   );
 }
