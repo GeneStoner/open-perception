@@ -1,3 +1,1 @@
-We are building transparent, parameter-by-parameter re-implementations of the leading computational accounts of surface-based selection, so that every prediction we test against the VR data traces back to explicit neurons and equations. The first model in the series is the **motion-competition model** of Stoner & Blanc (2010) — the account our delayed-onset paradigm was originally designed to test.
-
-The model is deliberately spare: two adapting motion channels and a single divisive-normalization stage, with **no attentional term at all**. That makes it a clean falsification target. It reproduces the cued advantage from adaptation alone, but it also makes a sharp, testable prediction about what should happen under a motion swap — a prediction the behavioral data refute.
+We are implementing a variety of computational accounts in order to provide a framework for understanding existing experimental findings and to provide predictions for future experiments.

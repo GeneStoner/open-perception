@@ -257,7 +257,7 @@ export default function CollaboratorDataPage() {
       {/* ── Computational Modeling ───────────────────────────────────────────── */}
       <section className="space-y-10">
         <SectionHeader
-          title="Computational Modeling"
+          title="Modeling"
           subtitle="Re-implementing the published accounts, then testing them against the VR data"
         />
 

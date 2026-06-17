@@ -159,6 +159,32 @@ export default function ObjectBasedAttentionPage() {
         </div>
       </section>
 
+      {/* ── Computational Modeling ───────────────────────────────────────────── */}
+      <section>
+        <SectionHeader title="Computational Modeling" subtitle="Re-implementing the published accounts of surface-based selection" />
+        <div
+          className="rounded-lg border p-6 flex flex-col sm:flex-row sm:items-center gap-4"
+          style={{ background: "var(--surface)", borderColor: "var(--border)" }}
+        >
+          <div className="flex-1 space-y-1">
+            <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+              Transparent, parameter-by-parameter models we can falsify against the VR data.
+            </p>
+            <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+              Starting with the motion-competition model of Stoner &amp; Blanc (2010) — every
+              prediction traces back to explicit neurons and equations.
+            </p>
+          </div>
+          <Link
+            href="/projects/object-based-attention/modeling"
+            className="text-xs font-medium px-4 py-2 rounded border whitespace-nowrap self-start sm:self-auto"
+            style={{ borderColor: "var(--accent)", color: "var(--accent)" }}
+          >
+            Explore the models →
+          </Link>
+        </div>
+      </section>
+
       {/* ── For Collaborators ────────────────────────────────────────────────── */}
       <section>
         <SectionHeader title="For Collaborators" subtitle="Access by invitation" />
