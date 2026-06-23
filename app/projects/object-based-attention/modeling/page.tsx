@@ -158,8 +158,8 @@ export default function ModelingPage() {
             <Image
               src="/figures/modeling/rh_fig1_cued.png"
               alt="Reynolds & Heeger Figure 1 schematic, run on the delayed-onset stimulus: stimulus drive multiplied by the attention field then divided by the suppressive drive to give the population response, as direction-by-time grayscale maps"
-              width={2400}
-              height={1200}
+              width={2560}
+              height={1440}
               className="w-full h-auto"
             />
           </div>
