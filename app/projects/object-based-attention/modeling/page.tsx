@@ -47,8 +47,29 @@ export default function ModelingPage() {
           style={{ color: "var(--text-secondary)" }}
         />
 
-        {/* Model schematic: circuit + Stage-1 adapting channels */}
+        {/* Delayed-onset design — published figure (Catek et al., 2022) */}
         <div id="figure-1" className="space-y-3 scroll-mt-24">
+          <div
+            className="rounded-lg border overflow-hidden mx-auto max-w-lg"
+            style={{ borderColor: "var(--border)", background: "var(--surface)" }}
+          >
+            <Image
+              src="/figures/modeling/catek_fig1_original.png"
+              alt="Delayed-onset design (Catek et al., 2022): the trial as a sequence of rotating transparent dot-field frames for cued and uncued, and the feature-direction timeline"
+              width={986}
+              height={1070}
+              className="w-full h-auto"
+            />
+          </div>
+          <ContentBlurb
+            file="model-catek-design-caption.md"
+            className="text-xs leading-relaxed"
+            style={{ color: "var(--text-secondary)" }}
+          />
+        </div>
+
+        {/* Model schematic: circuit + Stage-1 adapting channels */}
+        <div id="figure-2" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-hidden mx-auto max-w-2xl"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -69,7 +90,7 @@ export default function ModelingPage() {
         </div>
 
         {/* MT RF: rotations are locally translatory (conceptual setup) */}
-        <div id="figure-2" className="space-y-3 scroll-mt-24">
+        <div id="figure-3" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-hidden"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -90,7 +111,7 @@ export default function ModelingPage() {
         </div>
 
         {/* Feature trajectories ⟷ model input (toggle) — S&B (2010) Fig. 4 */}
-        <div id="figure-3" className="space-y-3 scroll-mt-24">
+        <div id="figure-4" className="space-y-3 scroll-mt-24">
           <TrajInputToggle
             trajSrc="/figures/modeling/web_model_traj_sb4.png"
             inputSrc="/figures/modeling/web_model_input_sb4.png"
@@ -107,7 +128,7 @@ export default function ModelingPage() {
         </div>
 
         {/* Row-cascade: input -> adapt -> compete -> output */}
-        <div id="figure-4" className="space-y-3 scroll-mt-24">
+        <div id="figure-5" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-hidden"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -150,7 +171,7 @@ export default function ModelingPage() {
         />
 
         {/* R&H Fig. 1 cascade run on the delayed-onset stimulus */}
-        <div id="figure-5" className="space-y-3 scroll-mt-24">
+        <div id="figure-6" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-hidden"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -171,7 +192,7 @@ export default function ModelingPage() {
         </div>
 
         {/* Translation-detector response: cued vs uncued under attention */}
-        <div id="figure-6" className="space-y-3 scroll-mt-24">
+        <div id="figure-7" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-hidden"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -197,7 +218,7 @@ export default function ModelingPage() {
           className="text-sm leading-relaxed"
           style={{ color: "var(--text-secondary)" }}
         />
-        <div id="figure-7" className="space-y-3 scroll-mt-24">
+        <div id="figure-8" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-hidden"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
