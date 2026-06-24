@@ -68,29 +68,8 @@ export default function ModelingPage() {
           />
         </div>
 
-        {/* Model schematic: circuit + Stage-1 adapting channels */}
-        <div id="figure-2" className="space-y-3 scroll-mt-24">
-          <div
-            className="rounded-lg border overflow-hidden mx-auto max-w-2xl"
-            style={{ borderColor: "var(--border)", background: "var(--surface)" }}
-          >
-            <Image
-              src="/figures/modeling/web_model_circuit_adapting.png"
-              alt="Motion-competition model: a divisively-normalized translation detector fed by two adapting rotation channels and a translation channel"
-              width={1387}
-              height={1381}
-              className="w-full h-auto"
-            />
-          </div>
-          <ContentBlurb
-            file="model-circuit-caption.md"
-            className="text-xs leading-relaxed"
-            style={{ color: "var(--text-secondary)" }}
-          />
-        </div>
-
         {/* MT RF: rotations are locally translatory (conceptual setup) */}
-        <div id="figure-3" className="space-y-3 scroll-mt-24">
+        <div id="figure-2" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-hidden"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -111,7 +90,7 @@ export default function ModelingPage() {
         </div>
 
         {/* Feature trajectories ⟷ model input (toggle) — S&B (2010) Fig. 4 */}
-        <div id="figure-4" className="space-y-3 scroll-mt-24">
+        <div id="figure-3" className="space-y-3 scroll-mt-24">
           <TrajInputToggle
             trajSrc="/figures/modeling/web_model_traj_sb4.png"
             inputSrc="/figures/modeling/web_model_input_sb4.png"
@@ -122,6 +101,27 @@ export default function ModelingPage() {
           />
           <ContentBlurb
             file="model-traj-input-toggle-caption.md"
+            className="text-xs leading-relaxed"
+            style={{ color: "var(--text-secondary)" }}
+          />
+        </div>
+
+        {/* Inputs (A) feeding the rotated biased-competition circuit (B) */}
+        <div id="figure-4" className="space-y-3 scroll-mt-24">
+          <div
+            className="rounded-lg border overflow-hidden"
+            style={{ borderColor: "var(--border)", background: "var(--surface)" }}
+          >
+            <Image
+              src="/figures/modeling/model_inputs_circuit_combo.png"
+              alt="Part A, the directional input (Up/Right/Down over time, cued no-swap), aligned row-for-row with Part B, the rotated biased-competition circuit, so each direction channel feeds its Stage-1 neuron (Up to R1, Right to R_T, Down to R2)"
+              width={2560}
+              height={1316}
+              className="w-full h-auto"
+            />
+          </div>
+          <ContentBlurb
+            file="model-circuit-caption.md"
             className="text-xs leading-relaxed"
             style={{ color: "var(--text-secondary)" }}
           />
