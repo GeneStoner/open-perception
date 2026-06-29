@@ -22,7 +22,7 @@ Duncan, J. (1984). *Selective attention and the organization of visual informati
 
   https://doi.org/10.1016/j.visres.2009.11.015
 
-- Catek, E. N., Özkan, M., Kafaligonul, H., & Stoner, G. R. (2022). *Behavioral and ERP evidence that object-based attention utilizes fine-grained spatial mechanisms*. Cortex, 151, 89–104.  
+- Çatak, E. N., Özkan, M., Kafaligonul, H., & Stoner, G. R. (2022). *Behavioral and ERP evidence that object-based attention utilizes fine-grained spatial mechanisms*. Cortex, 151, 89–104.  
 
   https://doi.org/10.1016/j.cortex.2022.02.013
 

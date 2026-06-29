@@ -17,10 +17,10 @@
 - **Citation**: Stoner, G. R., & Blanc, G. (2010). Exploring the mechanisms underlying surface-based stimulus selection. *Vision Research*, 50(2), 229–241.
 - **Type**: Empirical + review/synthesis (covers earlier transparent-motion attention work in its intro and discussion).
 - **Summary**: The core VRDots-lineage paper. Two experiments with the delayed-onset / transparent-motion paradigm; includes a motion-swap condition (Exp 1) and an added color-swap condition (Exp 2). Discusses competing mechanistic accounts (motion competition, object-based selection) and surveys the prior literature.
-- **Placement in blurb**: (1) cited alongside Catek et al. (2022) as a concise review of the field; (2) cited as also showing the color-attention account does not fit.
+- **Placement in blurb**: (1) cited alongside Çatak et al. (2022) as a concise review of the field; (2) cited as also showing the color-attention account does not fit.
 
-## Catek, Özkan, Kafaligonul, & Stoner (2022)
-- **Citation**: Catek, B., Özkan, M., Kafaligonul, H., & Stoner, G. R. (2022). Behavioral and ERP evidence that object-based attention utilizes fine-grained spatial mechanisms. *Cortex*, 151, 89–104.
+## Çatak, Özkan, Kafaligonul, & Stoner (2022)
+- **Citation**: Çatak, E. N., Özkan, M., Kafaligonul, H., & Stoner, G. R. (2022). Behavioral and ERP evidence that object-based attention utilizes fine-grained spatial mechanisms. *Cortex*, 151, 89–104.
 - **Type**: Empirical (behavioral + ERP) with literature framing.
 - **Summary**: Recent transparent-motion delayed-onset study. Reports motion-only and color-only swap conditions (no swap +20.2pp, motion swap +10.4pp, color swap +13.4pp; Cohen's d ≈ 1.1–1.7) and ERP correlates. Argues object-based attention recruits fine-grained spatial mechanisms.
 - **Placement in blurb**: (1) cited alongside Stoner & Blanc (2010) as discussing the literature; (2) cited as supporting the fine-grained spatial selection interpretation.
@@ -33,7 +33,7 @@
 
 ## Stoner (2018) — SFN poster
 - **Citation**: Stoner, G. R. (2018). Area V1 "point-set" as the unit of "object-based" selection. Program No. 172.13. 2018 Neuroscience Meeting Planner. San Diego, CA: Society for Neuroscience. Online.
-- **Note**: Catek et al. (2022) cite this work as "Stoner (2010)" — that is a year error in their citation; the actual year is 2018 (per the meeting planner).
+- **Note**: Çatak et al. (2022) cite this work as "Stoner (2010)" — that is a year error in their citation; the actual year is 2018 (per the meeting planner).
 - **Type**: Conference poster/abstract (unpublished).
 - **Summary**: Proposes a model in which feedback from area MT and/or MST onto V1 neurons can account for the fine-grained spatial selection observed in transparent-motion surface attention; predicts that increasing dot density should reduce the cued-vs-uncued performance asymmetry.
 - **Placement in blurb**: Cited as the source of the MT/MST→V1 feedback model that motivates ongoing density-manipulation experiments.

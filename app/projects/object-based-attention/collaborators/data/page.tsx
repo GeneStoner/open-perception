@@ -157,9 +157,9 @@ export default function CollaboratorDataPage() {
 
         </div>
 
-        {/* ── Catek et al. (2022) ─────────────────────────────────────────────── */}
+        {/* ── Çatak et al. (2022) ─────────────────────────────────────────────── */}
         <div className="space-y-4">
-          <SectionHeader title="Catek et al. (2022)" />
+          <SectionHeader title="Çatak et al. (2022)" />
 
           {/* Stimulus comparison blurb */}
           <ContentBlurb
@@ -168,7 +168,7 @@ export default function CollaboratorDataPage() {
             style={{ color: "var(--text-secondary)" }}
           />
 
-          {/* Live Catek demos */}
+          {/* Live Çatak demos */}
           <div className="space-y-4">
             <ContentBlurb file="collab-catek-demo-caption.md" className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }} />
             <div className="grid grid-cols-4 gap-4">
@@ -189,11 +189,11 @@ export default function CollaboratorDataPage() {
             </div>
           </div>
 
-          {/* Catek Fig 3 + VRDots replication side by side */}
+          {/* Çatak Fig 3 + VRDots replication side by side */}
           <div className="grid grid-cols-2 gap-6 items-start">
             <div className="space-y-3">
               <p className="text-xs font-medium uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
-                Catek et al. (2022) — Figure 3
+                Çatak et al. (2022) — Figure 3
               </p>
               <div
                 className="rounded-lg border overflow-hidden"
@@ -201,7 +201,7 @@ export default function CollaboratorDataPage() {
               >
                 <Image
                   src="/figures/catek2022/fig3.png"
-                  alt="Catek et al. (2022) Figure 3: Behavioral results"
+                  alt="Çatak et al. (2022) Figure 3: Behavioral results"
                   width={1201}
                   height={1200}
                   className="w-full h-auto"

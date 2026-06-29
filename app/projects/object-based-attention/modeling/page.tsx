@@ -47,7 +47,7 @@ export default function ModelingPage() {
           style={{ color: "var(--text-secondary)" }}
         />
 
-        {/* Delayed-onset design — published figure (Catek et al., 2022) */}
+        {/* Delayed-onset design — published figure (Çatak et al., 2022) */}
         <div id="figure-1" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-hidden mx-auto max-w-lg"
@@ -55,7 +55,7 @@ export default function ModelingPage() {
           >
             <Image
               src="/figures/modeling/catek_fig1_original.png"
-              alt="Delayed-onset design (Catek et al., 2022): the trial as a sequence of rotating transparent dot-field frames for cued and uncued, and the feature-direction timeline"
+              alt="Delayed-onset design (Çatak et al., 2022): the trial as a sequence of rotating transparent dot-field frames for cued and uncued, and the feature-direction timeline"
               width={986}
               height={1070}
               className="w-full h-auto"

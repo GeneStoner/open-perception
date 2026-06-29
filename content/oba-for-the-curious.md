@@ -10,7 +10,7 @@ For those curious about the underlying science, here is a selection of relevant 
 - [Valdés-Sosa, Cobo & Pinilla (2000)](https://doi.org/10.1037/0096-1523.26.2.488) — *Attention to object files defined by transparent motion.* Demonstrates that transparently overlapping motion fields define distinct attentional objects.
 - [Reynolds, Alborzian & Stoner (2003)](https://doi.org/10.1016/S0042-6989%2802%2900403-0) — *Exogenously cued attention triggers competitive selection of surfaces.* Vision Research, 43(1), 59–66.
 - [Stoner & Blanc (2010)](https://doi.org/10.1016/j.visres.2009.11.015) — *Exploring the mechanisms underlying surface-based stimulus selection.* Vision Research, 50(2), 229–238.
-- [Catek, Özkan, Kafaligonul & Stoner (2022)](https://doi.org/10.1016/j.cortex.2022.02.013) — *Behavioral and ERP evidence that object-based attention utilizes fine-grained spatial mechanisms.* Cortex, 151, 89–104.
+- [Çatak, Özkan, Kafaligonul & Stoner (2022)](https://doi.org/10.1016/j.cortex.2022.02.013) — *Behavioral and ERP evidence that object-based attention utilizes fine-grained spatial mechanisms.* Cortex, 151, 89–104.
 
 **Neural / ERP / Physiological Studies**
 
