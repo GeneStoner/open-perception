@@ -1,1 +1,3 @@
-We are implementing computational models to provide a framework for understanding existing experimental findings and to provide predictions for future experiments.
+[Valdés-Sosa et al. (2000)](https://doi.org/10.1037/0096-1523.26.2.488) introduced a transparent-motion design that has spawned numerous subsequent psychophysical and neurophysiological studies of surface-based attention. Taken together, these studies have been argued to provide some of the best evidence for object- or surface-based selection ([Reynolds, Alborzian, & Stoner, 2003](https://doi.org/10.1016/S0042-6989%2802%2900403-0); [Çatak, Özkan, Kafalıgönül, & Stoner, 2022](https://doi.org/10.1016/j.cortex.2022.02.013)).
+
+We are implementing computational models to provide a framework for understanding experimental findings from these previous studies and to provide predictions for future experiments.
