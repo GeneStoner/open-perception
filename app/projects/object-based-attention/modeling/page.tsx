@@ -26,13 +26,6 @@ export default function ModelingPage() {
         />
       </div>
 
-      {/* ── Brief background (post-intro bridge into the motion-competition model) ── */}
-      <ContentBlurb
-        file="model-postintro-brief-background.md"
-        className="text-sm leading-relaxed"
-        style={{ color: "var(--text-secondary)" }}
-      />
-
       {/* ── The motion-competition model (Stoner & Blanc, 2010) ─────────────── */}
       <section className="space-y-8">
         {/* Section header — title + md subtitle (with clickable citation) + rule */}
@@ -40,12 +33,6 @@ export default function ModelingPage() {
           <h2 className="text-2xl font-semibold tracking-tight" style={{ color: "var(--text-primary)" }}>
             The motion-competition model
           </h2>
-          <ContentBlurb
-            file="model-motion-competition-subtitle.md"
-            className="mt-1 text-sm"
-            style={{ color: "var(--text-secondary)" }}
-          />
-          <div className="mt-3 h-px w-12" style={{ background: "var(--accent)" }} />
         </div>
 
         <ContentBlurb
