@@ -7,13 +7,13 @@
 import ContentBlurb from '@/components/ContentBlurb';
 
 const CONDITIONS = [
-  { id: 'vrdots',     label: 'VRDots',    sub: '63 dots/field',   rho: '1.8/°²',
+  { id: 'vrdots',     label: 'VRDots',    sub: '63 dots/field',   rho: '~1.6/°²',
     cued: 60.5, uncued: 25.8, cuedCI: 6.0, uncuedCI: 5.4, delta: 34.8, sig: '***', p: '< .001' },
-  { id: 'highdens',   label: 'HighDens',  sub: '173 dots/field',  rho: '5.0/°²',
+  { id: 'highdens',   label: 'HighDens',  sub: '173 dots/field',  rho: '~4.5/°²',
     cued: 58.6, uncued: 25.0, cuedCI: 6.0, uncuedCI: 5.3, delta: 33.6, sig: '***', p: '< .001' },
-  { id: 'peak',       label: 'Peak',      sub: '500 dots/field',  rho: '14/°²',
+  { id: 'peak',       label: 'Peak',      sub: '500 dots/field',  rho: '~13/°²',
     cued: 63.3, uncued: 28.5, cuedCI: 5.9, uncuedCI: 5.5, delta: 34.8, sig: '***', p: '< .001' },
-  { id: 'ultrahigh',  label: 'UltraHigh', sub: '1000 dots/field', rho: '29/°²',
+  { id: 'ultrahigh',  label: 'UltraHigh', sub: '1000 dots/field', rho: '~26/°²',
     cued: 53.1, uncued: 28.1, cuedCI: 6.1, uncuedCI: 5.5, delta: 25.0, sig: '***', p: '< .001' },
 ] as const;
 
