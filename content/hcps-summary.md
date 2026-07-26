@@ -1,3 +1,10 @@
+<!-- ============================================================================
+     STALE as of 2026-07-26 — numbers come from the WITHDRAWN operating point
+     (sigma 0.60 deg, 8x8 lattice, tau_E 30 ms) and/or the pre-correction densities
+     (11%% too high) and the wrong measurement windows.
+     DO NOT publish without regenerating. See HCPS_MODELING_SECTION_TODO.md.
+     ============================================================================ -->
+
 **The mechanism works, and it works for the reason we wanted it to.** A bias applied to one attribute, entering a pool shared across attributes at a place, transfers to the other attributes of the same surface — with no object label anywhere in the model. Attending a direction lifts a colour that was never cued, because the dots carrying both are in the same receptive fields.
 
 **Spatial scale turned out to be the binding constraint, and it is not a free parameter.** The gain lives in the pool, which is a map over *places*, while the surfaces *move*. Sweeping speed to the point of failure shows the effect dies once a dot travels about **1.3 receptive-field sigmas** during the interval the pool has to bridge — the same constant for every RF size tested. That gives a hard ceiling,

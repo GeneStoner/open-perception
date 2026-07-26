@@ -1,3 +1,14 @@
+/* ============================================================================================
+ * ⛔ STALE — DO NOT PRESENT AS CURRENT.  See HCPS_MODELING_SECTION_TODO.md in the repo root.
+ *
+ * This viewer renders public/data/hcps_web_data.json, which was exported from the WITHDRAWN
+ * operating point: 64 point-sets, sigma 0.60 deg, tau_E 30 ms.  The model was reset on
+ * 2026-07-26 to the native 11x11 (121 point-sets, sigma 0.2424 deg, tau_E 150 ms), and the
+ * SCHEMATIC above this viewer on the page was regenerated — this was not.  So the page
+ * currently shows two different models one above the other.
+ *
+ * Fix: run `hcps_export_web` in the model repo (after `hcps_default_check` passes).
+ * ========================================================================================== */
 'use client';
 
 /**
