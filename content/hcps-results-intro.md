@@ -1,0 +1,3 @@
+Two measures come out of the same model runs, and they are not interchangeable. The **noise-free attention index** asks how much larger the response is when the surface is attended — an amplitude question. The **behavioural measure** adds independent Poisson spike noise at the read-out and asks how much better a right-versus-left decision becomes; it is summarised as the ratio of *d′* cued to *d′* uncued, which is the only quantity on the same footing as the human data (the observers do an 8-AFC direction task at 12.5% chance, so percentage-point benefits do not transfer between model and experiment).
+
+Throughout, the human numbers are plotted as a **reference, not a fit**. Nothing in the model has been tuned to them.

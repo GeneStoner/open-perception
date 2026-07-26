@@ -1,5 +1,7 @@
 import ContentBlurb from "@/components/ContentBlurb";
 import TrajInputToggle from "@/components/TrajInputToggle";
+import HCPSFlow from "@/components/HCPSFlow";
+import HCPSViewer from "@/components/HCPSViewer";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -235,6 +237,160 @@ export default function ModelingPage() {
         {/* How the time-varying application differs from R&H's original */}
         <ContentBlurb
           file="model-rh-timevarying.md"
+          className="text-sm leading-relaxed"
+          style={{ color: "var(--text-secondary)" }}
+        />
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          INSERTION POINT — the simpler models go HERE, before the full model:
+            1. a single hypercolumn (motion + colour, one shared pool)
+            2. a minimal pair of point-sets (the smallest thing with space in it)
+          Each will be its own <section>, same shape as the one below:
+          header → prose → schematic → result → caption.
+         ══════════════════════════════════════════════════════════════════════ */}
+
+      {/* ── The hypercolumn / point-set model ────────────────────────────────── */}
+      <section className="space-y-8">
+        {/* Section header — title + md subtitle + rule */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-semibold tracking-tight" style={{ color: "var(--text-primary)" }}>
+            The hypercolumn / point-set model
+          </h2>
+          <ContentBlurb
+            file="hcps-subtitle.md"
+            className="mt-1 text-sm"
+            style={{ color: "var(--text-secondary)" }}
+          />
+          <div className="mt-3 h-px w-12" style={{ background: "var(--accent)" }} />
+        </div>
+
+        <ContentBlurb
+          file="hcps-simpler-note.md"
+          className="text-xs leading-relaxed"
+          style={{ color: "var(--text-muted)" }}
+        />
+
+        <ContentBlurb
+          file="hcps-intro.md"
+          className="text-sm leading-relaxed"
+          style={{ color: "var(--text-secondary)" }}
+        />
+
+        {/* Architecture, left to right */}
+        <div id="figure-9" className="space-y-3 scroll-mt-24">
+          <div
+            className="rounded-lg border overflow-x-auto"
+            style={{ borderColor: "var(--border)", background: "var(--surface)" }}
+          >
+            <div className="min-w-[720px] p-4">
+              <HCPSFlow />
+            </div>
+          </div>
+          <ContentBlurb
+            file="hcps-flow-caption.md"
+            className="text-xs leading-relaxed"
+            style={{ color: "var(--text-secondary)" }}
+          />
+        </div>
+
+        {/* ── Results ─────────────────────────────────────────────────────── */}
+        <div className="pt-4">
+          <h3 className="text-lg font-semibold tracking-tight" style={{ color: "var(--text-primary)" }}>
+            Results
+          </h3>
+          <div className="mt-2 h-px w-8" style={{ background: "var(--border)" }} />
+        </div>
+
+        <ContentBlurb
+          file="hcps-results-intro.md"
+          className="text-sm leading-relaxed"
+          style={{ color: "var(--text-secondary)" }}
+        />
+
+        {/* Measures grid: noise-free AI vs behavioural d' ratio */}
+        <div id="figure-10" className="space-y-3 scroll-mt-24">
+          <div
+            className="rounded-lg border overflow-hidden"
+            style={{ borderColor: "var(--border)", background: "var(--surface)" }}
+          >
+            <Image
+              src="/figures/modeling/hcps_measures.png"
+              alt="Two panels. Left: the noise-free attention index against density, one line per field speed, positive everywhere and falling with both density and speed. Right: the same runs read out behaviourally as a d-prime ratio, with the human reference dashed well above the model curves."
+              width={1520}
+              height={660}
+              className="w-full h-auto"
+            />
+          </div>
+          <ContentBlurb
+            file="hcps-measures-caption.md"
+            className="text-xs leading-relaxed"
+            style={{ color: "var(--text-secondary)" }}
+          />
+        </div>
+
+        {/* Swap test */}
+        <div id="figure-11" className="space-y-3 scroll-mt-24">
+          <div
+            className="rounded-lg border overflow-hidden"
+            style={{ borderColor: "var(--border)", background: "var(--surface)" }}
+          >
+            <Image
+              src="/figures/modeling/hcps_swap.png"
+              alt="Swap test across density at four field speeds, for no-swap, motion-swap and motion-plus-colour-swap conditions, in both the noise-free and behavioural read-outs, with human no-swap and MC-swap references overlaid."
+              width={1600}
+              height={730}
+              className="w-full h-auto"
+            />
+          </div>
+          <ContentBlurb
+            file="hcps-swap-caption.md"
+            className="text-xs leading-relaxed"
+            style={{ color: "var(--text-secondary)" }}
+          />
+        </div>
+
+        {/* ── Interactive display ─────────────────────────────────────────── */}
+        <div className="pt-4">
+          <h3 className="text-lg font-semibold tracking-tight" style={{ color: "var(--text-primary)" }}>
+            Watch the model run
+          </h3>
+          <div className="mt-2 h-px w-8" style={{ background: "var(--border)" }} />
+        </div>
+
+        <div id="figure-12" className="space-y-3 scroll-mt-24">
+          <HCPSViewer />
+          <ContentBlurb
+            file="hcps-viewer-caption.md"
+            className="text-xs leading-relaxed"
+            style={{ color: "var(--text-secondary)" }}
+          />
+        </div>
+
+        {/* ── Summary ─────────────────────────────────────────────────────── */}
+        <div className="pt-4">
+          <h3 className="text-lg font-semibold tracking-tight" style={{ color: "var(--text-primary)" }}>
+            What the model shows
+          </h3>
+          <div className="mt-2 h-px w-8" style={{ background: "var(--border)" }} />
+        </div>
+
+        <ContentBlurb
+          file="hcps-summary.md"
+          className="text-sm leading-relaxed"
+          style={{ color: "var(--text-secondary)" }}
+        />
+
+        {/* ── Future directions ───────────────────────────────────────────── */}
+        <div className="pt-4">
+          <h3 className="text-lg font-semibold tracking-tight" style={{ color: "var(--text-primary)" }}>
+            Where it goes next
+          </h3>
+          <div className="mt-2 h-px w-8" style={{ background: "var(--border)" }} />
+        </div>
+
+        <ContentBlurb
+          file="hcps-future.md"
           className="text-sm leading-relaxed"
           style={{ color: "var(--text-secondary)" }}
         />
