@@ -1,0 +1,1 @@
+*This section documents the full model. Simpler versions — a single hypercolumn, then a minimal pair of point-sets — will be inserted before it, so the argument can be followed one addition at a time.*
