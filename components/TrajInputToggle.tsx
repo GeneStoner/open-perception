@@ -12,6 +12,10 @@ export default function TrajInputToggle({
   height,
   trajAlt = 'Feature trajectories',
   inputAlt = "The model's direction input",
+  trajLabel = 'With dot field identity',
+  trajSubtitle = 'Object-based',
+  inputLabel = 'Without dot field identity',
+  inputSubtitle = 'What the model sees',
   intervalMs = 1800,
 }: {
   trajSrc: string;
@@ -20,6 +24,10 @@ export default function TrajInputToggle({
   height: number;
   trajAlt?: string;
   inputAlt?: string;
+  trajLabel?: string;
+  trajSubtitle?: string;
+  inputLabel?: string;
+  inputSubtitle?: string;
   intervalMs?: number;
 }) {
   const [view, setView] = useState<View>('traj');
@@ -47,23 +55,37 @@ export default function TrajInputToggle({
 
   return (
     <div className="space-y-3">
-      <div className="flex flex-wrap items-center gap-2 text-xs">
-        <button
-          type="button"
-          onClick={() => pick('traj')}
-          className="px-3 py-1.5 rounded border font-medium"
-          style={btn(view === 'traj')}
-        >
-          Feature trajectories
-        </button>
-        <button
-          type="button"
-          onClick={() => pick('input')}
-          className="px-3 py-1.5 rounded border font-medium"
-          style={btn(view === 'input')}
-        >
-          What the model sees
-        </button>
+      <div className="flex flex-wrap items-start gap-2 text-xs">
+        <div className="flex flex-col items-start">
+          <button
+            type="button"
+            onClick={() => pick('traj')}
+            className="px-3 py-1.5 rounded border font-medium"
+            style={btn(view === 'traj')}
+          >
+            {trajLabel}
+          </button>
+          {trajSubtitle && (
+            <span className="px-3 pt-0.5 text-xs italic font-bold" style={{ color: 'var(--text-muted)' }}>
+              {trajSubtitle}
+            </span>
+          )}
+        </div>
+        <div className="flex flex-col items-start">
+          <button
+            type="button"
+            onClick={() => pick('input')}
+            className="px-3 py-1.5 rounded border font-medium"
+            style={btn(view === 'input')}
+          >
+            {inputLabel}
+          </button>
+          {inputSubtitle && (
+            <span className="px-3 pt-0.5 text-xs italic font-bold" style={{ color: 'var(--text-muted)' }}>
+              {inputSubtitle}
+            </span>
+          )}
+        </div>
         <button
           type="button"
           onClick={() => setAuto(a => !a)}
@@ -89,6 +111,7 @@ export default function TrajInputToggle({
             transition: 'opacity 0.45s ease',
           }}
           priority
+          unoptimized
         />
         <Image
           src={inputSrc}
@@ -100,6 +123,7 @@ export default function TrajInputToggle({
             opacity: view === 'input' ? 1 : 0,
             transition: 'opacity 0.45s ease',
           }}
+          unoptimized
         />
       </div>
     </div>

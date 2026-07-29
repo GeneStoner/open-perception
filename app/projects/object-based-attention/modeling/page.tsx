@@ -3,6 +3,7 @@ import TrajInputToggle from "@/components/TrajInputToggle";
 import Image from "next/image";
 import Link from "next/link";
 
+
 export default function ModelingPage() {
   return (
     <div className="max-w-5xl mx-auto px-6 py-16 space-y-14">
@@ -26,13 +27,19 @@ export default function ModelingPage() {
         />
       </div>
 
+      {/* ── Non-object-based models ─────────────────────────────────────────── */}
+      <section className="space-y-12">
+        <h2 className="text-2xl font-semibold tracking-tight" style={{ color: "var(--text-primary)" }}>
+          Non-object-based models
+        </h2>
+
       {/* ── The motion-competition model (Stoner & Blanc, 2010) ─────────────── */}
       <section className="space-y-8">
         {/* Section header — title + md subtitle (with clickable citation) + rule */}
         <div className="mb-8">
-          <h2 className="text-2xl font-semibold tracking-tight" style={{ color: "var(--text-primary)" }}>
+          <h3 className="text-xl font-semibold tracking-tight" style={{ color: "var(--text-primary)" }}>
             The motion-competition model
-          </h2>
+          </h3>
         </div>
 
         <ContentBlurb
@@ -48,7 +55,7 @@ export default function ModelingPage() {
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
           >
             <Image
-              src="/figures/modeling/catek_fig1_original.png"
+              src="/figures/modeling/catek_fig1_original.png" unoptimized
               alt="Delayed-onset design (Çatak et al., 2022): the trial as a sequence of rotating transparent dot-field frames for cued and uncued, and the feature-direction timeline"
               width={986}
               height={1070}
@@ -69,8 +76,8 @@ export default function ModelingPage() {
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
           >
             <Image
-              src="/figures/modeling/mt_rf_figure.png"
-              alt="Two counter-rotating dot fields with an off-center MT receptive field; within it the rotations are locally approximate translations (clockwise up, counter-clockwise down)"
+              src="/figures/modeling/mt_rf_figure.png" unoptimized
+              alt="Two counter-rotating dot fields with an off-center MT receptive field; within it the rotations are locally approximate translations (clockwise down, counter-clockwise up)"
               width={1851}
               height={918}
               className="w-full h-auto"
@@ -107,7 +114,7 @@ export default function ModelingPage() {
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
           >
             <Image
-              src="/figures/modeling/model_inputs_circuit_combo.png"
+              src="/figures/modeling/model_inputs_circuit_combo.png" unoptimized
               alt="Part A, the directional input (Up/Right/Down over time, cued no-swap), aligned row-for-row with Part B, the rotated biased-competition circuit, so each direction channel feeds its Stage-1 neuron (Up to R1, Right to R_T, Down to R2)"
               width={2560}
               height={1316}
@@ -128,7 +135,7 @@ export default function ModelingPage() {
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
           >
             <Image
-              src="/figures/modeling/row_cascade.png"
+              src="/figures/modeling/row_cascade.png" unoptimized
               alt="Two-row cascade (CUED / UNCUED) showing the computation left to right: stimulus input, adapting responses, competition (I vs E), and detector output R_TD"
               width={2388}
               height={974}
@@ -147,9 +154,9 @@ export default function ModelingPage() {
       <section className="space-y-8">
         {/* Section header — title + md subtitle (with clickable citation) + rule */}
         <div className="mb-8">
-          <h2 className="text-2xl font-semibold tracking-tight" style={{ color: "var(--text-primary)" }}>
+          <h3 className="text-xl font-semibold tracking-tight" style={{ color: "var(--text-primary)" }}>
             The normalization model of attention
-          </h2>
+          </h3>
           <ContentBlurb
             file="model-rh-subtitle.md"
             className="mt-1 text-sm"
@@ -171,7 +178,7 @@ export default function ModelingPage() {
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
           >
             <Image
-              src="/figures/modeling/rh_fig1_cued.png"
+              src="/figures/modeling/rh_fig1_cued.png" unoptimized
               alt="Reynolds & Heeger Figure 1 schematic, run on the delayed-onset stimulus: stimulus drive multiplied by the attention field then divided by the suppressive drive to give the population response, as direction-by-time grayscale maps"
               width={2560}
               height={1440}
@@ -192,7 +199,7 @@ export default function ModelingPage() {
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
           >
             <Image
-              src="/figures/modeling/rh_translation_response.png"
+              src="/figures/modeling/rh_translation_response.png" unoptimized
               alt="Translation-detector response over the trial for CUED vs UNCUED, computed with the verified R&H port: a fixed attentional gain on the cued direction yields a +43% cued advantage with no adaptation"
               width={1739}
               height={1255}
@@ -218,7 +225,7 @@ export default function ModelingPage() {
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
           >
             <Image
-              src="/figures/modeling/rh_replication.png"
+              src="/figures/modeling/rh_replication.png" unoptimized
               alt="Our Python port of attentionModel.m reproduces all nine Reynolds & Heeger (2009) figures, overlaid on the authors' MATLAB output, to machine precision"
               width={2013}
               height={1643}
@@ -239,6 +246,8 @@ export default function ModelingPage() {
           style={{ color: "var(--text-secondary)" }}
         />
       </section>
+
+      </section>{/* end Non-object-based models */}
 
     </div>
   );
