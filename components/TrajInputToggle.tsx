@@ -16,7 +16,7 @@ export default function TrajInputToggle({
   trajSubtitle = 'Object-based',
   inputLabel = 'Without dot field identity',
   inputSubtitle = 'What the model sees',
-  intervalMs = 1800,
+  intervalMs = 3600,
 }: {
   trajSrc: string;
   inputSrc: string;

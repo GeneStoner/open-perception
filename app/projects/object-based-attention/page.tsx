@@ -185,6 +185,32 @@ export default function ObjectBasedAttentionPage() {
         </div>
       </section>
 
+      {/* ── Replication & Extension ──────────────────────────────────────────── */}
+      <section>
+        <SectionHeader title="Replication &amp; Extension Results" />
+        <div
+          className="rounded-lg border p-6 flex flex-col sm:flex-row sm:items-center gap-4"
+          style={{ background: "var(--surface)", borderColor: "var(--border)" }}
+        >
+          <div className="flex-1 space-y-1">
+            <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+              VRDots behavioral data — preliminary single-observer results.
+            </p>
+            <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+              Replications of Stoner &amp; Blanc (2010) and Çatak et al. (2022), plus new density
+              and feature-swap experiments, all run on Meta Quest 3 V4 headsets.
+            </p>
+          </div>
+          <Link
+            href="/projects/object-based-attention/results"
+            className="text-xs font-medium px-4 py-2 rounded border whitespace-nowrap self-start sm:self-auto"
+            style={{ borderColor: "var(--accent)", color: "var(--accent)" }}
+          >
+            View results →
+          </Link>
+        </div>
+      </section>
+
       {/* ── For Collaborators ────────────────────────────────────────────────── */}
       <section>
         <SectionHeader title="For Collaborators" subtitle="Access by invitation" />
@@ -194,7 +220,7 @@ export default function ObjectBasedAttentionPage() {
         >
           <div className="flex-1 space-y-2">
             <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-              Internal data, session logs, analysis scripts, and experimental protocols are available
+              Experiment software (Meta Quest 3 APK) and key publications are available
               to invited collaborators. To request access contact{" "}
               <a href="mailto:Generstoner@gmail.com"
                 style={{ color: "var(--accent)", textDecoration: "underline" }}>
