@@ -95,10 +95,10 @@ function Chart() {
       {/* Density group labels (top) */}
       <text x={peakCentre} y={MT-18} textAnchor="middle" fontSize={11}
         fontWeight="600" fill="#1e1e2a">Peak</text>
-      <text x={peakCentre} y={MT-6} textAnchor="middle" fontSize={9} fill="#4a4a62">500 dots/field</text>
+      <text x={peakCentre} y={MT-6} textAnchor="middle" fontSize={9} fill="#4a4a62">13 dots/deg²</text>
       <text x={ultraCentre} y={MT-18} textAnchor="middle" fontSize={11}
         fontWeight="600" fill="#1e1e2a">UltraHigh</text>
-      <text x={ultraCentre} y={MT-6} textAnchor="middle" fontSize={9} fill="#4a4a62">1000 dots/field</text>
+      <text x={ultraCentre} y={MT-6} textAnchor="middle" fontSize={9} fill="#4a4a62">26 dots/deg²</text>
 
       {/* Separator */}
       <line x1={sepX} y1={MT-26} x2={sepX} y2={MT+PLOT_H}
