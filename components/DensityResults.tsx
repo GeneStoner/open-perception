@@ -82,17 +82,13 @@ function Chart() {
               fill={COL_UNCUED} opacity={0.85} rx={1} />
 
             {/* Error bars — CUED */}
-            {[[-3, 3]].map(() => <>
-              <line key="cv" x1={cxPos+BAR_W/2} y1={cyPos-cEH} x2={cxPos+BAR_W/2} y2={cyPos+cEH} stroke="#1e1e2a" strokeWidth={1.5}/>
-              <line key="ct" x1={cxPos+BAR_W/2-3} y1={cyPos-cEH} x2={cxPos+BAR_W/2+3} y2={cyPos-cEH} stroke="#1e1e2a" strokeWidth={1.5}/>
-              <line key="cb" x1={cxPos+BAR_W/2-3} y1={cyPos+cEH} x2={cxPos+BAR_W/2+3} y2={cyPos+cEH} stroke="#1e1e2a" strokeWidth={1.5}/>
-            </>)}
+            <line x1={cxPos+BAR_W/2} y1={cyPos-cEH} x2={cxPos+BAR_W/2} y2={cyPos+cEH} stroke="#1e1e2a" strokeWidth={1.5}/>
+            <line x1={cxPos+BAR_W/2-3} y1={cyPos-cEH} x2={cxPos+BAR_W/2+3} y2={cyPos-cEH} stroke="#1e1e2a" strokeWidth={1.5}/>
+            <line x1={cxPos+BAR_W/2-3} y1={cyPos+cEH} x2={cxPos+BAR_W/2+3} y2={cyPos+cEH} stroke="#1e1e2a" strokeWidth={1.5}/>
             {/* Error bars — UNCUED */}
-            {[[-3, 3]].map(() => <>
-              <line key="uv" x1={uxPos+BAR_W/2} y1={uyPos-uEH} x2={uxPos+BAR_W/2} y2={uyPos+uEH} stroke="#1e1e2a" strokeWidth={1.5}/>
-              <line key="ut" x1={uxPos+BAR_W/2-3} y1={uyPos-uEH} x2={uxPos+BAR_W/2+3} y2={uyPos-uEH} stroke="#1e1e2a" strokeWidth={1.5}/>
-              <line key="ub" x1={uxPos+BAR_W/2-3} y1={uyPos+uEH} x2={uxPos+BAR_W/2+3} y2={uyPos+uEH} stroke="#1e1e2a" strokeWidth={1.5}/>
-            </>)}
+            <line x1={uxPos+BAR_W/2} y1={uyPos-uEH} x2={uxPos+BAR_W/2} y2={uyPos+uEH} stroke="#1e1e2a" strokeWidth={1.5}/>
+            <line x1={uxPos+BAR_W/2-3} y1={uyPos-uEH} x2={uxPos+BAR_W/2+3} y2={uyPos-uEH} stroke="#1e1e2a" strokeWidth={1.5}/>
+            <line x1={uxPos+BAR_W/2-3} y1={uyPos+uEH} x2={uxPos+BAR_W/2+3} y2={uyPos+uEH} stroke="#1e1e2a" strokeWidth={1.5}/>
 
             {/* Significance bracket */}
             <line x1={cxPos+BAR_W/2} y1={bracketY+6} x2={cxPos+BAR_W/2} y2={bracketY} stroke="#4a4a62" strokeWidth={1.5}/>
