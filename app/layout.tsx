@@ -1,12 +1,25 @@
 import type { Metadata } from "next";
 import { Analytics } from '@vercel/analytics/next';
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import AuthSessionProvider from "@/components/SessionProvider";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+// Self-hosted so the site builds and runs with no network (offline work on the
+// laptop). Files are the latin subset of the Geist variable fonts, previously
+// fetched by next/font/google at build time.
+const geistSans = localFont({
+  src: "./fonts/Geist-latin-variable.woff2",
+  variable: "--font-geist-sans",
+  weight: "100 900",
+  display: "swap",
+});
+const geistMono = localFont({
+  src: "./fonts/GeistMono-latin-variable.woff2",
+  variable: "--font-geist-mono",
+  weight: "100 900",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Open Perception",
