@@ -215,32 +215,12 @@ export default function ModelingPage() {
           />
         </div>
 
-        {/* Verification: the port reproduces all of R&H's published figures */}
+        {/* Verification: summary only -- the figure and detail live at ./verification */}
         <ContentBlurb
           file="model-rh-verification.md"
           className="text-sm leading-relaxed"
           style={{ color: "var(--text-secondary)" }}
         />
-        <div id="figure-8" className="space-y-3 scroll-mt-24">
-          <div
-            className="rounded-lg border overflow-hidden"
-            style={{ borderColor: "var(--border)", background: "var(--surface)" }}
-          >
-            <Image
-              src="/figures/modeling/rh_replication.png" unoptimized
-              alt="Our Python port of attentionModel.m reproduces all nine Reynolds & Heeger (2009) figures, overlaid on the authors' MATLAB output, to machine precision"
-              width={2013}
-              height={1643}
-              className="w-full h-auto"
-            />
-          </div>
-          <ContentBlurb
-            file="model-rh-replication-caption.md"
-            className="text-xs leading-relaxed"
-            style={{ color: "var(--text-secondary)" }}
-          />
-        </div>
-
         {/* How the time-varying application differs from R&H's original */}
         <ContentBlurb
           file="model-rh-timevarying.md"
@@ -287,7 +267,7 @@ export default function ModelingPage() {
         />
 
         {/* Architecture, left to right */}
-        <div id="figure-9" className="space-y-3 scroll-mt-24">
+        <div id="figure-8" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-x-auto"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -318,7 +298,7 @@ export default function ModelingPage() {
         />
 
         {/* Measures grid: noise-free AI vs behavioural d' ratio */}
-        <div id="figure-10" className="space-y-3 scroll-mt-24">
+        <div id="figure-9" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-hidden"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -339,7 +319,7 @@ export default function ModelingPage() {
         </div>
 
         {/* Swap test */}
-        <div id="figure-11" className="space-y-3 scroll-mt-24">
+        <div id="figure-10" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-hidden"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -367,7 +347,7 @@ export default function ModelingPage() {
           <div className="mt-2 h-px w-8" style={{ background: "var(--border)" }} />
         </div>
 
-        <div id="figure-12" className="space-y-3 scroll-mt-24">
+        <div id="figure-11" className="space-y-3 scroll-mt-24">
           <HCPSViewer />
           <ContentBlurb
             file="hcps-viewer-caption.md"
