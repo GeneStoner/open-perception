@@ -204,7 +204,7 @@ export default function ModelingPage() {
               src="/figures/modeling/rh_translation_response.png" unoptimized
               alt="Translation-detector response over the trial for CUED vs UNCUED, computed with the verified R&H port: a fixed attentional gain on the cued direction yields a +43% cued advantage with no adaptation"
               width={1739}
-              height={1255}
+              height={746}
               className="w-full h-auto"
             />
           </div>
