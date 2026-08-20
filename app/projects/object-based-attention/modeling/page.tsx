@@ -79,9 +79,9 @@ export default function ModelingPage() {
           >
             <Image
               src="/figures/modeling/mt_rf_figure.png" unoptimized
-              alt="Two counter-rotating dot fields with an off-center MT receptive field; within it the rotations are locally approximate translations (clockwise down, counter-clockwise up)"
-              width={1851}
-              height={918}
+              alt="(A) Two counter-rotating dot fields, arcs marking each field's rotation sense, with an off-center MT receptive field. (B) That receptive field magnified: local motion directions, counter-clockwise up and clockwise down"
+              width={2040}
+              height={1020}
               className="w-full h-auto"
             />
           </div>
@@ -238,6 +238,41 @@ export default function ModelingPage() {
           Each will be its own <section>, same shape as the one below:
           header → prose → schematic → result → caption.
          ══════════════════════════════════════════════════════════════════════ */}
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          OBJECT-BASED MODELS — the new material goes here.
+
+          Titles are GS's, tentative. Nothing below this block has been touched:
+          the existing hypercolumn / point-set section stays as it is until we
+          decide how much of it survives, so it is still its own <h2> sibling
+          rather than nested under this one. Folding it in later means demoting
+          its heading to <h3> and moving the closing tag of this section down
+          past it.
+         ══════════════════════════════════════════════════════════════════════ */}
+      <section className="space-y-12">
+        <h2 className="text-2xl font-semibold tracking-tight" style={{ color: "var(--text-primary)" }}>
+          Object-based models
+        </h2>
+
+      {/* ── V1 point-sets as the unit of selection ───────────────────────────── */}
+      <section className="space-y-8">
+        {/* Section header — title, matching the h3 sections above */}
+        <div className="mb-8">
+          <h3 className="text-xl font-semibold tracking-tight" style={{ color: "var(--text-primary)" }}>
+            Area V1 point-sets as the unit of object-based selection
+          </h3>
+        </div>
+
+        {/* CONTENT GOES HERE — prose, then the two-V1-RF schematic, then result
+            and caption, following the shape of the sections above. Deliberately
+            empty for now so nothing placeholder can ship by accident. The
+            two-V1-RF figure is built and waiting at
+            VRDots/Agents/Modeling/sb2010/ps_two_rf_figure.png; placing it will
+            renumber the hcps figures again (8-11 -> 9-12). */}
+
+      </section>
+
+      </section>{/* end Object-based models */}
 
       {/* ── The hypercolumn / point-set model ────────────────────────────────── */}
       <section className="space-y-8">
