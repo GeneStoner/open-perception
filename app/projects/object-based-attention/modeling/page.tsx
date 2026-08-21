@@ -263,12 +263,72 @@ export default function ModelingPage() {
           </h3>
         </div>
 
-        {/* CONTENT GOES HERE — prose, then the two-V1-RF schematic, then result
-            and caption, following the shape of the sections above. Deliberately
-            empty for now so nothing placeholder can ship by accident. The
-            two-V1-RF figure is built and waiting at
-            VRDots/Agents/Modeling/sb2010/ps_two_rf_figure.png; placing it will
-            renumber the hcps figures again (8-11 -> 9-12). */}
+        {/* FIGURES PLACED 2026-08-21 to see how the section flows. Captions are
+            DRAFTS and the figures themselves are still to be tweaked. Prose
+            introducing them is deliberately still absent. */}
+
+        {/* Two V1 receptive fields on the transparent-motion stimulus */}
+        <div id="figure-8" className="space-y-3 scroll-mt-24">
+          <div
+            className="rounded-lg border overflow-hidden"
+            style={{ borderColor: "var(--border)", background: "var(--surface)" }}
+          >
+            <Image
+              src="/figures/modeling/ps_two_rf_figure.png" unoptimized
+              alt="Two V1 receptive fields on the transparent-motion stimulus: panel A places two small receptive fields on the counter-rotating dot fields, panel B magnifies both to show the dot paths through the probe"
+              width={2040}
+              height={1020}
+              className="w-full h-auto"
+            />
+          </div>
+          <ContentBlurb
+            file="ps-two-rf-caption.md"
+            className="text-xs leading-relaxed"
+            style={{ color: "var(--text-secondary)" }}
+          />
+        </div>
+
+        {/* Model III schematic */}
+        <div id="figure-9" className="space-y-3 scroll-mt-24">
+          <div
+            className="rounded-lg border overflow-hidden"
+            style={{ borderColor: "var(--border)", background: "var(--surface)" }}
+          >
+            <Image
+              src="/figures/modeling/fig_modelIII_profile.png" unoptimized
+              alt="Model III schematic: the attentional bias acts on the stimulus drive, with a tuned bias field and a flat cooperative scalar summed in a gain box that then multiplies the drive"
+              width={2380}
+              height={2102}
+              className="w-full h-auto"
+            />
+          </div>
+          <ContentBlurb
+            file="fig-modelIII-caption.md"
+            className="text-xs leading-relaxed"
+            style={{ color: "var(--text-secondary)" }}
+          />
+        </div>
+
+        {/* Model IV schematic */}
+        <div id="figure-10" className="space-y-3 scroll-mt-24">
+          <div
+            className="rounded-lg border overflow-hidden"
+            style={{ borderColor: "var(--border)", background: "var(--surface)" }}
+          >
+            <Image
+              src="/figures/modeling/fig_modelIV_profile.png" unoptimized
+              alt="Model IV schematic: no tuned field reaches the gain, which is a single cooperative scalar; the attentional bias instead multiplies the hypercolumn response on its way to the cooperative pool"
+              width={2380}
+              height={2102}
+              className="w-full h-auto"
+            />
+          </div>
+          <ContentBlurb
+            file="fig-modelIV-caption.md"
+            className="text-xs leading-relaxed"
+            style={{ color: "var(--text-secondary)" }}
+          />
+        </div>
 
       </section>
 
@@ -302,7 +362,7 @@ export default function ModelingPage() {
         />
 
         {/* Architecture, left to right */}
-        <div id="figure-8" className="space-y-3 scroll-mt-24">
+        <div id="figure-11" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-x-auto"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -333,7 +393,7 @@ export default function ModelingPage() {
         />
 
         {/* Measures grid: noise-free AI vs behavioural d' ratio */}
-        <div id="figure-9" className="space-y-3 scroll-mt-24">
+        <div id="figure-12" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-hidden"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -354,7 +414,7 @@ export default function ModelingPage() {
         </div>
 
         {/* Swap test */}
-        <div id="figure-10" className="space-y-3 scroll-mt-24">
+        <div id="figure-13" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-hidden"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -382,7 +442,7 @@ export default function ModelingPage() {
           <div className="mt-2 h-px w-8" style={{ background: "var(--border)" }} />
         </div>
 
-        <div id="figure-11" className="space-y-3 scroll-mt-24">
+        <div id="figure-14" className="space-y-3 scroll-mt-24">
           <HCPSViewer />
           <ContentBlurb
             file="hcps-viewer-caption.md"
