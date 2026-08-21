@@ -3,31 +3,39 @@
 /**
  * HCMinResponse — the motion-only hypercolumn model running, one dot in one V1 receptive field.
  *
- * This is the INTERACTIVE form of the two response figures. GS, 2026-08-21: "when we animate it
- * using the model's responses we can have an indicator showing which frame/time we are at as we
- * march (slowed down speed) through the stimulus."
+ * ⭐ THIS IS fig_response_profile.py's LAYOUT, MADE LIVE. GS, 2026-08-21: the interactive version
+ * "should have the same spatial layout and components as the static schematics". It does, and the
+ * reason is not consistency for its own sake — the layout carries meaning:
  *
- * The layout is deliberately the same object as the stills, not a second design:
+ *   * a modulator arrives OFF-AXIS, above the spine (Figure 6's grammar). WHICH OPERATOR the
+ *     attention panel feeds is the one visible fact separating Model III from Model IV, and the
+ *     first version of this file flattened everything onto one line and lost it — drawing Model
+ *     IV's bias gaining the DRIVE, which is Model III's claim.
+ *   * the cooperative return lane is THE LOOP. That version reduced C to a printed number, hiding
+ *     the thing this figure exists to show.
  *
- *   TIME IN            the stimulus raster, R_theta(t) for the three directions, and S(t),
- *                      all on one x-axis with ONE cursor
- *   INSTANT ACROSS     the schematic's own panels — DRIVE -> (x) -> RESPONSE -> Sigma, plus the
- *                      GAIN box (III) or the off-axis bias and POOL AFFERENT (IV) — carrying the
- *                      model's values AT the cursor, for CUED and UNCUED
+ * LAYOUT, matching the PNG panel for panel:
+ *   LEFT COLUMN   the whole time story on one x-axis — the stimulus raster, R_theta(t) for the
+ *                 three directions, then S(t) — with ONE cursor through all of it
+ *   RIGHT         two rows, CUED above UNCUED, each the schematic's spine with its off-axis
+ *                 bias/gain and its cooperative return lane, carrying the values AT the cursor
  *
- * So the still is this component with the cursor parked, and the two cannot tell different
- * stories. Park it at frame 60 and it is fig_modelIII_response.png; at 63, the _f63 still.
+ * So the still is this component with the cursor parked: at frame 60 it is
+ * fig_model{III,IV}_response.png, at frame 63 the _f63 stills.
+ *
+ * It is ONE <svg> with a viewBox rather than a reflowing flex layout, because the spine geometry
+ * IS the statement — it scales down on a narrow screen instead of rearranging into a different
+ * claim. Coordinates are the PNG's own figure units (y UP), flipped once at render by Y(), so the
+ * two files can be read side by side when either is edited.
  *
  * ⚠️ EVERY NUMBER COMES FROM THE MODEL, via public/data/hc_min_onedot.json, exported by
- * pointset/hc_min_onedot_export.m. There are no illustrative values anywhere in this file. The
- * read-outs are ASSERTED on load (III 0.4445/0.3681, IV 0.4338/0.4358) and the component renders
- * an explicit error rather than a plausible-looking figure if they disagree.
+ * pointset/hc_min_onedot_export.m. No illustrative values anywhere. The read-outs are ASSERTED on
+ * load and the component renders an explicit error rather than a plausible-looking figure.
  *
- * ⚠️ WHY THE STALENESS FOOTER EXISTS. HCPSViewer.tsx below this on the page has been rendering a
- * WITHDRAWN operating point since 2026-07-26 while the schematic above it was regenerated — see
- * HCPS_MODELING_SECTION_TODO.md. The JSON this component reads is a COPY of the file in the
- * MATLAB tree and can drift the same way, so the export timestamp and every parameter that
- * defines the run are printed on the page. A stale payload should be VISIBLE, not merely wrong.
+ * ⚠️ WHY THE PROVENANCE FOOTER EXISTS. HCPSViewer.tsx has been rendering a WITHDRAWN operating
+ * point since 2026-07-26 while the schematic above it was regenerated — see
+ * HCPS_MODELING_SECTION_TODO.md. The JSON here is a COPY of the file in the MATLAB tree and can
+ * drift the same way, so the export timestamp and every run parameter are printed on the page.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -46,31 +54,51 @@ type Meta = {
 };
 type Data = { meta: Meta; stim: { u: number[][] }; models: Record<'III' | 'IV', Model> };
 
-/* The read-outs hc_min_onedot prints. If the payload disagrees, the payload is wrong — never
- * adjust these to match it. Same guard the Python generators carry. */
-const EXPECT: Record<'III' | 'IV', [number, number]> = {
-  III: [0.4445, 0.3681],
-  IV: [0.4338, 0.4358],
-};
+/* What hc_min_onedot prints. If the payload disagrees, the PAYLOAD is wrong — never adjust these
+ * to match it. The same guard the Python generators carry. */
+const EXPECT: Record<'III' | 'IV', [number, number]> = { III: [0.4445, 0.3681], IV: [0.4338, 0.4358] };
 
-/* Palette. ATT and COOP are the measured Okabe-Ito pair from the figures — orange/green failed
- * CIEDE2000 at 9 under protanopia and 6 in greyscale, blue/orange passes at 56/22 (fig_cvd_check.py).
- * Keep them in step with the Python generators.
- * STIM is the ONE role that does NOT hardcode: in the figures it is dark ink on white, which
- * would vanish on this site's dark theme, and it is a neutral sensory quantity — exactly what
- * --text-primary means here. It also plays no part in the CVD result, which measures ATT vs COOP. */
+/* Palette, in step with the Python generators — orange/green failed CIEDE2000 at 9 under
+ * protanopia and 6 in greyscale; this Okabe-Ito pair passes at 56/22 (fig_cvd_check.py). COOP also
+ * carries a DASH, so the distinction survives monochrome.
+ * STIM is the one role that does NOT hardcode: in print it is dark ink on white, which would
+ * vanish on this site's dark theme, and it is a neutral sensory quantity — what --text-primary
+ * means here. It plays no part in the CVD result, which measures ATT against COOP. */
 const ATT = '#E69F00';
 const COOP = '#0072B2';
 const STIM = 'var(--text-primary)';
 const CURSOR = '#C1272D';
+const BAND = 'var(--accent-dim)';
 
 const nz = (v: number) => (v > 0 ? v : 1e-9);
+
+/* ── canvas, in fig_response_profile.py's own constants ─────────────────────────────────── */
+const XL = 16.9, YL = 16.6;      // identical to fig_response_profile.py
+const CH = 0.32, COLW = 1.75, PH = 8 * CH;
+const RX = 1.42, RW = 3.95;
+const RAS_TOP = 15.05, RAS_BOT = RAS_TOP - PH;
+const TRH = 1.62, TRG = 0.26;
+const TR_TOP = RAS_BOT - 1.05;
+const POOL_TOP = TR_TOP - 3 * TRH - 2 * TRG - 1.05;
+const POOL_H = 2.0;
+const LC_BOT = POOL_TOP - POOL_H;
+const RCEN = RAS_BOT + PH / 2;
+const FX = RX + RW + 0.48;
+const YB_U = 0.95, YA_U = YB_U + PH + 1.05;
+const YB_C = YA_U + PH + 1.85, YA_C = YB_C + PH + 1.05;
+const SP_U = YB_U + 4 * CH, SP_C = YB_C + 4 * CH;
+const C1 = 6.30, XOP1 = 8.90, C2 = 9.70, XOP2 = 12.30, C3 = 13.10;
+const CG = XOP1 - COLW / 2, CB = XOP2 - COLW / 2, CA = 6.30;
+const SR = 0.40;         // the pool neuron's radius
+// SX (the pool's x) depends on the model, so it is resolved per render, not here
+
+const Y = (v: number) => YL - v;                    // figure coords are y-UP; SVG is y-down
 
 export default function HCMinResponse({ src = '/data/hc_min_onedot.json' }: { src?: string }) {
   const [data, setData] = useState<Data | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [mode, setMode] = useState<'III' | 'IV'>('III');
-  const [frame, setFrame] = useState(59);          // end of rotation — what the stills park at
+  const [frame, setFrame] = useState(59);           // end of rotation — where the stills park
   const [playing, setPlaying] = useState(false);
   const raf = useRef<number | null>(null);
   const last = useRef(0);
@@ -81,16 +109,15 @@ export default function HCMinResponse({ src = '/data/hc_min_onedot.json' }: { sr
       .then(r => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
       .then((d: Data) => {
         if (!alive) return;
-        for (const k of ['III', 'IV'] as const) {
-          const m = d.models?.[k];
-          if (!m) return setErr(`payload has no model ${k}`);
-          if (!m.converged) return setErr(`model ${k} did not converge in the export`);
-          const [p, t] = EXPECT[k];
+        for (const key of ['III', 'IV'] as const) {
+          const m = d.models?.[key];
+          if (!m) return setErr(`payload has no model ${key}`);
+          if (!m.converged) return setErr(`model ${key} did not converge in the export`);
+          const [p, t] = EXPECT[key];
           if (Math.abs(m.primary - p) > 5e-5 || Math.abs(m.translation - t) > 5e-5) {
             return setErr(
-              `model ${k} read-outs disagree with hc_min_onedot — expected ${p}/${t}, ` +
-              `payload has ${m.primary}/${m.translation}. The export is stale or wrong.`,
-            );
+              `model ${key} read-outs disagree with hc_min_onedot — expected ${p}/${t}, payload ` +
+              `has ${m.primary}/${m.translation}. The export is stale or wrong.`);
           }
         }
         setData(d);
@@ -101,9 +128,9 @@ export default function HCMinResponse({ src = '/data/hc_min_onedot.json' }: { sr
 
   const nF = data?.meta.nFrames ?? 65;
   const step = useCallback((t: number) => {
-    // the model runs 10 ms/frame; 95 ms of real time per frame is the ~10x slow march GS asked
-    // for, and matches HCPSViewer's cadence so the two figures feel like one page
-    if (t - last.current > 95) { last.current = t; setFrame(f => (f + 1) % nF); }
+    // 10 ms of model time per frame; 95 ms of real time is the ~10x slowed march GS asked for,
+    // and matches HCPSViewer's cadence so the two figures feel like one page
+    if (t - last.current > 95) { last.current = t; setFrame(fr => (fr + 1) % nF); }
     raf.current = requestAnimationFrame(step);
   }, [nF]);
   useEffect(() => {
@@ -113,16 +140,15 @@ export default function HCMinResponse({ src = '/data/hc_min_onedot.json' }: { sr
   }, [playing, step]);
 
   /* FIXED SCALES — the run's peak over every frame AND both cue conditions, exactly as the PNGs
-   * compute them. Not each panel's own peak, and never the current frame's: per-frame scaling
-   * would make the bars jump under playback and would destroy the cued-vs-uncued comparison that
-   * is the entire point of showing two rows.
-   * ⚠️ This is a hook, so it must sit ABOVE the early returns below — the file it follows
-   * (HCPSViewer) carries a comment about exactly this hook-order trap. */
+   * compute them. Never per-frame: bars would jump under playback, and the cued-vs-uncued
+   * comparison the two rows exist for would be destroyed.
+   * ⚠️ A hook, so it must stay ABOVE the early returns — HCPSViewer carries a comment about
+   * exactly this hook-order trap. */
   const sc = useMemo(() => {
     if (!data) return null;
     const m = data.models[mode];
     const cols = (A: number[][]) => Math.max(...A.map(r => Math.max(...r)));
-    const both = (f: (s: Side) => number) => Math.max(f(m.cued), f(m.uncued));
+    const both = (fn: (s: Side) => number) => Math.max(fn(m.cued), fn(m.uncued));
     const chans = data.meta.plotDeg.map(d => data.meta.prefsDeg.indexOf(d));
     return {
       drive: nz(cols(data.stim.u)),
@@ -156,11 +182,14 @@ export default function HCMinResponse({ src = '/data/hc_min_onedot.json' }: { sr
 
   const { meta } = data;
   const M = data.models[mode];
+  const onDrive = mode === 'III';
+  const SX = onDrive ? 12.55 : 15.95;
   const f = Math.min(frame, meta.nFrames - 1);
-  const tMs = (f + 1) * meta.msPerFrame;
-  const T = meta.nFrames * meta.msPerFrame;
-  const T_ROT = meta.nRot * meta.msPerFrame;
+  const MS = meta.msPerFrame, T = meta.nFrames * MS, T_ROT = meta.nRot * MS;
+  const tMs = (f + 1) * MS;
   const inTrans = f + 1 > meta.nRot;
+  const xOf = (ms: number) => RX + RW * (ms / T);
+  const xc = xOf(tMs);
 
   const btn = (a: boolean): React.CSSProperties => ({
     borderColor: a ? 'var(--accent)' : 'var(--border)',
@@ -168,164 +197,247 @@ export default function HCMinResponse({ src = '/data/hc_min_onedot.json' }: { sr
     background: a ? 'var(--accent-dim)' : 'transparent',
   });
 
-  /* ── the TIME block: one SVG, so the cursor cannot drift between panels ──────────────── */
-  const W = 1000, ML = 54, MR = 58;
-  const px = (ms: number) => ML + (W - ML - MR) * (ms / T);
-  const LANE = 13, RAS_Y = 16, RAS_H = 8 * LANE;
-  const TR_H = 46, TR_GAP = 7;
-  const TR_Y = RAS_Y + RAS_H + 26;
-  const POOL_Y = TR_Y + 3 * (TR_H + TR_GAP) + 22;
-  const POOL_H = 62;
-  const TH = POOL_Y + POOL_H + 24;
+  const el: React.ReactNode[] = [];
+  let n = 0;
+  const k = () => `n${n++}`;
 
-  const lit = data.stim.u.map(r => r.indexOf(Math.max(...r)));
-  const NAME: Record<number, string> = { 0: 'RIGHT', 2: 'UP', 4: 'LEFT', 6: 'DOWN' };
-  const linePath = (v: number[], y0: number, h: number, top: number) =>
-    v.map((y, i) => `${i ? 'L' : 'M'}${px((i + 1) * meta.msPerFrame).toFixed(1)},` +
-                    `${(y0 + h - h * (y / top)).toFixed(1)}`).join(' ');
+  const txt = (x: number, y: number, s: string, o: Partial<{
+    size: number; fill: string; anchor: 'start' | 'middle' | 'end'; weight: number; italic: boolean;
+  }> = {}) => el.push(
+    <text key={k()} x={x} y={Y(y)} fontSize={o.size ?? 0.19} fill={o.fill ?? 'var(--text-primary)'}
+          textAnchor={o.anchor ?? 'start'} fontWeight={o.weight ?? 400}
+          fontStyle={o.italic ? 'italic' : 'normal'} dominantBaseline="middle">{s}</text>);
 
-  /* ── one 8-channel bar panel, the schematic's `panel()` ──────────────────────────────── */
-  const Panel = ({ vals, scale, colour, title, formula, ticks = false }: {
-    vals: number[]; scale: number; colour: string; title: string; formula: string; ticks?: boolean;
-  }) => (
-    <div className="shrink-0" style={{ width: ticks ? 116 : 96 }}>
-      <div className="text-[9.5px] font-semibold leading-tight" style={{ color: 'var(--text-primary)' }}>{title}</div>
-      <div className="text-[9px] leading-tight mb-1" style={{ color: 'var(--text-muted)' }}>{formula}</div>
-      <svg viewBox={`0 0 ${ticks ? 116 : 96} 108`} className="w-full h-auto">
-        {vals.map((v, k) => {
-          const y = 4 + k * 12.5, x0 = ticks ? 22 : 2;
-          return (
-            <g key={k}>
-              {ticks && (
-                <text x={19} y={y + 8.4} textAnchor="end" fontSize={7.4} fill="var(--text-muted)">
-                  {meta.prefsDeg[k]}°
-                </text>
-              )}
-              <rect x={x0} y={y} width={(ticks ? 92 : 92)} height={11} fill="none"
-                    stroke="var(--border)" strokeWidth={0.5} />
-              <rect x={x0 + 0.7} y={y + 1.4} width={Math.max(0, 90.6 * (v / scale))} height={8.2}
-                    fill={colour} opacity={0.92} />
-            </g>
-          );
-        })}
-      </svg>
-    </div>
-  );
+  const line = (x0: number, y0: number, x1: number, y1: number, o: Partial<{
+    c: string; w: number; dash: string;
+  }> = {}) => el.push(
+    <line key={k()} x1={x0} y1={Y(y0)} x2={x1} y2={Y(y1)} stroke={o.c ?? 'var(--text-primary)'}
+          strokeWidth={o.w ?? 0.035} strokeDasharray={o.dash} strokeLinecap="round" />);
 
-  /* the GAIN box: the flat cooperative band C with the tuned cap a_theta stacked on it. Stacking
-   * IS addition — the terms add, they do not compound (the cross-term would be 104% of the coded
-   * gain), which is why there is no operator glyph between them. */
-  const GainBox = ({ s }: { s: Side }) => {
-    const C = s.C[f], kmax = s.a.indexOf(Math.max(...s.a));
-    return (
-      <div className="shrink-0" style={{ width: 96 }}>
-        <div className="text-[9.5px] font-semibold leading-tight" style={{ color: 'var(--text-primary)' }}>GAIN</div>
-        <div className="text-[9px] leading-tight mb-1" style={{ color: 'var(--text-muted)' }}>aθ + C</div>
-        <svg viewBox="0 0 96 108" className="w-full h-auto">
-          {s.a.map((av, k) => {
-            const y = 4 + k * 12.5;
-            const w1 = 90.6 * (C / sc.gain), w2 = 90.6 * (av / sc.gain);
-            return (
-              <g key={k}>
-                <rect x={2} y={y} width={92} height={11} fill="none" stroke="var(--border)" strokeWidth={0.5} />
-                <rect x={2.7} y={y + 1.4} width={Math.max(0, w1)} height={8.2} fill={COOP} opacity={0.95} />
-                <rect x={2.7 + w1} y={y + 1.4} width={Math.max(0, w2)} height={8.2} fill={ATT} opacity={0.95} />
-                {k === kmax && w1 > 12 && (
-                  <text x={2.7 + w1 / 2} y={y + 8.4} textAnchor="middle" fontSize={7} fill="#fff">C</text>
-                )}
-              </g>
-            );
-          })}
-        </svg>
-      </div>
-    );
+  /* the arrowhead is drawn, not an SVG marker, so it lives in figure units and cannot rescale
+   * independently of the geometry it points at */
+  const arrow = (x0: number, y0: number, x1: number, y1: number, o: Partial<{
+    c: string; w: number; dash: string;
+  }> = {}) => {
+    const c = o.c ?? 'var(--text-primary)';
+    const dx = x1 - x0, dy = y1 - y0, L = Math.hypot(dx, dy) || 1;
+    const ux = dx / L, uy = dy / L, h = 0.17, s = 0.42;
+    line(x0, y0, x1 - ux * h, y1 - uy * h, o);
+    el.push(<polygon key={k()} fill={c}
+      points={`${x1},${Y(y1)} ${x1 - ux * h + uy * h * s},${Y(y1 - uy * h - ux * h * s)} ` +
+              `${x1 - ux * h - uy * h * s},${Y(y1 - uy * h + ux * h * s)}`} />);
   };
 
-  const Op = ({ sym, note }: { sym: string; note?: string }) => (
-    <div className="shrink-0 flex flex-col items-center" style={{ width: 34, paddingTop: 26 }}>
-      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden>
-        <circle cx={13} cy={13} r={8.5} fill="none" stroke="var(--text-secondary)" strokeWidth={1.2} />
-        <text x={13} y={17} textAnchor="middle" fontSize={12} fill="var(--text-secondary)">{sym}</text>
-      </svg>
-      {note && <div className="text-[8.5px] tabular-nums mt-0.5" style={{ color: COOP }}>{note}</div>}
-    </div>
-  );
+  /* one FIELD over the 8 channels — the schematic's panel() */
+  const panel = (x: number, y0: number, vals: number[], scale: number, colour: string,
+                 title: string, formula: string, ticks = false) => {
+    el.push(<rect key={k()} x={x} y={Y(y0 + PH)} width={COLW} height={PH} rx={0.05}
+                  fill="var(--background)" stroke="var(--text-primary)" strokeWidth={0.032} />);
+    vals.forEach((v, i) => {
+      const cy = y0 + PH - CH * (i + 1);
+      if (i) line(x, y0 + PH - CH * i, x + COLW, y0 + PH - CH * i, { c: 'var(--border)', w: 0.014 });
+      el.push(<rect key={k()} x={x + 0.05} y={Y(cy + CH - 0.065)}
+                    width={Math.max(0, 0.88 * COLW * (v / scale))} height={CH - 0.13}
+                    fill={colour} opacity={0.92} />);
+      if (ticks) txt(x - 0.14, cy + CH / 2, `${meta.prefsDeg[i]}°`,
+                     { size: 0.16, fill: 'var(--text-muted)', anchor: 'end' });
+    });
+    txt(x, y0 + PH + 0.46, title, { size: 0.2, weight: 700 });
+    txt(x, y0 + PH + 0.22, formula, { size: 0.19, fill: 'var(--text-secondary)' });
+  };
 
-  /* flow, not an operation — a circled glyph in this figure family means an OPERATOR, so the
-   * step from an assembled gain to the response it produces must NOT be circled. */
-  const Flow = () => (
-    <div className="shrink-0 flex items-center justify-center" style={{ width: 22, paddingTop: 32 }}>
-      <svg width="22" height="12" viewBox="0 0 22 12" aria-hidden>
-        <path d="M0,6 L16,6" stroke="var(--text-muted)" strokeWidth="1.4" />
-        <path d="M15,2 L21,6 L15,10 z" fill="var(--text-muted)" />
-      </svg>
-    </div>
-  );
+  /* the GAIN box: the flat cooperative band C with the tuned cap a_theta stacked on it. Stacking
+   * IS addition — they add, they do not compound (the cross-term would be 104% of the coded
+   * gain), which is why no operator glyph sits between them. Returns the flat band's centre x, so
+   * the cooperative arrow drops onto the band it actually feeds and cannot drift. */
+  const gainbox = (x: number, y0: number, s: Side) => {
+    const C = s.C[f];
+    const kmax = s.a.indexOf(Math.max(...s.a));
+    el.push(<rect key={k()} x={x} y={Y(y0 + PH)} width={COLW} height={PH} rx={0.05}
+                  fill="var(--background)" stroke="var(--text-primary)" strokeWidth={0.032} />);
+    s.a.forEach((av, i) => {
+      const cy = y0 + PH - CH * (i + 1);
+      if (i) line(x, y0 + PH - CH * i, x + COLW, y0 + PH - CH * i, { c: 'var(--border)', w: 0.014 });
+      const w1 = 0.88 * COLW * (C / sc.gain), w2 = 0.88 * COLW * (av / sc.gain);
+      el.push(<rect key={k()} x={x + 0.05} y={Y(cy + CH - 0.065)} width={Math.max(0, w1)}
+                    height={CH - 0.13} fill={COOP} opacity={0.95} />);
+      el.push(<rect key={k()} x={x + 0.05 + w1} y={Y(cy + CH - 0.065)} width={Math.max(0, w2)}
+                    height={CH - 0.13} fill={ATT} opacity={0.95} />);
+      if (i === kmax && w1 > 0.22) txt(x + 0.05 + w1 / 2, cy + CH / 2, 'C',
+                                       { size: 0.16, fill: '#fff', anchor: 'middle' });
+    });
+    // right-aligned: the cooperative arrow comes down into this box's top-LEFT
+    txt(x + COLW, y0 + PH + 0.46, 'GAIN', { size: 0.2, weight: 700, anchor: 'end' });
+    txt(x + COLW, y0 + PH + 0.22, 'aθ + C',
+        { size: 0.19, fill: 'var(--text-secondary)', anchor: 'end' });
+    return x + 0.05 + (0.88 * COLW * (C / sc.gain)) / 2;
+  };
 
-  const Row = ({ side, label, cueDeg, cueName }: {
-    side: Side; label: string; cueDeg: number; cueName: string;
-  }) => (
-    <div className="flex items-start gap-1.5 flex-wrap">
-      <div className="shrink-0 pt-1" style={{ width: 74 }}>
-        <div className="text-[11px] font-bold" style={{ color: 'var(--text-primary)' }}>{label}</div>
-        <div className="text-[9px] leading-tight" style={{ color: ATT }}>
-          bias at {cueDeg}° ({cueName})
-        </div>
-      </div>
-      <Panel vals={data.stim.u[f]} scale={sc.drive} colour={STIM}
-             title="STIMULUS DRIVE" formula="uθ" ticks />
-      {mode === 'III' ? (
-        <>
-          <Op sym="×" />
-          <GainBox s={side} />
-          <Flow />
-          <Panel vals={side.R[f]} scale={sc.resp} colour={STIM} title="HC RESPONSE" formula="Rθ" />
-        </>
-      ) : (
-        <>
-          {/* Model IV's drive gain is the lone scalar 1+C — no field reaches it, so no panel */}
-          <Op sym="×" note={`1+C = ${(1 + side.C[f]).toFixed(2)}`} />
-          <Panel vals={side.R[f]} scale={sc.resp} colour={STIM} title="HC RESPONSE" formula="Rθ" />
-          <Op sym="×" />
-          <Panel vals={side.a.map(v => 1 + v)} scale={1 + sc.bias} colour={ATT}
-                 title="ATTENTIONAL BIAS" formula="1 + aθ" />
-          <Flow />
-          <Panel vals={side.Pin[f]} scale={sc.pin} colour={ATT}
-                 title="POOL AFFERENT" formula="(1+aθ) Rθ" />
-        </>
-      )}
-      <div className="shrink-0 pt-6 text-center" style={{ width: 84 }}>
-        <svg width="46" height="46" viewBox="0 0 46 46" className="mx-auto">
-          <circle cx={23} cy={23} r={16} fill="var(--surface-raised)" stroke="var(--text-secondary)" strokeWidth={1.3} />
-          <text x={23} y={29} textAnchor="middle" fontSize={17} fill="var(--text-primary)">Σ</text>
-        </svg>
-        <div className="text-[10px] tabular-nums mt-0.5" style={{ color: 'var(--text-primary)' }}>
-          S = {side.S[f].toFixed(1)}
-        </div>
-        <div className="text-[10px] tabular-nums" style={{ color: COOP }}>
-          C = {side.C[f].toFixed(2)}
-        </div>
-      </div>
-    </div>
+  const opnode = (x: number, y: number, sym: string) => {
+    el.push(<circle key={k()} cx={x} cy={Y(y)} r={0.22} fill="var(--background)"
+                    stroke="var(--text-primary)" strokeWidth={0.032} />);
+    txt(x, y, sym, { size: 0.26, anchor: 'middle' });
+  };
+
+  /* ── LEFT COLUMN: the whole time story, one x-axis, one cursor ─────────────────────── */
+  const tracePanel = (y0: number, h: number, cued: number[], unc: number[], top: number,
+                      label: string, colour: string, note?: string, shade?: [number, number]) => {
+    if (shade) el.push(<rect key={k()} x={xOf(shade[0])} y={Y(y0 + h)}
+                             width={xOf(shade[1]) - xOf(shade[0])} height={h}
+                             fill={BAND} opacity={0.55} />);
+    line(RX, y0, RX + RW, y0, { c: 'var(--border)', w: 0.02 });
+    const path = (v: number[]) => v.map((y, i) =>
+      `${i ? 'L' : 'M'}${xOf((i + 1) * MS).toFixed(3)},${Y(y0 + h * (y / top)).toFixed(3)}`).join(' ');
+    // uncued is DOTTED, deliberately not the schematics' dash — there, dashed means COOPERATION
+    el.push(<path key={k()} d={path(unc)} fill="none" stroke={colour} strokeWidth={0.032}
+                  strokeDasharray="0.09 0.09" />);
+    el.push(<path key={k()} d={path(cued)} fill="none" stroke={colour} strokeWidth={0.045} />);
+    txt(RX - 0.14, y0 + h / 2, label, { size: 0.19, weight: 700, anchor: 'end' });
+    if (note) txt(RX + 0.12, y0 + h - 0.18, note,
+                  { size: 0.15, fill: 'var(--text-muted)', italic: true });
+  };
+
+  // the raster
+  el.push(<rect key={k()} x={RX} y={Y(RAS_TOP)} width={RW} height={PH} rx={0.05}
+                fill="var(--background)" stroke="var(--text-primary)" strokeWidth={0.032} />);
+  const lit = data.stim.u.map(r => r.indexOf(Math.max(...r)));
+  const NAME: Record<number, string> = { 0: 'RIGHT', 2: 'UP', 4: 'LEFT', 6: 'DOWN' };
+  meta.prefsDeg.forEach((d, i) => {
+    const cy = RAS_BOT + PH - CH * (i + 1);
+    if (i) line(RX, RAS_BOT + PH - CH * i, RX + RW, RAS_BOT + PH - CH * i,
+                { c: 'var(--border)', w: 0.014 });
+    txt(RX - 0.14, cy + CH / 2, `${d}°`, { size: 0.16, fill: 'var(--text-muted)', anchor: 'end' });
+    const on = lit.reduce<number[]>((acc, v, j) => (v === i ? [...acc, j] : acc), []);
+    if (!on.length) return;
+    const x0 = xOf(on[0] * MS), x1 = xOf((on[on.length - 1] + 1) * MS);
+    el.push(<rect key={k()} x={x0} y={Y(cy + CH - 0.065)} width={x1 - x0} height={CH - 0.13}
+                  fill={STIM} opacity={0.85} />);
+    // ⚠️ the lit rows are DERIVED from the drive's argmax, never typed, so the raster and the
+    // DRIVE panel beside it cannot disagree about which way the dot is going
+    if (NAME[i]) {
+      const wide = x1 - x0 > 0.9;
+      txt(wide ? (x0 + x1) / 2 : x0 - 0.10, cy + CH / 2, NAME[i],
+          { size: 0.155, weight: 700, anchor: wide ? 'middle' : 'end',
+            fill: wide ? 'var(--background)' : STIM });
+    }
+  });
+  txt(RX, RAS_TOP + 0.46, 'STIMULUS', { size: 0.2, weight: 700 });
+  txt(RX, RAS_TOP + 0.24, 'one dot, one V1 RF',
+      { size: 0.17, fill: 'var(--text-secondary)', italic: true });
+  txt(RX + RW, RAS_TOP + 0.46, `frame ${f + 1} · t = ${tMs} ms`,
+      { size: 0.18, fill: CURSOR, weight: 700, anchor: 'end' });
+
+  // the three directions
+  txt(RX, TR_TOP + 0.30, 'HC RESPONSE', { size: 0.2, weight: 700 });
+  txt(RX + 2.90, TR_TOP + 0.30, 'Rθ(t)', { size: 0.19, fill: 'var(--text-secondary)' });
+  meta.plotDeg.forEach((d, i) => {
+    const ch = sc.chans[i], y0 = TR_TOP - (i + 1) * TRH - i * TRG;
+    tracePanel(y0, TRH, M.cued.R.map(r => r[ch]), M.uncued.R.map(r => r[ch]), sc.trace,
+               `${d}°`, STIM, d === meta.uncuedDeg ? 'no drive, ever' : undefined,
+               d === meta.rotDeg ? [0, T_ROT] : d === meta.transDeg ? [T_ROT, T] : undefined);
+  });
+
+  // the pool
+  txt(RX, POOL_TOP + 0.30, 'COOPERATIVE POOL', { size: 0.2, weight: 700 });
+  txt(RX + 2.90, POOL_TOP + 0.30, 'S(t)', { size: 0.19, fill: 'var(--text-secondary)' });
+  tracePanel(POOL_TOP - POOL_H, POOL_H, M.cued.S, M.uncued.S, sc.pool, 'S', COOP,
+             `C = CoopL·S — the ONLY route to ${meta.transDeg}°`, [T_ROT, T]);
+
+  // the shared time axis
+  for (let t = 0; t <= T; t += 200) {
+    line(xOf(t), LC_BOT - 0.06, xOf(t), LC_BOT, { w: 0.025 });
+    txt(xOf(t), LC_BOT - 0.26, `${t}`, { size: 0.16, fill: 'var(--text-muted)', anchor: 'middle' });
+  }
+  txt(RX + RW / 2, LC_BOT - 0.58, 'time (ms)',
+      { size: 0.18, fill: 'var(--text-secondary)', anchor: 'middle' });
+
+  /* ── RIGHT: one row per cue condition, the schematic's own spine ───────────────────── */
+  const row = (side: Side, YB: number, YA: number) => {
+    const SP = YB + 4 * CH;
+    panel(C1, YB, data.stim.u[f], sc.drive, STIM, 'STIMULUS DRIVE', 'uθ', true);
+    arrow(C1 + COLW + 0.05, SP, XOP1 - 0.26, SP);
+    opnode(XOP1, SP, '×');
+    arrow(XOP1 + 0.26, SP, C2 - 0.05, SP);
+    panel(C2, YB, side.R[f], sc.resp, STIM, 'HC RESPONSE', 'Rθ');
+
+    let drop: number;
+    if (onDrive) {
+      arrow(C2 + COLW + 0.05, SP, SX - SR - 0.05, SP, { c: 'var(--text-muted)' });
+      drop = gainbox(CG, YA, side);
+      arrow(XOP1, YA - 0.05, XOP1, SP + 0.26);
+      panel(CA, YA, side.a, sc.bias, ATT, 'ATTENTIONAL BIAS', 'aθ');
+      arrow(CA + COLW + 0.05, YA + PH * 0.5, CG - 0.05, YA + PH * 0.5, { c: ATT });
+    } else {
+      // ⚠️ ORDER IS THE CLAIM. Model IV's bias multiplies the RESPONSE, not the drive: it arrives
+      // off-axis onto the SECOND operator, and the spine's third slot is the POOL AFFERENT, which
+      // is what Sigma sums. Putting the bias before the response would be Model III's claim.
+      arrow(C2 + COLW + 0.05, SP, XOP2 - 0.26, SP);
+      opnode(XOP2, SP, '×');
+      arrow(XOP2 + 0.26, SP, C3 - 0.05, SP);
+      panel(C3, YB, side.Pin[f], sc.pin, ATT, 'POOL AFFERENT', '(1+aθ) Rθ');
+      arrow(C3 + COLW + 0.05, SP, SX - SR - 0.05, SP, { c: 'var(--text-muted)' });
+      panel(CB, YA, side.a.map(v => 1 + v), 1 + sc.bias, ATT, 'ATTENTIONAL BIAS', '1 + aθ');
+      arrow(XOP2, YA - 0.05, XOP2, SP + 0.26, { c: ATT });
+      drop = XOP1;                                   // no gain box: the gain is the scalar C
+    }
+
+    // the pool, and the cooperative gain returning up and to the left — THE LOOP
+    el.push(<circle key={k()} cx={SX} cy={Y(SP)} r={SR} fill="var(--surface-raised)"
+                    stroke="var(--text-primary)" strokeWidth={0.038} />);
+    txt(SX, SP, 'Σ', { size: 0.34, anchor: 'middle' });
+    txt(SX, SP - SR - 0.26, `S = ${side.S[f].toFixed(1)}`,
+        { size: 0.19, weight: 700, anchor: 'middle' });
+    const RET = YA + PH + 0.98;
+    line(SX, SP + SR + 0.02, SX, RET, { c: COOP, w: 0.042, dash: '0.16 0.09' });
+    line(SX, RET, drop, RET, { c: COOP, w: 0.042, dash: '0.16 0.09' });
+    arrow(drop, RET, drop, onDrive ? YA + PH + 0.05 : SP + 0.26,
+          { c: COOP, w: 0.042, dash: '0.16 0.09' });
+    txt(SX - 0.14, RET + 0.24, `C = ${side.C[f].toFixed(2)}`,
+        { size: 0.2, fill: COOP, weight: 700, anchor: 'end' });
+  };
+
+  row(M.cued, YB_C, YA_C);
+  row(M.uncued, YB_U, YA_U);
+
+  /* ── the fork, then THE CURSOR last so it sits above everything ────────────────────── */
+  // one stimulus, forking into the two cue conditions — the SAME dot field drives both
+  line(RX + RW + 0.06, RCEN, FX, RCEN, { w: 0.038 });
+  line(FX, SP_U, FX, SP_C, { w: 0.038 });
+  arrow(FX, SP_C, C1 - 0.05, SP_C, { w: 0.038 });
+  arrow(FX, SP_U, C1 - 0.05, SP_U, { w: 0.038 });
+  el.push(<line key={k()} x1={xc} y1={Y(LC_BOT)} x2={xc} y2={Y(RAS_TOP + 0.02)}
+                stroke={CURSOR} strokeWidth={0.038} />);
+  el.push(<polygon key={k()} fill={CURSOR}
+    points={`${xc},${Y(RAS_TOP + 0.04)} ${xc - 0.10},${Y(RAS_TOP + 0.24)} ${xc + 0.10},${Y(RAS_TOP + 0.24)}`} />);
+
+  const rowLabel = (y: number, big: string, small: string) => (
+    <>
+      <g transform={`rotate(-90 0.42 ${Y(y)})`}>
+        <text x={0.42} y={Y(y)} fontSize={0.30} fontWeight={700} textAnchor="middle"
+              dominantBaseline="middle" fill="var(--text-primary)">{big}</text>
+      </g>
+      <g transform={`rotate(-90 0.74 ${Y(y)})`}>
+        <text x={0.74} y={Y(y)} fontSize={0.17} fontStyle="italic" textAnchor="middle"
+              dominantBaseline="middle" fill={ATT}>{small}</text>
+      </g>
+    </>
   );
 
   return (
     <div className="rounded-lg border overflow-hidden"
          style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}>
-
-      {/* ── controls ─────────────────────────────────────────────────────────── */}
       <div className="px-4 pt-3 pb-2 flex flex-wrap items-center gap-3 text-xs border-b"
            style={{ borderColor: 'var(--border)' }}>
         <div className="flex gap-1">
-          {(['III', 'IV'] as const).map(k => (
-            <button key={k} type="button" onClick={() => setMode(k)}
-                    className="px-2.5 py-1 rounded border font-medium" style={btn(mode === k)}>
-              Model {k}
+          {(['III', 'IV'] as const).map(m => (
+            <button key={m} type="button" onClick={() => setMode(m)}
+                    className="px-2.5 py-1 rounded border font-medium" style={btn(mode === m)}>
+              Model {m}
             </button>
           ))}
         </div>
         <span style={{ color: 'var(--text-muted)' }}>
-          {mode === 'III' ? 'bias on the drive' : 'bias into the pool'}
+          {onDrive ? 'bias on the drive' : 'bias into the pool'}
         </span>
         <button type="button" onClick={() => setPlaying(p => !p)}
                 className="px-3 py-1 rounded border font-medium" style={btn(false)}>
@@ -338,122 +450,30 @@ export default function HCMinResponse({ src = '/data/hc_min_onedot.json' }: { sr
           frame {f + 1} · {tMs} ms
         </span>
         <span className="px-2 py-0.5 rounded"
-              style={inTrans
-                ? { background: '#f6e6c8', color: '#8a5a10' }
-                : { background: 'var(--accent-dim)', color: 'var(--accent)' }}>
+              style={inTrans ? { background: '#f6e6c8', color: '#8a5a10' }
+                             : { background: 'var(--accent-dim)', color: 'var(--accent)' }}>
           {inTrans ? 'translation' : 'rotation'}
         </span>
       </div>
 
-      {/* ── the instant: the schematic's panels, at the cursor ────────────────── */}
-      <div className="px-4 py-3 space-y-3">
-        <Row side={M.cued} label="CUED" cueDeg={meta.cuedDeg} cueName="UP" />
-        <div className="border-t" style={{ borderColor: 'var(--border)' }} />
-        <Row side={M.uncued} label="UNCUED" cueDeg={meta.uncuedDeg} cueName="DOWN" />
-      </div>
-
-      {/* ── time: raster, the three directions, the pool — one cursor ─────────── */}
-      <div className="px-4 pb-3 pt-1 border-t" style={{ borderColor: 'var(--border)' }}>
-        <svg viewBox={`0 0 ${W} ${TH}`} className="w-full h-auto">
-          {/* the stimulus raster */}
-          <text x={ML} y={11} fontSize={11} fontWeight={600} fill="var(--text-primary)">STIMULUS</text>
-          {meta.prefsDeg.map((d, k) => (
-            <g key={k}>
-              <text x={ML - 6} y={RAS_Y + k * LANE + 9.5} textAnchor="end" fontSize={9}
-                    fill="var(--text-muted)">{d}°</text>
-              <rect x={ML} y={RAS_Y + k * LANE} width={W - ML - MR} height={LANE}
-                    fill="none" stroke="var(--border)" strokeWidth={0.5} />
-            </g>
-          ))}
-          {meta.prefsDeg.map((_, k) => {
-            const on = lit.reduce<number[]>((acc, v, i) => (v === k ? [...acc, i] : acc), []);
-            if (!on.length) return null;
-            const x0 = px(on[0] * meta.msPerFrame), x1 = px((on[on.length - 1] + 1) * meta.msPerFrame);
-            const wide = x1 - x0 > 90;
-            return (
-              <g key={`b${k}`}>
-                <rect x={x0} y={RAS_Y + k * LANE + 2.5} width={x1 - x0} height={LANE - 5}
-                      fill={STIM} opacity={0.85} />
-                {NAME[k] && (
-                  <text x={wide ? (x0 + x1) / 2 : x0 - 5} y={RAS_Y + k * LANE + 10}
-                        textAnchor={wide ? 'middle' : 'end'} fontSize={8.5} fontWeight={700}
-                        fill={wide ? 'var(--surface)' : STIM}>{NAME[k]}</text>
-                )}
-              </g>
-            );
-          })}
-
-          {/* the three directions */}
-          <text x={ML} y={TR_Y - 8} fontSize={11} fontWeight={600} fill="var(--text-primary)">
-            HC RESPONSE  Rθ(t)
-          </text>
-          {meta.plotDeg.map((d, i) => {
-            const ch = sc.chans[i], y0 = TR_Y + i * (TR_H + TR_GAP);
-            const isPrimary = d === meta.rotDeg, isTrans = d === meta.transDeg;
-            return (
-              <g key={d}>
-                {isPrimary && <rect x={px(0)} y={y0} width={px(T_ROT) - px(0)} height={TR_H}
-                                    fill="var(--accent-dim)" opacity={0.55} />}
-                {isTrans && <rect x={px(T_ROT)} y={y0} width={px(T) - px(T_ROT)} height={TR_H}
-                                  fill="#f6e6c8" opacity={0.75} />}
-                <line x1={ML} y1={y0 + TR_H} x2={W - MR} y2={y0 + TR_H} stroke="var(--border)" />
-                <text x={ML - 6} y={y0 + TR_H / 2 + 3.5} textAnchor="end" fontSize={10}
-                      fontWeight={700} fill="var(--text-primary)">{d}°</text>
-                <path d={linePath(M.uncued.R.map(r => r[ch]), y0, TR_H, sc.trace)} fill="none"
-                      stroke={STIM} strokeWidth={1.5} strokeDasharray="3 3" opacity={0.85} />
-                <path d={linePath(M.cued.R.map(r => r[ch]), y0, TR_H, sc.trace)} fill="none"
-                      stroke={STIM} strokeWidth={2} />
-                {d === meta.uncuedDeg && (
-                  <text x={ML + 6} y={y0 + 10} fontSize={8.5} fill="var(--text-muted)">
-                    no drive, ever — where the UNCUED bias points
-                  </text>
-                )}
-                <circle cx={px(tMs)} cy={y0 + TR_H - TR_H * (M.cued.R[f][ch] / sc.trace)} r={3}
-                        fill={CURSOR} />
-              </g>
-            );
-          })}
-
-          {/* the pool */}
-          <text x={ML} y={POOL_Y - 8} fontSize={11} fontWeight={600} fill="var(--text-primary)">
-            COOPERATIVE POOL  S(t)
-          </text>
-          <rect x={px(T_ROT)} y={POOL_Y} width={px(T) - px(T_ROT)} height={POOL_H}
-                fill="#f6e6c8" opacity={0.75} />
-          <line x1={ML} y1={POOL_Y + POOL_H} x2={W - MR} y2={POOL_Y + POOL_H} stroke="var(--border)" />
-          <path d={linePath(M.uncued.S, POOL_Y, POOL_H, sc.pool)} fill="none" stroke={COOP}
-                strokeWidth={1.6} strokeDasharray="3 3" />
-          <path d={linePath(M.cued.S, POOL_Y, POOL_H, sc.pool)} fill="none" stroke={COOP} strokeWidth={2.1} />
-          <text x={ML + 6} y={POOL_Y + POOL_H - 5} fontSize={8.5} fill="var(--text-muted)">
-            C = CoopL·S is the ONLY route to {meta.transDeg}° once the dot turns
-          </text>
-          <text x={W - MR + 4} y={POOL_Y + POOL_H - POOL_H * (M.cued.S[f] / sc.pool) + 3}
-                fontSize={9} fontWeight={700} fill={COOP}>cued</text>
-          <text x={W - MR + 4} y={POOL_Y + POOL_H - POOL_H * (M.uncued.S[f] / sc.pool) + 3}
-                fontSize={9} fill={COOP} opacity={0.8}>unc</text>
-          <circle cx={px(tMs)} cy={POOL_Y + POOL_H - POOL_H * (M.cued.S[f] / sc.pool)} r={3} fill={CURSOR} />
-
-          {/* THE CURSOR — one line through every time panel, so they cannot disagree */}
-          <line x1={px(tMs)} y1={RAS_Y} x2={px(tMs)} y2={POOL_Y + POOL_H}
-                stroke={CURSOR} strokeWidth={1.5} />
-          <polygon points={`${px(tMs)},${RAS_Y - 1} ${px(tMs) - 4},${RAS_Y - 8} ${px(tMs) + 4},${RAS_Y - 8}`}
-                   fill={CURSOR} />
-          {[0, 200, 400, 600].map(t => (
-            <text key={t} x={px(t)} y={TH - 8} textAnchor="middle" fontSize={9} fill="var(--text-muted)">{t}</text>
-          ))}
-          <text x={W - MR} y={TH - 8} textAnchor="end" fontSize={9} fill="var(--text-muted)">time (ms)</text>
+      <div className="px-3 py-3">
+        {/* the PNG's top 0.6 is its title band; here that lives in HTML, so trim it */}
+        <svg viewBox={`0 0.6 ${XL} ${YL - 0.6}`} className="w-full h-auto"
+             role="img" aria-label={`Model ${mode} response at ${tMs} ms`}>
+          {rowLabel(SP_C, 'CUED', `bias at ${meta.cuedDeg}° (UP)`)}
+          {rowLabel(SP_U, 'UNCUED', `bias at ${meta.uncuedDeg}° (DOWN)`)}
+          {el}
         </svg>
       </div>
 
-      {/* ── read-outs, then the provenance footer ─────────────────────────────── */}
       <div className="px-4 py-2 text-[11px] flex flex-wrap gap-x-5 gap-y-1 border-t"
            style={{ borderColor: 'var(--border)', color: 'var(--text-secondary)' }}>
         <span>attentional index — primary <strong className="tabular-nums">{M.primary.toFixed(4)}</strong></span>
         <span>translation <strong className="tabular-nums">{M.translation.toFixed(4)}</strong></span>
         <span>ratio <strong className="tabular-nums">{M.ratio.toFixed(3)}</strong></span>
-        <span className="opacity-70">solid = cued · dashed = uncued</span>
+        <span className="opacity-70">solid = cued · dotted = uncued</span>
         <span className="opacity-70">
-          panels fixed to the run&apos;s peak over both rows — comparable across rows and time
+          every panel is fixed to the run&apos;s peak over both rows — comparable across rows and time
         </span>
       </div>
       <div className="px-4 py-2 text-[10px] flex flex-wrap gap-x-4 gap-y-1"
@@ -463,7 +483,7 @@ export default function HCMinResponse({ src = '/data/hc_min_onedot.json' }: { sr
         <span>loop gain {M.loopGain.toFixed(3)}</span>
         <span>τ {meta.tau_ms} ms (cells)</span>
         <span>τ<sub>S</sub> {meta.tauS_ms} ms (pool)</span>
-        <span>{meta.nRot * meta.msPerFrame} ms rotation at {meta.rotDeg}° + {meta.nTrans * meta.msPerFrame} ms translation at {meta.transDeg}°</span>
+        <span>{T_ROT} ms rotation at {meta.rotDeg}° + {meta.nTrans * MS} ms translation at {meta.transDeg}°</span>
         <span className="opacity-80">exported {meta.generated} from {meta.source}</span>
       </div>
     </div>
