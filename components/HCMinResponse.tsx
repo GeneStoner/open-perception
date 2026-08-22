@@ -153,7 +153,11 @@ export default function HCMinResponse({ src = '/data/hc_min_onedot.json' }: { sr
     return {
       drive: nz(cols(data.stim.u)),
       bias: nz(both(s => Math.max(...s.a))),
-      gain: nz(both(s => Math.max(...s.a) + Math.max(...s.C))),
+      // what the GAIN panel actually draws: a_theta + C in Model III, C alone in Model IV.
+      // Scaled to its own max over time and both cue conditions so the flat band uses the
+      // panel's full sweep — the point of the panel is watching that band move.
+      gain: nz(mode === 'III' ? both(s => Math.max(...s.a) + Math.max(...s.C))
+                              : both(s => Math.max(...s.C))),
       resp: nz(both(s => cols(s.R))),
       pin: nz(both(s => cols(s.Pin))),
       pool: nz(both(s => Math.max(...s.S))),
@@ -250,12 +254,12 @@ export default function HCMinResponse({ src = '/data/hc_min_onedot.json' }: { sr
    * IS addition — they add, they do not compound (the cross-term would be 104% of the coded
    * gain), which is why no operator glyph sits between them. Returns the flat band's centre x, so
    * the cooperative arrow drops onto the band it actually feeds and cannot drift. */
-  const gainbox = (x: number, y0: number, s: Side) => {
+  const gainbox = (x: number, y0: number, s: Side, tuned: number[], formula: string) => {
     const C = s.C[f];
-    const kmax = s.a.indexOf(Math.max(...s.a));
+    const kmax = Math.max(...tuned) > 0 ? tuned.indexOf(Math.max(...tuned)) : 0;
     el.push(<rect key={k()} x={x} y={Y(y0 + PH)} width={COLW} height={PH} rx={0.05}
                   fill="var(--background)" stroke="var(--text-primary)" strokeWidth={0.032} />);
-    s.a.forEach((av, i) => {
+    tuned.forEach((av, i) => {
       const cy = y0 + PH - CH * (i + 1);
       if (i) line(x, y0 + PH - CH * i, x + COLW, y0 + PH - CH * i, { c: 'var(--border)', w: 0.014 });
       const w1 = 0.88 * COLW * (C / sc.gain), w2 = 0.88 * COLW * (av / sc.gain);
@@ -263,12 +267,15 @@ export default function HCMinResponse({ src = '/data/hc_min_onedot.json' }: { sr
                     height={CH - 0.13} fill={COOP} opacity={0.95} />);
       el.push(<rect key={k()} x={x + 0.05 + w1} y={Y(cy + CH - 0.065)} width={Math.max(0, w2)}
                     height={CH - 0.13} fill={ATT} opacity={0.95} />);
-      if (i === kmax && w1 > 0.22) txt(x + 0.05 + w1 / 2, cy + CH / 2, 'C',
+      // Model IV has NO tuned cap, so the C label keys off the FLAT band's own width
+      if (i === kmax && w1 > 0.30) txt(x + 0.05 + w1 / 2, cy + CH / 2, 'C',
                                        { size: 0.16, fill: '#fff', anchor: 'middle' });
+      if (i === kmax && w2 > 0.16) txt(x + 0.05 + w1 + w2 / 2, cy + CH / 2, 'aθ',
+                                       { size: 0.16, anchor: 'middle' });
     });
     // right-aligned: the cooperative arrow comes down into this box's top-LEFT
     txt(x + COLW, y0 + PH + 0.46, 'GAIN', { size: 0.2, weight: 700, anchor: 'end' });
-    txt(x + COLW, y0 + PH + 0.22, 'aθ + C',
+    txt(x + COLW, y0 + PH + 0.22, formula,
         { size: 0.19, fill: 'var(--text-secondary)', anchor: 'end' });
     return x + 0.05 + (0.88 * COLW * (C / sc.gain)) / 2;
   };
@@ -363,7 +370,7 @@ export default function HCMinResponse({ src = '/data/hc_min_onedot.json' }: { sr
     let drop: number;
     if (onDrive) {
       arrow(C2 + COLW + 0.05, SP, SX - SR - 0.05, SP, { c: 'var(--text-muted)' });
-      drop = gainbox(CG, YA, side);
+      drop = gainbox(CG, YA, side, side.a, 'aθ + C');
       arrow(XOP1, YA - 0.05, XOP1, SP + 0.26);
       panel(CA, YA, side.a, sc.bias, ATT, 'ATTENTIONAL BIAS', 'aθ');
       arrow(CA + COLW + 0.05, YA + PH * 0.5, CG - 0.05, YA + PH * 0.5, { c: ATT });
@@ -378,7 +385,15 @@ export default function HCMinResponse({ src = '/data/hc_min_onedot.json' }: { sr
       arrow(C3 + COLW + 0.05, SP, SX - SR - 0.05, SP, { c: 'var(--text-muted)' });
       panel(CB, YA, side.a.map(v => 1 + v), 1 + sc.bias, ATT, 'ATTENTIONAL BIAS', '1 + aθ');
       arrow(XOP2, YA - 0.05, XOP2, SP + 0.26, { c: ATT });
-      drop = XOP1;                                   // no gain box: the gain is the scalar C
+      // ⭐ GS, 2026-08-22: Model IV gets a GAIN panel too. Its gain is a lone SCALAR, so all
+      // eight bars are identical — and that IS the point once this animates: they rise and fall
+      // in UNISON, the visible signature of a broadcast scalar, read against Model III's stack
+      // where the same flat band carries a FIXED tuned cap on top. Same slot as Model III's, so
+      // the two are compared at the same position.
+      // (Until 2026-08-21 this panel was deliberately omitted, the argument being that its
+      // ABSENCE said "one number". True in a still; in an animation the MOTION says it better.)
+      drop = gainbox(CG, YA, side, side.a.map(() => 0), 'C');
+      arrow(XOP1, YA - 0.05, XOP1, SP + 0.26);
     }
 
     // the pool, and the cooperative gain returning up and to the left — THE LOOP
@@ -390,8 +405,7 @@ export default function HCMinResponse({ src = '/data/hc_min_onedot.json' }: { sr
     const RET = YA + PH + 0.98;
     line(SX, SP + SR + 0.02, SX, RET, { c: COOP, w: 0.042, dash: '0.16 0.09' });
     line(SX, RET, drop, RET, { c: COOP, w: 0.042, dash: '0.16 0.09' });
-    arrow(drop, RET, drop, onDrive ? YA + PH + 0.05 : SP + 0.26,
-          { c: COOP, w: 0.042, dash: '0.16 0.09' });
+    arrow(drop, RET, drop, YA + PH + 0.05, { c: COOP, w: 0.042, dash: '0.16 0.09' });
     txt(SX - 0.14, RET + 0.24, `C = ${side.C[f].toFixed(2)}`,
         { size: 0.2, fill: COOP, weight: 700, anchor: 'end' });
   };
