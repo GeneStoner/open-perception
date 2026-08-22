@@ -73,7 +73,11 @@ const BAND = 'var(--accent-dim)';
 const nz = (v: number) => (v > 0 ? v : 1e-9);
 
 /* ── canvas, in fig_response_profile.py's own constants ─────────────────────────────────── */
-const XL = 16.9, YL = 16.6;      // identical to fig_response_profile.py
+const XL = 16.9, YL = 17.4;      // identical to fig_response_profile.py
+// YL gained headroom on 2026-08-22: the cooperative return lane (16.12) and its C label (16.36)
+// were being crossed by the PNG's title/subtitle. Here those live in HTML, so the viewBox TRIMS
+// the empty band instead of the constants diverging — fig_layout_check.py compares YL.
+const TRIM = 0.85;
 const CH = 0.32, COLW = 1.75, PH = 8 * CH;
 const RX = 1.42, RW = 3.95;
 const RAS_TOP = 15.05, RAS_BOT = RAS_TOP - PH;
@@ -88,7 +92,7 @@ const YB_U = 0.95, YA_U = YB_U + PH + 1.05;
 const YB_C = YA_U + PH + 1.85, YA_C = YB_C + PH + 1.05;
 const SP_U = YB_U + 4 * CH, SP_C = YB_C + 4 * CH;
 const C1 = 6.30, XOP1 = 8.90, C2 = 9.70, XOP2 = 12.30, C3 = 13.10;
-const CG = XOP1 - COLW / 2, CB = XOP2 - COLW / 2, CA = 6.30;
+const CG = XOP1 - COLW / 2, CB = XOP2 - COLW / 2, CA = 6.10;  // 6.30 overlapped the GAIN box
 const SR = 0.40;         // the pool neuron's radius
 // SX (the pool's x) depends on the model, so it is resolved per render, not here
 
@@ -373,7 +377,10 @@ export default function HCMinResponse({ src = '/data/hc_min_onedot.json' }: { sr
       drop = gainbox(CG, YA, side, side.a, 'aθ + C');
       arrow(XOP1, YA - 0.05, XOP1, SP + 0.26);
       panel(CA, YA, side.a, sc.bias, ATT, 'ATTENTIONAL BIAS', 'aθ');
-      arrow(CA + COLW + 0.05, YA + PH * 0.5, CG - 0.05, YA + PH * 0.5, { c: ATT });
+      // ⛔ NO ARROW into the GAIN box. GS, 2026-08-22. It was redundant — the gain box carries
+      // the same gold, labelled aθ, immediately to the right — and it misdescribed the mapping:
+      // one arrow at the vertical middle implies a single link at that row, where the relation
+      // is eight parallel per-channel ones. The panels' ROWS ALIGN, which says it correctly.
     } else {
       // ⚠️ ORDER IS THE CLAIM. Model IV's bias multiplies the RESPONSE, not the drive: it arrives
       // off-axis onto the SECOND operator, and the spine's third slot is the POOL AFFERENT, which
@@ -471,8 +478,8 @@ export default function HCMinResponse({ src = '/data/hc_min_onedot.json' }: { sr
       </div>
 
       <div className="px-3 py-3">
-        {/* the PNG's top 0.6 is its title band; here that lives in HTML, so trim it */}
-        <svg viewBox={`0 0.6 ${XL} ${YL - 0.6}`} className="w-full h-auto"
+        {/* the PNG's top band is its title/subtitle; here that lives in HTML, so trim it */}
+        <svg viewBox={`0 ${TRIM} ${XL} ${YL - TRIM}`} className="w-full h-auto"
              role="img" aria-label={`Model ${mode} response at ${tMs} ms`}>
           {rowLabel(SP_C, 'CUED', `bias at ${meta.cuedDeg}° (UP)`)}
           {rowLabel(SP_U, 'UNCUED', `bias at ${meta.uncuedDeg}° (DOWN)`)}
