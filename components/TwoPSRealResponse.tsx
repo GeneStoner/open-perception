@@ -85,7 +85,7 @@ type Data = {
 
 /* What toy_2ps_real prints for the default (representative) layout. If the payload disagrees,
  * the PAYLOAD is wrong — never adjust these to match it. */
-const EXPECT = { primary: 0.2106870, colour: 0.2102580, translation: 0.2754873 };
+const EXPECT = { primary: 0.1798618, colour: 0.1671362, translation: 0.0004249 };
 
 const ATT = '#E69F00';
 const COOP = '#0072B2';
@@ -112,7 +112,8 @@ const XOP2 = 9.95 + LEFTW;
 const C3 = 10.55 + LEFTW;
 const SX = 13.30 + LEFTW;
 const SR = 0.40;
-const NORMW = 2.60, NORMH = 2.10;   // 2.10: the box now carries C_A and C_B too
+const NORMW = 3.00, NORMH = 2.90;   // carries the collapsed identity AND the resultant
+                                    // multiplier; trimmed so it clears B's panel titles
 const CBIAS = XOP2 - COLW / 2;
 const YCB = 1.40, YMB = YCB + PH + 0.80;
 const YCA = YMB + PH + 4.20, YMA = YCA + PH + 0.80;
@@ -121,7 +122,8 @@ const RET_A = YCA - 0.36, RET_B = YMB + PH + 0.78;
 const LX = 0.75, LW = 5.45;
 const LTOP = 15.52;
 const STIMH = 3.60;
-const TRH = 1.24, TGAP = 0.45;
+const TRH = 1.14, TGAP = 0.45;
+const LEGGAP = 1.30;
 const TRIM = 0.80;
 const VIEW_SIG = 2.6;               // how much of each RF's neighbourhood the box shows
 
@@ -191,6 +193,8 @@ export default function TwoPSRealResponse({ src = '/data/toy_2ps_real.json' }: {
     </div>
   );
 
+  const CUE_LABELS: [string, string] =
+    [`${data.meta.biasDeg[0].toFixed(0)}°`, `${data.meta.biasDeg[1].toFixed(0)}°`];
   const M = data.meta, SC = data.scales, T = M.nSteps, DOT = data.dots;
   const side = data[cond];
   const STEP = M.frames[fi];
@@ -253,6 +257,13 @@ export default function TwoPSRealResponse({ src = '/data/toy_2ps_real.json' }: {
     </g>
   );
 
+  const Gsub = ({ x, y, nm, v }: any) => (
+    <text x={x} y={Y(y)} fontSize={fs(8.4)} fill={COOP} textAnchor="middle"
+          dominantBaseline="middle" fontFamily="Georgia, 'Times New Roman', serif">
+      G<tspan dy={fs(2.4)} fontSize={fs(6.2)}>{nm}</tspan>
+      <tspan dy={-fs(2.4)}>{` = ${v.toFixed(4)}`}</tspan>
+    </text>
+  );
   /* C with a real subscript — the box carries the two cooperation pools now */
   const Csub = ({ x, y, nm, v }: any) => (
     <text x={x} y={Y(y)} fontSize={fs(9.2)} fill={COOP} textAnchor="middle"
@@ -319,7 +330,10 @@ export default function TwoPSRealResponse({ src = '/data/toy_2ps_real.json' }: {
     vals.map((v, i) => `${tx(i + 1)},${Y(y0 + (v / top) * h)}`).join(' ');
   const TraceRow = ({ y0, k, title, ink, note }: any) => {
     const t = data.traces[k] as Trace;
-    const top = nz(Math.max(...t.cued, ...t.uncued) * 1.12);
+    /* ⚠️ EACH PANEL IS SCALED TO ITS OWN PEAK, unlike the body panels -- so heights are NOT
+     * comparable between panels, which is why the peak is printed on every one. */
+    const pk = Math.max(...t.cued, ...t.uncued);
+    const top = nz(pk * 1.12);
     return (
       <g>
         <Frame y0={y0} h={TRH} title={title} sub={note} />
@@ -327,11 +341,38 @@ export default function TwoPSRealResponse({ src = '/data/toy_2ps_real.json' }: {
         <polyline points={poly(t.uncued, y0, TRH, top)} fill="none" stroke={ink}
                   strokeWidth={1.4 * PT} strokeDasharray="0.07 0.04" />
         <polyline points={poly(t.cued, y0, TRH, top)} fill="none" stroke={ink} strokeWidth={1.7 * PT} />
+        <line x1={LX} y1={Y(y0)} x2={LX + LW} y2={Y(y0)} stroke={LINE} strokeWidth={0.6 * PT} />
+        <Txt x={LX + 0.06} y={y0 + 0.10} size={5.6} c={MUTE}>0</Txt>
+        <rect x={LX + LW - 0.72} y={Y(y0 + TRH - 0.03)} width={0.66} height={0.17}
+              fill="var(--background)" opacity={0.85} />
+        <Txt x={LX + LW - 0.06} y={y0 + TRH - 0.13} size={5.8} c={MUTE} a="end">
+          {`peak ${pk.toFixed(3)}`}
+        </Txt>
         <rect x={LX} y={Y(y0 + TRH)} width={LW} height={TRH} fill="none" stroke={INK}
               strokeWidth={1.2 * PT} />
       </g>
     );
   };
+  /* ⭐ solid vs dashed is the ONE thing a reader must know to read this column at all. */
+  const CUE_TXT: [string, string] = CUE_LABELS;
+  const TraceLegend = ({ y }: any) => (
+    <g>
+      <line x1={LX} y1={Y(y)} x2={LX + 0.34} y2={Y(y)} stroke={INK} strokeWidth={1.7 * PT} />
+      <Txt x={LX + 0.40} y={y} size={7}>{`cued (attend ${CUE_TXT[0]})`}</Txt>
+      <line x1={LX + 2.05} y1={Y(y)} x2={LX + 2.39} y2={Y(y)} stroke={INK} strokeWidth={1.4 * PT}
+            strokeDasharray="0.07 0.04" />
+      <Txt x={LX + 2.45} y={y} size={7}>{`uncued (attend ${CUE_TXT[1]})`}</Txt>
+      <Txt x={LX} y={y - 0.24} size={6.4} c={MUTE} i>
+        colour = point-set (red A, green B) · each panel scaled to its OWN peak, so heights are not
+        comparable between panels
+      </Txt>
+      <g transform={`rotate(-90 0.30 ${Y(yTr0 - 0.62 - 3 * (TRH + TGAP))})`}>
+        <Txt x={0.30} y={yTr0 - 0.62 - 3 * (TRH + TGAP)} size={7.4} c={MUTE} a="middle">
+          RESPONSE R (fraction of Rmax)
+        </Txt>
+      </g>
+    </g>
+  );
   /* ⚠️ each title takes its degree FROM ITS OWN TRACE — the two point-sets read DIFFERENT
    * channels here, because each reads its own local direction. */
   const dg = (k: string) => Math.round((data.traces[k] as Trace).deg);
@@ -342,7 +383,7 @@ export default function TwoPSRealResponse({ src = '/data/toy_2ps_real.json' }: {
     ['colourRed', 'COLOUR RED · point-set A', RED_INK, null],
     ['colourGreen', 'COLOUR GREEN · point-set B', GREEN_INK, 'COLOUR read-out'],
   ];
-  const yTr0 = LTOP - STIMH - 0.60 - TRH;
+  const yTr0 = LTOP - STIMH - LEGGAP - TRH;
   const yPool = yTr0 - 5 * (TRH + TGAP);
   const Cscale = nz(SC.S * M.params.CoopL * 1.12);
 
@@ -492,6 +533,7 @@ export default function TwoPSRealResponse({ src = '/data/toy_2ps_real.json' }: {
       <svg viewBox={`0 ${TRIM} ${XL} ${YL - TRIM}`} className="w-full h-auto"
            style={{ background: 'var(--background)' }}>
         <Display />
+        <TraceLegend y={yTr0 + TRH + 0.86} />
         {TRACES.map(([k, title, ink, note], i) => (
           <TraceRow key={k} y0={yTr0 - i * (TRH + TGAP)} k={k} title={title} ink={ink} note={note} />
         ))}
@@ -523,15 +565,27 @@ export default function TwoPSRealResponse({ src = '/data/toy_2ps_real.json' }: {
         <Seg x1={XDIV} y1={spine(YCB)} x2={XDIV} y2={spine(YMA)} c={NORM} w={1.6} />
         <rect x={XDIV - NORMW / 2} y={Y(MID + NORMH / 2)} width={NORMW} height={NORMH} rx={0.06}
               fill={FILL} stroke={INK} strokeWidth={1.6 * PT} />
-        <Txt x={XDIV} y={MID + 0.80} size={8.8} a="middle" b>SHARED</Txt>
-        <Txt x={XDIV} y={MID + 0.59} size={8.8} a="middle" b>NORMALIZATION</Txt>
-        <Txt x={XDIV} y={MID + 0.30} size={10.5} a="middle">σⁿ + w Σ Dⁿ</Txt>
-        {/* ⭐ the denominator's only TIME-VARYING inputs are these two, so the box shows them */}
-        <Csub x={XDIV - 0.62} y={MID - 0.02} nm="A" v={side.C.A[fi]} />
-        <Csub x={XDIV + 0.62} y={MID - 0.02} nm="B" v={side.C.B[fi]} />
-        <Txt x={XDIV} y={MID - 0.36} size={11.5} a="middle" b>{`= ${side.den[fi].toFixed(2)}`}</Txt>
-        <Txt x={XDIV} y={MID - 0.68} size={7.2} a="middle" c={MUTE} i>one number, all four</Txt>
-        <Txt x={XDIV} y={MID - 0.88} size={7.2} a="middle" c={MUTE} i>hypercolumns</Txt>
+        <Txt x={XDIV} y={MID + 1.22} size={8.8} a="middle" b>SHARED NORMALIZATION</Txt>
+        <Txt x={XDIV} y={MID + 0.98} size={9.6} a="middle">den = σⁿ + w Σ Dⁿ</Txt>
+        {/* ⭐ THE COLLAPSED FORM. In Model IV the gain on BOTH drives of a point-set is the same
+          * SCALAR (1+C_s), and a scalar factors straight out of a power sum — so the denominator
+          * is a function of the two cooperation pools and a stimulus term.
+          * ⛔ FALSE in Model III, where the bias is a FIELD on the drive and does not factor. */}
+        <Txt x={XDIV} y={MID + 0.60} size={9} a="middle">= σⁿ + w[(1+C_A)ⁿU_A</Txt>
+        <Txt x={XDIV + 0.22} y={MID + 0.38} size={9} a="middle">+ (1+C_B)ⁿU_B]</Txt>
+        <Csub x={XDIV - 0.62} y={MID + 0.16} nm="A" v={side.C.A[fi]} />
+        <Csub x={XDIV + 0.62} y={MID + 0.16} nm="B" v={side.C.B[fi]} />
+        <Txt x={XDIV} y={MID - 0.12} size={11} a="middle" b>{`= ${side.den[fi].toFixed(2)}`}</Txt>
+        <line x1={XDIV - NORMW / 2 + 0.18} y1={Y(MID - 0.38)} x2={XDIV + NORMW / 2 - 0.18}
+              y2={Y(MID - 0.38)} stroke={LINE} strokeWidth={0.8 * PT} />
+        {/* ⭐ THE RESULTANT MULTIPLIER. Cooperation raises the numerator AND the denominator, so
+          * within ONE point-set the two largely cancel. What does NOT cancel is the OTHER
+          * point-set's term: G_A falls when C_B rises. The competition lives in this ratio, and
+          * the attention index is (G_cued − G_unc)/(G_cued + G_unc). */}
+        <Txt x={XDIV} y={MID - 0.54} size={7.4} a="middle" b>RESULTANT MULTIPLIER</Txt>
+        <Txt x={XDIV} y={MID - 0.80} size={9} a="middle">Gs = (1+C_s)ⁿ / den</Txt>
+        <Gsub x={XDIV - 0.62} y={MID - 1.08} nm="A" v={(1 + side.C.A[fi]) ** M.params.nV1 / side.den[fi]} />
+        <Gsub x={XDIV + 0.62} y={MID - 1.08} nm="B" v={(1 + side.C.B[fi]) ** M.params.nV1 / side.den[fi]} />
         {[spine(YMA), spine(YCA), spine(YMB), spine(YCB)].map((sp, i) => (
           <Arrow key={i} x1={XDIV} y1={MID + (sp > MID ? NORMH / 2 : -NORMH / 2)}
                  x2={XDIV} y2={sp + (sp > MID ? -0.24 : 0.24)} c={NORM} w={1.5} />
@@ -541,9 +595,8 @@ export default function TwoPSRealResponse({ src = '/data/toy_2ps_real.json' }: {
             const y1 = dn ? MID + NORMH / 2 + 0.04 : MID - NORMH / 2 - 0.04;
             return (
               <g key={nm}>
+{/* no label: the BOX now states the whole collapsed expression */}
                 <Arrow x1={bx} y1={ret} x2={bx} y2={y1} c={COOP} w={1.6} />
-                <Txt x={bx + (ha === 'end' ? -0.10 : 0.10)} y={0.5 * (ret + y1)} size={8}
-                     c={COOP} a={ha}>{`(1+C${nm})ⁿ U${nm}`}</Txt>
               </g>
             );
           })}
@@ -558,7 +611,7 @@ export default function TwoPSRealResponse({ src = '/data/toy_2ps_real.json' }: {
         <br />
         <strong style={{ color: '#8a4b2a' }}>
           One layout of many. At the calibrated biasAmp, over 40 that satisfy purity the primary index is
-          +0.2366 ± 0.1385 (median +0.2469, range −0.090…+0.481, negative in 3). Seed {M.seed} is the one nearest the
+          +0.2366 ± 0.1877 (median +0.2595, range −0.113…+0.539, negative in 4). Seed {M.seed} is the one nearest the
           median, not the best — and &ldquo;pure&rdquo; is a 1σ containment test, so 12–38% of each
           point-set&apos;s drive still comes from the other surface&apos;s dots.
         </strong>

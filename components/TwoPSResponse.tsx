@@ -68,7 +68,7 @@ type Data = {
 
 /* What toy_2ps_run prints. If the payload disagrees, the PAYLOAD is wrong — never adjust these
  * to match it. The same guard the Python generator carries. */
-const EXPECT = { primary: 0.4684280, colour: 0.4684280, translation: 0.3538053 };
+const EXPECT = { primary: 0.5431856, colour: 0.5431856, translation: 0.4170924 };
 
 /* Palette, in step with fig_2ps_response.py and fig_2ps_schematic.py; fig_cvd_check.py measures
  * ATT against COOP (orange/green failed at 9 under protanopia, this pair passes at 56). COOP
@@ -99,7 +99,8 @@ const XOP2 = 9.95 + LEFTW;
 const C3 = 10.55 + LEFTW;
 const SX = 13.30 + LEFTW;
 const SR = 0.40;
-const NORMW = 2.60, NORMH = 2.10;   // 2.10: the box now carries C_A and C_B too
+const NORMW = 3.00, NORMH = 2.90;   // carries the collapsed identity AND the resultant
+                                    // multiplier; trimmed so it clears B's panel titles
 const CBIAS = XOP2 - COLW / 2;
 const YCB = 1.40, YMB = YCB + PH + 0.80;
 const YCA = YMB + PH + 4.20, YMA = YCA + PH + 0.80;
@@ -107,11 +108,13 @@ const XL = 15.2 + LEFTW, YL = 17.0;
 const RET_A = YCA - 0.36, RET_B = YMB + PH + 0.78;
 const LX = 0.75, LW = 5.45;
 const LTOP = 15.52;
-const RASH = 1.15, TRH = 1.26, TGAP = 0.56;
+const RASH = 1.15, TRH = 1.16, TGAP = 0.56;
+const LEGGAP = 0.70;
 /* the PNG's title/subtitle live in HTML here, so the viewBox TRIMS that band rather than the
  * constants diverging — fig_2ps_layout_check.py compares YL, not the trimmed height */
 const TRIM = 0.80;
 
+const CUE_LABELS: [string, string] = ['270°', '90°'];
 const spine = (y0: number) => y0 + 4 * CH;
 const MID = 0.5 * (spine(YMB) + spine(YCA));
 const Y = (v: number) => YL - v;                    // figure coords are y-UP; SVG is y-down
@@ -299,20 +302,49 @@ export default function TwoPSResponse({ src = '/data/toy_2ps.json' }: { src?: st
     vals.map((v, i) => `${tx(i + 1)},${Y(y0 + (v / top) * h)}`).join(' ');
   const TraceRow = ({ y0, k, title, ink, note }: any) => {
     const t = data.traces[k] as Trace;
-    const top = nz(Math.max(...t.cued, ...t.uncued) * 1.12);
+    /* ⚠️ EACH PANEL IS SCALED TO ITS OWN PEAK, unlike the body panels -- so heights are NOT
+     * comparable between panels, which is why the peak is printed on every one. */
+    const pk = Math.max(...t.cued, ...t.uncued);
+    const top = nz(pk * 1.12);
     return (
       <g>
         <Frame y0={y0} h={TRH} title={title} sub={note} />
         <Windows y0={y0} h={TRH} />
         <polyline points={poly(t.uncued, y0, TRH, top)} fill="none" stroke={ink}
                   strokeWidth={1.4 * PT} strokeDasharray="0.07 0.04" />
-        <polyline points={poly(t.cued, y0, TRH, top)} fill="none" stroke={ink}
-                  strokeWidth={1.7 * PT} />
+        <polyline points={poly(t.cued, y0, TRH, top)} fill="none" stroke={ink} strokeWidth={1.7 * PT} />
+        <line x1={LX} y1={Y(y0)} x2={LX + LW} y2={Y(y0)} stroke={LINE} strokeWidth={0.6 * PT} />
+        <Txt x={LX + 0.06} y={y0 + 0.10} size={5.6} c={MUTE}>0</Txt>
+        <rect x={LX + LW - 0.72} y={Y(y0 + TRH - 0.03)} width={0.66} height={0.17}
+              fill="var(--background)" opacity={0.85} />
+        <Txt x={LX + LW - 0.06} y={y0 + TRH - 0.13} size={5.8} c={MUTE} a="end">
+          {`peak ${pk.toFixed(3)}`}
+        </Txt>
         <rect x={LX} y={Y(y0 + TRH)} width={LW} height={TRH} fill="none" stroke={INK}
               strokeWidth={1.2 * PT} />
       </g>
     );
   };
+  /* ⭐ solid vs dashed is the ONE thing a reader must know to read this column at all. */
+  const CUE_TXT: [string, string] = CUE_LABELS;
+  const TraceLegend = ({ y }: any) => (
+    <g>
+      <line x1={LX} y1={Y(y)} x2={LX + 0.34} y2={Y(y)} stroke={INK} strokeWidth={1.7 * PT} />
+      <Txt x={LX + 0.40} y={y} size={7}>{`cued (attend ${CUE_TXT[0]})`}</Txt>
+      <line x1={LX + 2.05} y1={Y(y)} x2={LX + 2.39} y2={Y(y)} stroke={INK} strokeWidth={1.4 * PT}
+            strokeDasharray="0.07 0.04" />
+      <Txt x={LX + 2.45} y={y} size={7}>{`uncued (attend ${CUE_TXT[1]})`}</Txt>
+      <Txt x={LX} y={y - 0.24} size={6.4} c={MUTE} i>
+        colour = point-set (red A, green B) · each panel scaled to its OWN peak, so heights are not
+        comparable between panels
+      </Txt>
+      <g transform={`rotate(-90 0.30 ${Y(yTr0 - 0.62 - 3 * (TRH + TGAP))})`}>
+        <Txt x={0.30} y={yTr0 - 0.62 - 3 * (TRH + TGAP)} size={7.4} c={MUTE} a="middle">
+          RESPONSE R (fraction of Rmax)
+        </Txt>
+      </g>
+    </g>
+  );
 
   const TRACES: [string, string, string, string | null][] = [
     ['motionUp', 'MOTION 90° UP · point-set A', RED_INK, null],
@@ -323,12 +355,19 @@ export default function TwoPSResponse({ src = '/data/toy_2ps.json' }: { src?: st
   ];
   const yRasA = LTOP - RASH;
   const yRasB = yRasA - RASH - TGAP;
-  const yTr0 = yRasB - RASH - TGAP;
+  const yTr0 = yRasB - RASH - TGAP - LEGGAP;
   const yPool = yTr0 - 5 * (TRH + TGAP);
   const LBOT = yPool;
   const Cscale = nz(SC.S * M.params.CoopL * 1.12);
 
   /* ── BODY ───────────────────────────────────────────────────────────────────────────── */
+  const Gsub = ({ x, y, nm, v }: any) => (
+    <text x={x} y={Y(y)} fontSize={fs(8.4)} fill={COOP} textAnchor="middle"
+          dominantBaseline="middle" fontFamily="Georgia, 'Times New Roman', serif">
+      G<tspan dy={fs(2.4)} fontSize={fs(6.2)}>{nm}</tspan>
+      <tspan dy={-fs(2.4)}>{` = ${v.toFixed(4)}`}</tspan>
+    </text>
+  );
   /* C with a real subscript — the box carries the two cooperation pools now */
   const Csub = ({ x, y, nm, v }: any) => (
     <text x={x} y={Y(y)} fontSize={fs(9.2)} fill={COOP} textAnchor="middle"
@@ -456,6 +495,7 @@ export default function TwoPSResponse({ src = '/data/toy_2ps.json' }: { src?: st
         {/* ── the left column: the whole time story, one x-axis, one cursor ── */}
         <Raster y0={yRasA} psKey="A" name="A" ink={RED_INK} huelab="red · moves up" />
         <Raster y0={yRasB} psKey="B" name="B" ink={GREEN_INK} huelab="green · moves down" />
+        <TraceLegend y={yTr0 + TRH + 0.86} />
         {TRACES.map(([k, title, ink, note], i) => (
           <TraceRow key={k} y0={yTr0 - i * (TRH + TGAP)} k={k} title={title} ink={ink} note={note} />
         ))}
@@ -492,15 +532,27 @@ export default function TwoPSResponse({ src = '/data/toy_2ps.json' }: { src?: st
         <Seg x1={XDIV} y1={spine(YCB)} x2={XDIV} y2={spine(YMA)} c={NORM} w={1.6} />
         <rect x={XDIV - NORMW / 2} y={Y(MID + NORMH / 2)} width={NORMW} height={NORMH} rx={0.06}
               fill={FILL} stroke={INK} strokeWidth={1.6 * PT} />
-        <Txt x={XDIV} y={MID + 0.80} size={8.8} a="middle" b>SHARED</Txt>
-        <Txt x={XDIV} y={MID + 0.59} size={8.8} a="middle" b>NORMALIZATION</Txt>
-        <Txt x={XDIV} y={MID + 0.30} size={10.5} a="middle">σⁿ + w Σ Dⁿ</Txt>
-        {/* ⭐ the denominator's only TIME-VARYING inputs are these two, so the box shows them */}
-        <Csub x={XDIV - 0.62} y={MID - 0.02} nm="A" v={side.C.A[fi]} />
-        <Csub x={XDIV + 0.62} y={MID - 0.02} nm="B" v={side.C.B[fi]} />
-        <Txt x={XDIV} y={MID - 0.36} size={11.5} a="middle" b>{`= ${side.den[fi].toFixed(2)}`}</Txt>
-        <Txt x={XDIV} y={MID - 0.68} size={7.2} a="middle" c={MUTE} i>one number, all four</Txt>
-        <Txt x={XDIV} y={MID - 0.88} size={7.2} a="middle" c={MUTE} i>hypercolumns</Txt>
+        <Txt x={XDIV} y={MID + 1.22} size={8.8} a="middle" b>SHARED NORMALIZATION</Txt>
+        <Txt x={XDIV} y={MID + 0.98} size={9.6} a="middle">den = σⁿ + w Σ Dⁿ</Txt>
+        {/* ⭐ THE COLLAPSED FORM. In Model IV the gain on BOTH drives of a point-set is the same
+          * SCALAR (1+C_s), and a scalar factors straight out of a power sum — so the denominator
+          * is a function of the two cooperation pools and a stimulus term.
+          * ⛔ FALSE in Model III, where the bias is a FIELD on the drive and does not factor. */}
+        <Txt x={XDIV} y={MID + 0.60} size={9} a="middle">= σⁿ + w[(1+C_A)ⁿU_A</Txt>
+        <Txt x={XDIV + 0.22} y={MID + 0.38} size={9} a="middle">+ (1+C_B)ⁿU_B]</Txt>
+        <Csub x={XDIV - 0.62} y={MID + 0.16} nm="A" v={side.C.A[fi]} />
+        <Csub x={XDIV + 0.62} y={MID + 0.16} nm="B" v={side.C.B[fi]} />
+        <Txt x={XDIV} y={MID - 0.12} size={11} a="middle" b>{`= ${side.den[fi].toFixed(2)}`}</Txt>
+        <line x1={XDIV - NORMW / 2 + 0.18} y1={Y(MID - 0.38)} x2={XDIV + NORMW / 2 - 0.18}
+              y2={Y(MID - 0.38)} stroke={LINE} strokeWidth={0.8 * PT} />
+        {/* ⭐ THE RESULTANT MULTIPLIER. Cooperation raises the numerator AND the denominator, so
+          * within ONE point-set the two largely cancel. What does NOT cancel is the OTHER
+          * point-set's term: G_A falls when C_B rises. The competition lives in this ratio, and
+          * the attention index is (G_cued − G_unc)/(G_cued + G_unc). */}
+        <Txt x={XDIV} y={MID - 0.54} size={7.4} a="middle" b>RESULTANT MULTIPLIER</Txt>
+        <Txt x={XDIV} y={MID - 0.80} size={9} a="middle">Gs = (1+C_s)ⁿ / den</Txt>
+        <Gsub x={XDIV - 0.62} y={MID - 1.08} nm="A" v={(1 + side.C.A[fi]) ** M.params.nV1 / side.den[fi]} />
+        <Gsub x={XDIV + 0.62} y={MID - 1.08} nm="B" v={(1 + side.C.B[fi]) ** M.params.nV1 / side.den[fi]} />
         {[spine(YMA), spine(YCA), spine(YMB), spine(YCB)].map((sp, i) => (
           <Arrow key={i} x1={XDIV} y1={MID + (sp > MID ? NORMH / 2 : -NORMH / 2)}
                  x2={XDIV} y2={sp + (sp > MID ? -0.24 : 0.24)} c={NORM} w={1.5} />
@@ -510,9 +562,8 @@ export default function TwoPSResponse({ src = '/data/toy_2ps.json' }: { src?: st
             const y1 = dn ? MID + NORMH / 2 + 0.04 : MID - NORMH / 2 - 0.04;
             return (
               <g key={nm}>
+{/* no label: the BOX now states the whole collapsed expression */}
                 <Arrow x1={bx} y1={ret} x2={bx} y2={y1} c={COOP} w={1.6} />
-                <Txt x={bx + (ha === 'end' ? -0.10 : 0.10)} y={0.5 * (ret + y1)} size={8}
-                     c={COOP} a={ha}>{`(1+C${nm})ⁿ U${nm}`}</Txt>
               </g>
             );
           })}
