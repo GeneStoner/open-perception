@@ -22,7 +22,9 @@ to make, not finished prose.*
 - **The attentional bias is one field applied to both point-sets**, not one bias per point-set,
   and in Model IV it enters the *pool afferent* — after the response. Which operator it feeds is
   the one visible difference between Models III and IV.
-- Directions are physical degrees (0° right, 90° up); the colour axis is opponent, red at 0° and
-  green at 180°. Red and green are the actual stimulus colours and are labelled in words.
+- Directions are physical degrees (0° right, 90° up). The **colour** axis is not a direction —
+  it is an opponent hue ring, red opposite green with yellow on both arcs, so its cells carry
+  hue swatches rather than angles. Red and green are the actual stimulus colours and are the
+  only two ever presented; both are additionally labelled in words.
 - **Schematic:** the profiles show shape, not measured values. The model is `toy_color.m` with the
   bias in the pool; n = 2 throughout.
