@@ -330,6 +330,27 @@ export default function ModelingPage() {
           />
         </div>
 
+        {/* Two point-sets — Model IV (stage 2) */}
+        <div id="figure-11" className="space-y-3 scroll-mt-24">
+          <div
+            className="rounded-lg border overflow-hidden"
+            style={{ borderColor: "var(--border)", background: "var(--surface)" }}
+          >
+            <Image
+              src="/figures/modeling/fig_2ps_modelIV_schematic.png" unoptimized
+              alt="Two point-set schematic: each point-set reads its own V1 receptive field and binds a motion and a colour hypercolumn with one cooperative pool; both point-sets share a single normalization pool, whose denominator is fed by the two cooperative pools, and one attentional bias field feeds only the motion rows"
+              width={2520}
+              height={2818}
+              className="w-full h-auto"
+            />
+          </div>
+          <ContentBlurb
+            file="fig-2ps-modelIV-caption.md"
+            className="text-xs leading-relaxed"
+            style={{ color: "var(--text-secondary)" }}
+          />
+        </div>
+
       </section>
 
       </section>{/* end Object-based models */}
@@ -362,7 +383,7 @@ export default function ModelingPage() {
         />
 
         {/* Architecture, left to right */}
-        <div id="figure-11" className="space-y-3 scroll-mt-24">
+        <div id="figure-12" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-x-auto"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -393,7 +414,7 @@ export default function ModelingPage() {
         />
 
         {/* Measures grid: noise-free AI vs behavioural d' ratio */}
-        <div id="figure-12" className="space-y-3 scroll-mt-24">
+        <div id="figure-13" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-hidden"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -414,7 +435,7 @@ export default function ModelingPage() {
         </div>
 
         {/* Swap test */}
-        <div id="figure-13" className="space-y-3 scroll-mt-24">
+        <div id="figure-14" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-hidden"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -442,7 +463,7 @@ export default function ModelingPage() {
           <div className="mt-2 h-px w-8" style={{ background: "var(--border)" }} />
         </div>
 
-        <div id="figure-14" className="space-y-3 scroll-mt-24">
+        <div id="figure-15" className="space-y-3 scroll-mt-24">
           <HCPSViewer />
           <ContentBlurb
             file="hcps-viewer-caption.md"

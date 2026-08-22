@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local-only viewing route for HCMinResponse — must never ship
+app/scratch-hcmin/
