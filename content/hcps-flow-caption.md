@@ -1,3 +1,10 @@
+<!-- ============================================================================
+     NOT ON THE PAGE as of 2026-08-28. Removed as out of scope: it documents a 64 point-set lattice at tau_E 30 ms,
+     which is not the operating point the model now runs at.
+     The "Figure 16" label below is the number it HAD when it was removed and is
+     NOT current -- the page now ends at Figure 19. Renumber before re-splicing.
+     ============================================================================ -->
+
 **Figure 16.** **The model, end to end.** The stimulus is two superimposed transparent dot fields in a **square aperture** (the model seeds and wraps in a square, which is what keeps the field stationary — a disc seeded inside a square wrap drifts, and that artifact once produced a spurious cueing effect). The fields counter-rotate; one briefly translates — the probe, always at 2.26°/s regardless of field speed. This drives a lattice of **64 point-sets** (σ = 0.60°, spacing 1.5σ).
 
 *Inset:* inside one point-set, a motion hypercolumn (8 directions, von Mises κ = 2) and a colour hypercolumn (8 hues on a circle with red opposite green — **A** and **B** mark the two surfaces' own hues). The stimulus has only two chromatic primaries and additive red + green is yellow, so every intermediate channel is a red–green mixture and *both* arcs of the circle run red → yellow → green: it is mirror-symmetric about the red–green axis, with no blue or magenta anywhere in it. Both hypercolumns feed a shared cooperative pool **E** (τ_E = 30 ms), and both receive back the single gain that pool produces. The attentional bias enters the **pool**, not the channels, which is why it cannot stay confined to the attribute that was cued.
