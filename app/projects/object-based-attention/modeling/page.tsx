@@ -478,29 +478,8 @@ export default function ModelingPage() {
           />
         </div>
 
-        {/* Measures grid: noise-free AI vs behavioural d' ratio */}
-        <div id="figure-17" className="space-y-3 scroll-mt-24">
-          <div
-            className="rounded-lg border overflow-hidden"
-            style={{ borderColor: "var(--border)", background: "var(--surface)" }}
-          >
-            <Image
-              src="/figures/modeling/hcps_measures.png"
-              alt="Two panels. Left: the noise-free attention index against density, one line per field speed, positive everywhere and falling with both density and speed. Right: the same runs read out behaviourally as a d-prime ratio, with the human reference dashed well above the model curves."
-              width={1520}
-              height={660}
-              className="w-full h-auto"
-            />
-          </div>
-          <ContentBlurb
-            file="hcps-measures-caption.md"
-            className="text-xs leading-relaxed"
-            style={{ color: "var(--text-secondary)" }}
-          />
-        </div>
-
         {/* Swap test */}
-        <div id="figure-18" className="space-y-3 scroll-mt-24">
+        <div id="figure-17" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-hidden"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -528,7 +507,7 @@ export default function ModelingPage() {
           <div className="mt-2 h-px w-8" style={{ background: "var(--border)" }} />
         </div>
 
-        <div id="figure-19" className="space-y-3 scroll-mt-24">
+        <div id="figure-18" className="space-y-3 scroll-mt-24">
           <HCPSViewer />
           <ContentBlurb
             file="hcps-viewer-caption.md"
