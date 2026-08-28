@@ -478,8 +478,43 @@ export default function ModelingPage() {
           style={{ color: "var(--text-secondary)" }}
         />
 
-        {/* Measures grid: noise-free AI vs behavioural d' ratio */}
+        {/* HEADLINE: the tiled model on the REAL rotating stimulus, all four swap
+            conditions positive. Placed first in Results deliberately -- it is the
+            top-line claim, and the density x swap FAILURE (Figure 20) reads as the
+            qualification to it rather than the other way round. */}
         <div id="figure-17" className="space-y-3 scroll-mt-24">
+          <FigureZoom
+            src="/figures/modeling/hcps_swap_headline.png"
+            alt="Four bar-chart panels. A and B: attention index across four swap conditions for two stimulus geometries, all four bars positive and near-equal, with open diamonds marking a shorter cue lead. C and D: eight-alternative accuracy for the no-swap and motion-swap conditions, a solid dark blue cued bar well above a pale blue uncued bar in every case, with the cueing benefit bracketed above each pair."
+            width={2520}
+            height={1800}
+          />
+          <ContentBlurb
+            file="hcps-swap-headline-caption.md"
+            className="text-xs leading-relaxed"
+            style={{ color: "var(--text-secondary)" }}
+          />
+        </div>
+
+        {/* MECHANISM: how the cue reaches translation at all -- the bias acts on
+            rotation directly, translation only via the pool. Sits after the headline
+            because it explains it. */}
+        <div id="figure-18" className="space-y-3 scroll-mt-24">
+          <FigureZoom
+            src="/figures/modeling/hcps_transfer.png"
+            alt="Three line plots. A: attention index against cue lead on a log axis, a high blue rotation curve and a low orange translation curve, both rising then levelling. B: the ratio of translation to rotation attention index against cue lead, rising then flat within error bars. C: attention index at PRE, TRANS and POST, rotation nearly flat and high, translation peaking at TRANS."
+            width={2579}
+            height={1100}
+          />
+          <ContentBlurb
+            file="hcps-transfer-caption.md"
+            className="text-xs leading-relaxed"
+            style={{ color: "var(--text-secondary)" }}
+          />
+        </div>
+
+        {/* Measures grid: noise-free AI vs behavioural d' ratio */}
+        <div id="figure-19" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-hidden"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -500,7 +535,7 @@ export default function ModelingPage() {
         </div>
 
         {/* Swap test */}
-        <div id="figure-18" className="space-y-3 scroll-mt-24">
+        <div id="figure-20" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-hidden"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -528,7 +563,7 @@ export default function ModelingPage() {
           <div className="mt-2 h-px w-8" style={{ background: "var(--border)" }} />
         </div>
 
-        <div id="figure-19" className="space-y-3 scroll-mt-24">
+        <div id="figure-21" className="space-y-3 scroll-mt-24">
           <HCPSViewer />
           <ContentBlurb
             file="hcps-viewer-caption.md"
