@@ -24,9 +24,9 @@ export default function ScratchFrontend() {
       <div className="space-y-3 scroll-mt-24">
         <FigureZoom
           src="/figures/modeling/ps_frontend_figure.png"
-          alt="Five stages left to right. 1: one V1 receptive field magnified, containing a single green dot with an arrow giving its instantaneous direction and its Gaussian weight labelled. 2: two tuning curves, direction and hue, each with eight channels ghosted and the one the dot drives drawn solid; the hue axis is labelled only RED and GREEN. 3: the raw drive as eight-channel bar graphs in a single dark ink, one for motion with the preferred direction of each channel in degrees, one for colour with RED and GREEN named and the other six channels marked by a swatch of the hue they prefer. 4: the same bars after the per-stream input normalization. 5: a box reading HYPERCOLUMN AND POINT-SET MODELS."
+          alt="Five stages left to right. 1: one V1 receptive field magnified, containing a single green dot with an arrow giving its instantaneous direction and its Gaussian weight labelled, and beneath it the full Gaussian spatial weighting profile drawn to the same spatial scale as the receptive field, in degrees, crossing 0.5 at the circle's edge. 2: two tuning curves, direction and hue, each with eight channels ghosted and the one the dot drives drawn solid; the hue axis is labelled only RED and GREEN. 3: the raw drive as eight-channel bar graphs in a single dark ink, one for motion with the preferred direction of each channel in degrees, one for colour with RED and GREEN named and the other six channels marked by a swatch of the hue they prefer. 4: the same bars after the per-stream input normalization. 5: a box reading HYPERCOLUMN AND POINT-SET MODELS."
           width={2473}
-          height={1319}
+          height={1246}
         />
         <ContentBlurb
           file="ps-frontend-caption.md"
