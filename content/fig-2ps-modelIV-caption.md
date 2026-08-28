@@ -1,4 +1,4 @@
-**Figure 11.** **Two point-sets — Model IV.** *Draft caption: a list of the points this figure has
+**Figure 12.** **Two point-sets — Model IV.** *Draft caption: a list of the points this figure has
 to make, not finished prose.*
 
 - **In our initial implementations only a direction-of-motion attentional bias is included.** The

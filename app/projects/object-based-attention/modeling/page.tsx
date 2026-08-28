@@ -289,8 +289,26 @@ export default function ModelingPage() {
           />
         </div>
 
-        {/* Model III schematic */}
+        {/* The front end -- the common input to every model that follows.
+            Drawn on the RIGHT-HAND receptive field of Figure 8 above: it imports
+            ps_stimulus_common, the module Figures 2 and 8 already share, so the
+            receptive field here IS the one Figure 8 marks, not a lookalike. */}
         <div id="figure-9" className="space-y-3 scroll-mt-24">
+          <FigureZoom
+            src="/figures/modeling/ps_frontend_figure.png"
+            alt="Five stages left to right. 1: one V1 receptive field magnified, containing a single green dot with an arrow giving its instantaneous direction and its Gaussian weight labelled, and beneath it the full Gaussian spatial weighting profile drawn to the same spatial scale as the receptive field, in degrees, crossing 0.5 at the circle's edge. 2: two tuning curves, direction and hue, each with eight channels ghosted and the one the dot drives drawn solid; the hue axis is labelled only RED and GREEN. 3: the raw drive as eight-channel bar graphs in a single dark ink, one for motion with the preferred direction of each channel in degrees, one for colour with RED and GREEN named and the other six channels marked by a swatch of the hue they prefer. 4: the same bars after the per-stream input normalization, written as the canonical divisive-normalization equation. 5: a box reading HYPERCOLUMN AND POINT-SET MODELS."
+            width={2473}
+            height={1246}
+          />
+          <ContentBlurb
+            file="ps-frontend-caption.md"
+            className="text-xs leading-relaxed"
+            style={{ color: "var(--text-secondary)" }}
+          />
+        </div>
+
+        {/* Model III schematic */}
+        <div id="figure-10" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-hidden"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -311,7 +329,7 @@ export default function ModelingPage() {
         </div>
 
         {/* Model IV schematic */}
-        <div id="figure-10" className="space-y-3 scroll-mt-24">
+        <div id="figure-11" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-hidden"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -332,7 +350,7 @@ export default function ModelingPage() {
         </div>
 
         {/* Two point-sets — Model IV (stage 2) */}
-        <div id="figure-11" className="space-y-3 scroll-mt-24">
+        <div id="figure-12" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-hidden"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -385,7 +403,7 @@ export default function ModelingPage() {
 
 
         {/* How the model tiles visual space */}
-        <div id="figure-12" className="space-y-3 scroll-mt-24">
+        <div id="figure-13" className="space-y-3 scroll-mt-24">
           <FigureZoom
             src="/figures/modeling/hcps_tiling.png"
             alt="Three panels. A: the full arrangement of point-sets on concentric rings, one example highlighted in orange with the arc section marked. B: a zoomed wedge showing true point-set positions, the example and its two neighbours drawn at half-maximum extent. C: an arc section along one ring through the example, showing seven unit-peak Gaussian receptive-field profiles overlapping."
@@ -400,7 +418,7 @@ export default function ModelingPage() {
         </div>
 
         {/* One global state, a local direction everywhere */}
-        <div id="figure-13" className="space-y-3 scroll-mt-24">
+        <div id="figure-14" className="space-y-3 scroll-mt-24">
           <FigureZoom
             src="/figures/modeling/hcps_bias_map.png"
             alt="Two panels. A: the annulus of point-sets, each drawn as a short grey arrow pointing tangentially counter-clockwise, with a large curved arrow above marking the single global attentional state; three point-sets are circled in orange and numbered 1 to 3. B: three bar charts, one per circled point-set, showing the bias across eight direction channels; each peaks at a different channel, marked with an orange triangle."
@@ -415,7 +433,7 @@ export default function ModelingPage() {
         </div>
 
         {/* The tiled scaled-RF model, one point-set */}
-        <div id="figure-14" className="space-y-3 scroll-mt-24">
+        <div id="figure-15" className="space-y-3 scroll-mt-24">
           <FigureZoom
             src="/figures/modeling/hcps_tiled_schematic.png"
             alt="A wide four-part schematic. A: the stimulus, an annulus of red and green dots with two curved arrows inside marking the two counter-rotating fields, and one point-set circled as its V1 receptive field. B: the circuit for one point-set, with motion and colour drive panels, multiply and divide operators, an attentional bias bar panel, and a cooperative pool E. C: the normalizer, a lattice of surrounding point-sets. D: three read-out boxes, MT translation, MST rotation and V4 colour."
@@ -430,7 +448,7 @@ export default function ModelingPage() {
         </div>
 
         {/* Architecture, left to right */}
-        <div id="figure-15" className="space-y-3 scroll-mt-24">
+        <div id="figure-16" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-x-auto"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -461,7 +479,7 @@ export default function ModelingPage() {
         />
 
         {/* Measures grid: noise-free AI vs behavioural d' ratio */}
-        <div id="figure-16" className="space-y-3 scroll-mt-24">
+        <div id="figure-17" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-hidden"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -482,7 +500,7 @@ export default function ModelingPage() {
         </div>
 
         {/* Swap test */}
-        <div id="figure-17" className="space-y-3 scroll-mt-24">
+        <div id="figure-18" className="space-y-3 scroll-mt-24">
           <div
             className="rounded-lg border overflow-hidden"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -510,7 +528,7 @@ export default function ModelingPage() {
           <div className="mt-2 h-px w-8" style={{ background: "var(--border)" }} />
         </div>
 
-        <div id="figure-18" className="space-y-3 scroll-mt-24">
+        <div id="figure-19" className="space-y-3 scroll-mt-24">
           <HCPSViewer />
           <ContentBlurb
             file="hcps-viewer-caption.md"

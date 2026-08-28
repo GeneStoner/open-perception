@@ -1,4 +1,4 @@
-**Figure 14.** *(provisional caption — figure and wording still to be tweaked.)* **The tiled scaled-RF model — one point-set, drawn as it runs.** The per-point-set circuit is identical to the two-point-set model; the four differences from it are marked **◆1–◆4**. Bar profiles are illustrative; counts, extents and constants are real.
+**Figure 15.** *(provisional caption — figure and wording still to be tweaked.)* **The tiled scaled-RF model — one point-set, drawn as it runs.** The per-point-set circuit is identical to the two-point-set model; the four differences from it are marked **◆1–◆4**. Bar profiles are illustrative; counts, extents and constants are real.
 
 **(A) The stimulus.** Two counter-rotating dot fields at 81°/s. One point-set is circled — point-set **1** of the bias-map figure above, at polar angle 0° — and it is drawn as its **V1 RF**, at 1σ solid with 2σ and 3σ dotted, the same way the RF is drawn in B.
 
