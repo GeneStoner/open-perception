@@ -85,7 +85,7 @@ type Data = {
 
 /* What toy_2ps_real prints for the default (representative) layout. If the payload disagrees,
  * the PAYLOAD is wrong — never adjust these to match it. */
-const EXPECT = { primary: 0.1798618, colour: 0.1671362, translation: 0.0004249 };
+const EXPECT = { primary: 0.8278144, colour: 0.8442837, translation: 0.0287517 };
 
 const ATT = '#E69F00';
 const COOP = '#0072B2';
@@ -610,10 +610,20 @@ export default function TwoPSRealResponse({ src = '/data/toy_2ps_real.json' }: {
         {M.read.colour.toFixed(4)}, translation {M.read.translation.toFixed(4)}.
         <br />
         <strong style={{ color: '#8a4b2a' }}>
-          One layout of many. At the calibrated biasAmp, over 40 that satisfy purity the primary index is
-          +0.2366 ± 0.1877 (median +0.2595, range −0.113…+0.539, negative in 4). Seed {M.seed} is the one nearest the
-          median, not the best — and &ldquo;pure&rdquo; is a 1σ containment test, so 12–38% of each
-          point-set&apos;s drive still comes from the other surface&apos;s dots.
+          One layout of many, and the population is what the model claims. Over the 40 layouts that
+          satisfy purity, this operating point gives primary +0.4279 ± 0.6460 (median +0.8059,
+          negative in 11) and translation +0.2535 ± 0.4469 (median +0.1126, negative in 14). Seed{' '}
+          {M.seed} is the layout nearest the median on both, not the best — the best on translation
+          is +0.9729 and the worst is −0.6249. Purity is a drive-share ≥ 80% test, and the achieved
+          contamination is 10.7% ± 6.1% (A) and 8.7% ± 7.7% (B), so roughly a tenth of each
+          point-set&apos;s drive still comes from the other surface.
+        </strong>
+        <br />
+        <strong style={{ color: '#8a4b2a' }}>
+          Swap survival at this operating point is 91% of the no-swap effect (population means,
+          n = 40), against 82% at the previously calibrated point. Survival is set by the ratio of
+          cooperative coupling to normalization weight, CoopL/normW; biasAmp sets the magnitude
+          independently.
         </strong>
         <br />
         <span className="opacity-70">

@@ -68,7 +68,7 @@ type Data = {
 
 /* What toy_2ps_run prints. If the payload disagrees, the PAYLOAD is wrong — never adjust these
  * to match it. The same guard the Python generator carries. */
-const EXPECT = { primary: 0.5431856, colour: 0.5431856, translation: 0.4170924 };
+const EXPECT = { primary: 0.9908296, colour: 0.9908296, translation: 0.8315901 };
 
 /* Palette, in step with fig_2ps_response.py and fig_2ps_schematic.py; fig_cvd_check.py measures
  * ATT against COOP (orange/green failed at 9 under protanopia, this pair passes at 56). COOP
