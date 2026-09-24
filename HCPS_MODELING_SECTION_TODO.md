@@ -30,16 +30,26 @@ models. That is the thing to fix first.
 2. **Wrong measurement windows.** Every index was read during the translation, when the cued
    surface had already stopped carrying the cued features. Corrected: primary/colour at frames
    15–19, translation at 22–26.
-3. **Densities 11% too high.** 1.82/4.99/14.4/28.8 implies a 3.32° radius; the aperture is 3.5°.
-   Correct values ≈ 1.64/4.50/12.99/25.98 — and even those are ESTIMATES (see below).
+3. ~~**Densities 11% too high.**~~ **FIXED 2026-09-24** — the site now shows 1.6/4.5/13/26
+   (`results/page.tsx`, `DensityResults.tsx`).
+   ⚠️ The original diagnosis here was wrong and should not be repeated: 1.82/4.99/14.4/28.8 does
+   NOT imply a 3.32° radius. Those are the correct **annulus** densities at a 3.5° radius —
+   dots are never placed inside the 1.1° exclusion zone, which removes 9.9% of the disk. The
+   two figures are different *conventions*, not an arithmetic error:
+   **full disk 1.6/4.5/13/26** (S&B convention, no exclusion zone — what this site shows) vs
+   **annulus 1.82/4.99/14.4/28.8** (what a receptive field inside the stimulus actually sees,
+   and what the VRDots analysis scripts use). Always say which.
 4. **Swap uncued arms were assumed, and wrongly.** Real values are on this site's own
    `HighDensSwapResults.tsx`.
 
 ## Also unresolved, and it affects the data page too
 
-- The **density labels are estimates** (nominal count ÷ aperture area). Whether the Unity assets
-  exclude the central fixation region is UNKNOWN — it would raise every value ~1.3%.
-  **The Unity source is the authority.** Labels carry a leading `~` until then.
+- ~~The **density labels are estimates**~~ **ANSWERED 2026-09-24 from the Unity source.**
+  The assets DO exclude the central region: `StimulusBuilder` places and respawns every dot with
+  `UniformAnnulus(rng, ApertureRadiusMeters, exclusionRadiusMeters)`, and the exclusion radius is
+  **1.1°** for the 3.5° specs. So `dotsPerField` is the count of *visible* dots, and excluding
+  the centre raises density by **9.9%, not ~1.3%** (annulus 34.68 deg² vs full disk 38.48 deg²).
+  The site's full-disk labels are a deliberate convention choice, not an estimate; the `~` can go.
 - **The experiment's translation lasts 80 ms; the model's probe is 50 ms.** Never reconciled.
   S&B used 40 ms, Çatak 133 ms.
 
